@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.board.service.impl.BoardMapper">
+
+	<resultMap id="board" type="egovframework.example.board.service.BoardVO">
+		<result property="b_no" column="b_no"/>
+		<result property="b_title" column="b_title"/>
+		<result property="b_writer" column="b_writer"/>
+		<result property="b_content" column="b_content"/>
+		<result property="b_regdate" column="b_regdate"/>
+		<result property="b_readcnt" column="b_readcnt"/>
+		<result property="b_grpno" column="b_grpno"/>
+		<result property="b_grpord" column="b_grpord"/>
+		<result property="b_depth" column="b_depth"/>
+		<result property="b_category" column="b_category"/>
+	</resultMap>
+
+	<insert id="insertBoard" parameterType="boardVO">
+
+			INSERT INTO BOARD
+				( b_title
+				  , b_writer
+				  , b_content
+				  , b_grpno
+				  , b_category
+				  , b_grpord
+				  , b_depth
+				   )
+			VALUES ( #{b_title}
+				  , #{b_writer}
+				  , #{b_content}
+				  , #{b_grpno}
+				  , #{b_category}
+				  , 0
+				  , 0
+				   )
+
+	</insert>
+
+	<update id="updateBoard">
+
+			UPDATE BOARD
+			SET b_title=#{b_title}
+				, b_content=#{b_content}
+				  WHERE b_no=#{b_no}
+
+	</update>
+
+	<delete id="deleteBoard">
+
+			DELETE FROM BOARD
+			WHERE b_no=#{b_no}
+
+	</delete>
+
+	<select id="selectBoard" resultMap="board">
+
+			SELECT
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
+			FROM BOARD
+			WHERE b_no=#{b_no}
+
+	</select>
+
+	<select id="selectBoardList" parameterType="searchVO" resultType="egovMap">
+
+			SELECT
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
+			FROM BOARD
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND b_writer LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 1">
+						AND b_title LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 2">
+						AND b_content LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 3">
+		            	AND
+		            	b_writer LIKE '%' || #{searchKeyword} || '%'
+		            	OR
+		            	b_title LIKE '%' || #{searchKeyword} || '%'
+		            	OR
+						b_content LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+			ORDER BY b_no DESC
+			<!-- LIMIT #{recordCountPerPage} OFFSET #{firstIndex} -->
+	</select>
+
+	<select id="selectBoardListTotCnt" parameterType="searchVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM BOARD
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND ID LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 1">
+						AND	NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+	</select>
+	
+	
+	<select id="loginCheck" parameterType="userVO" resultType="userVO">
+
+			SELECT *
+			FROM USER
+			WHERE user_id = #{user_id}
+			AND user_pwd = #{user_pwd}
+			
+	</select>
+	
+	<select id="selectMaxBno" resultType="int">
+	
+			SELECT MAX(b_no) FROM board
+			
+	</select>
+
+</mapper>
