@@ -5,6 +5,7 @@
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt"	   uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -28,8 +29,8 @@ function writeBoard() {
 	location.href = "<c:url value='/writeBoard.do' />";
 }
 
-function readBoard() {
-	location.href = "<c:url value='/readBoard.do' />"
+function readBoard(b_no) {
+	location.href = "<c:url value='/readBoard.do' />?b_no=" + b_no;
 }
 
 function userJoin() {
@@ -90,15 +91,15 @@ function logout() {
 		<!-- 테이블(게시글) 영역  -->
 		<div class="panel-body mt-5">
 			<!-- 검색 영역 -->
-			<form class="form-inline float-right" action="boardSearch.do">
+			<form class="form-inline float-right" action="<c:url value='/boardList.do' />">
 			  <select name="searchCondition" class="browser-default custom-select mr-2 mb-2">
-				  <option value="0">작성자</option>
-				  <option value="1">제목</option>
-				  <option value="2">내용</option>
-				  <option value="3">전체</option>
+				  <option value="0" <c:if test="${board.searchCondition=='0' || board.searchCondition=='' }">selected</c:if>>작성자</option>
+				  <option value="1" <c:if test="${board.searchCondition=='1'}">selected</c:if>>제목</option>
+				  <option value="2" <c:if test="${board.searchCondition=='2'}">selected</c:if>>내용</option>
+				  <option value="3" <c:if test="${board.searchCondition=='3'}">selected</c:if>>전체</option>
 				</select>
 			  <div class="form-group">
-			    <input type="text" class="form-control" id="searchKeyword" name="searchKeyWord">
+			  	<input type="text" class="form-control" name="searchKeyword" value="${board.searchKeyword} ">
 			  </div>
 			  <button type="submit" class="btn btn-primary">검색</button>
 			</form>
@@ -117,9 +118,9 @@ function logout() {
 			    <tbody>
 			    <c:forEach var="board" items="${resultList }">
 			      <tr>
-			        <td><a href="javascript:readBoard();"><c:out value="${board.bTitle }" /></a></td>
+			        <td><a href="javascript:readBoard(${board.bNo });"><c:out value="${board.bTitle }" /></a></td>
 			        <td><c:out value="${board.bWriter }" /></td>
-			        <td><c:out value="${board.bRegdate }" /></td>
+			        <td><fmt:formatDate pattern='yyyy-MM-dd' value='${board.bRegdate }'/></td>
 			        <td><c:out value="${board.bReadcnt }" /></td>
 			      </tr>
 			    </c:forEach>

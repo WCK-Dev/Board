@@ -46,6 +46,7 @@ public class BoardController {
 
 		List<?> boardList = boardService.selectBoardList(boardVO);
 		model.addAttribute("resultList", boardList);
+		model.addAttribute("board", boardVO);
 
 		int totCnt = boardService.selectBoardListTotCnt(boardVO);
 		//paginationInfo.setTotalRecordCount(totCnt);
@@ -71,10 +72,28 @@ public class BoardController {
 	}
 
 	@RequestMapping(value="readBoard.do")
-	public String readBoard() throws Exception {
+	public String readBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
+		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
 		
 		return "board/readBoard";
+	}
+	
+	@RequestMapping(value="replyWrite.do", method =RequestMethod.GET)
+	public String replyWrite(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+		
+		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
+		
+		return "board/writeReply";
+	}
+	
+	@RequestMapping(value="insertReply.do", method =RequestMethod.POST)
+	public String insertReply(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+		
+		boardService.updateGrpord(boardVO);
+		boardService.insertReply(boardVO);
+		
+		return "redirect:/boardList.do";
 	}
 	
 	@RequestMapping(value="login.do")

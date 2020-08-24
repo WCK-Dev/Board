@@ -60,6 +60,10 @@ public interface BoardService {
 	List<?> selectBoardList(BoardVO vo) throws Exception;
 	
 	int selectMaxBno()throws Exception;
+	
+	int updateGrpord(BoardVO vo) throws Exception;
+	
+	int insertReply(BoardVO vo) throws Exception;
 
 	/**
 	 * 글 총 갯수를 조회한다.

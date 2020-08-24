@@ -128,6 +128,16 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	public int selectMaxBno() throws Exception {
 		return boardDAO.selectMaxBno();
 	}
+	
+	@Override
+	public int updateGrpord(BoardVO vo) throws Exception {
+		return boardDAO.updateGrpord(vo);
+	}
+	
+	@Override
+	public int insertReply(BoardVO vo) throws Exception {
+		return boardDAO.insertReply(vo);
+	}
 
 	/**
 	 * 글 총 갯수를 조회한다.

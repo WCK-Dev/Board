@@ -62,10 +62,42 @@
 
 	</select>
 
-	<select id="selectBoardList" parameterType="searchVO" resultType="egovMap">
+	<select id="selectBoardList" parameterType="boardVO" resultType="egovMap">
 
 			SELECT
 				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
+			FROM BOARD
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 1">
+						AND b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 2">
+						AND b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 3">
+		            	AND
+		            	(
+		            	b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+		            	b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+						b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+						)
+					</when>
+				</choose>
+			</if>
+			ORDER BY b_no DESC
+			<!-- LIMIT #{recordCountPerPage} OFFSET #{firstIndex} -->
+	</select>
+
+	<select id="selectBoardListTotCnt" parameterType="boardVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
 			FROM BOARD
 			WHERE 1=1
 			<if test="searchKeyword != null and searchKeyword != ''">
@@ -81,30 +113,13 @@
 					</when>
 		            <when test="searchCondition == 3">
 		            	AND
-		            	b_writer LIKE '%' || #{searchKeyword} || '%'
+		            	(
+		            	b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
 		            	OR
-		            	b_title LIKE '%' || #{searchKeyword} || '%'
+		            	b_title LIKE CONCAT('%', #{searchKeyword}, '%')
 		            	OR
-						b_content LIKE '%' || #{searchKeyword} || '%'
-					</when>
-				</choose>
-			</if>
-			ORDER BY b_no DESC
-			<!-- LIMIT #{recordCountPerPage} OFFSET #{firstIndex} -->
-	</select>
-
-	<select id="selectBoardListTotCnt" parameterType="searchVO" resultType="int">
-
-			SELECT COUNT(*) totcnt
-			FROM BOARD
-			WHERE 1=1
-			<if test="searchKeyword != null and searchKeyword != ''">
-		        <choose>
-		            <when test="searchCondition == 0">
-						AND ID LIKE '%' || #{searchKeyword} || '%'
-					</when>
-		            <when test="searchCondition == 1">
-						AND	NAME LIKE '%' || #{searchKeyword} || '%'
+						b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+						)
 					</when>
 				</choose>
 			</if>
@@ -125,5 +140,36 @@
 			SELECT MAX(b_no) FROM board
 			
 	</select>
+	
+	<insert id="insertReply" parameterType="boardVO">
 
+			INSERT INTO BOARD
+				( b_title
+				  , b_writer
+				  , b_content
+				  , b_grpno
+				  , b_category
+				  , b_grpord
+				  , b_depth
+				   )
+			VALUES ( #{b_title}
+				  , #{b_writer}
+				  , #{b_content}
+				  , #{b_grpno}
+				  , #{b_category}
+				  , #{b_grpord}
+				  , #{b_depth} + 1
+				   )
+
+	</insert>
+	
+	<update id="updateGrpord" parameterType="boardVO">
+	
+			UPDATE BOARD SET 
+				b_grpord = b_grpord+1
+			WHERE b_grpno = #{b_grpno} 
+				AND b_grpord = #{b_grpord}
+	
+	 </update>
+	 
 </mapper>

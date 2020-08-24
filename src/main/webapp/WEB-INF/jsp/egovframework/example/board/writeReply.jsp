@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Write Board</title>
+<title>Write Reply</title>
 
 <!-- JQuery -->
 <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -25,7 +25,7 @@ $(document).ready(function() {
 		location.href = "<c:url value='/boardList.do'/>"
 	}
 	
-	function insert() {
+	function insertReply() {
 		if( $("#b_title").val() == '' ){
 			alert("제목을 입력해야 합니다.");
 			$("#b_title").focus();
@@ -49,15 +49,18 @@ $(document).ready(function() {
 	<hr>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
-			<form class="form-horizontal" method="post" action="<c:url value='/writeBoard.do' />" id="writeForm">
+			<form class="form-horizontal" method="post" action="<c:url value='/insertReply.do' />" id="replyForm">
 			<c:if test="${sessionScope.user_id == 'admin' }">
 				<input type="hidden" name="b_category" value="1">
 			</c:if>
+				<input type="hidden" name="b_grpno" value="${boardVO.b_grpno }">
+				<input type="hidden" name="b_grpord" value="${boardVO.b_grpord }">
+				<input type="hidden" name="b_depth" value="${boardVO.b_depth }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="b_title" name="b_title" placeholder="제목을 입력해주세요." maxlength="100">
+			      <input type="text" class="form-control" id="b_title" name="b_title" value="RE: ${boardVO.b_title }" placeholder="제목을 입력해주세요." maxlength="100">
 			    </div>
 			  </div>
 			  <div class="form-group">
@@ -73,7 +76,7 @@ $(document).ready(function() {
 				</div>
 			  </div>
 			<div class="panel-footer float-right">
-				<button type="submit" class="btn btn-primary" onclick="return insert()">등록</button>
+				<button type="submit" class="btn btn-primary" onclick="return insertReply()">등록</button>
 				<button type="button" class="btn btn-primary" onclick="boardList()">취소</button>
 			</div>
 			</form>

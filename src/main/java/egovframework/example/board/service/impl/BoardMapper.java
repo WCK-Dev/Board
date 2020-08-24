@@ -87,8 +87,13 @@ public interface BoardMapper {
 	 */
 	int selectBoardListTotCnt(BoardVO vo);
 	
+	int selectMaxBno();
+	
+	int updateGrpord(BoardVO vo) throws Exception;
+	
+	int insertReply(BoardVO vo) throws Exception;
+	
 	UserVO loginCheck(UserVO vo);
 
-	int selectMaxBno();
 
 }
