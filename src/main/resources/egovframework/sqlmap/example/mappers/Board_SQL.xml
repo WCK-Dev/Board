@@ -18,7 +18,8 @@
 	<insert id="insertBoard" parameterType="boardVO">
 
 			INSERT INTO BOARD
-				( b_title
+				( b_no
+				  ,	b_title
 				  , b_writer
 				  , b_content
 				  , b_grpno
@@ -26,7 +27,8 @@
 				  , b_grpord
 				  , b_depth
 				   )
-			VALUES ( #{b_title}
+			VALUES ( #{b_no}
+				  ,	#{b_title}
 				  , #{b_writer}
 				  , #{b_content}
 				  , #{b_grpno}
@@ -48,8 +50,15 @@
 
 	<delete id="deleteBoard">
 
-			DELETE FROM BOARD
-			WHERE b_no=#{b_no}
+			<if test="b_no == b_grpno">
+				DELETE FROM BOARD
+				WHERE b_grpno = #{b_no}
+			</if>
+			<if test="b_no != b_grpno">
+				DELETE FROM BOARD
+				WHERE b_no=#{b_no}
+			</if>
+			
 
 	</delete>
 
@@ -61,6 +70,14 @@
 			WHERE b_no=#{b_no}
 
 	</select>
+	
+	<update id="updateReadCnt">
+			
+			UPDATE board 
+			SET b_readcnt = b_readcnt + 1
+			WHERE b_no = #{b_no}
+			
+	</update>
 
 	<select id="selectBoardList" parameterType="boardVO" resultType="egovMap">
 
@@ -91,8 +108,8 @@
 					</when>
 				</choose>
 			</if>
-			ORDER BY b_no DESC
-			<!-- LIMIT #{recordCountPerPage} OFFSET #{firstIndex} -->
+			ORDER BY b_grpno DESC, b_grpord ASC
+			LIMIT #{firstIndex}, #{recordCountPerPage}
 	</select>
 
 	<select id="selectBoardListTotCnt" parameterType="boardVO" resultType="int">
@@ -103,13 +120,13 @@
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
 		            <when test="searchCondition == 0">
-						AND b_writer LIKE '%' || #{searchKeyword} || '%'
+						AND b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
 					</when>
 		            <when test="searchCondition == 1">
-						AND b_title LIKE '%' || #{searchKeyword} || '%'
+						AND b_title LIKE CONCAT('%', #{searchKeyword}, '%')
 					</when>
 		            <when test="searchCondition == 2">
-						AND b_content LIKE '%' || #{searchKeyword} || '%'
+						AND b_content LIKE CONCAT('%', #{searchKeyword}, '%')
 					</when>
 		            <when test="searchCondition == 3">
 		            	AND
@@ -125,6 +142,27 @@
 			</if>
 	</select>
 	
+	<select id="userIdCheck" parameterType="userVO" resultType="String">
+	
+			SELECT count(*) FROM user
+			WHERE user_id = #{user_id}
+			
+	</select>
+	
+	<insert id="insertUser" parameterType="userVO">
+	
+			INSERT INTO user
+				( user_id
+					,user_pwd
+					,user_name		
+				)
+			VALUES ( #{user_id}
+					,#{user_pwd}
+					,#{user_name}
+				)	
+	
+	</insert>
+	
 	
 	<select id="loginCheck" parameterType="userVO" resultType="userVO">
 
@@ -137,7 +175,7 @@
 	
 	<select id="selectMaxBno" resultType="int">
 	
-			SELECT MAX(b_no) FROM board
+			SELECT IFNULL(MAX(b_no), 0) FROM board
 			
 	</select>
 	
@@ -157,7 +195,7 @@
 				  , #{b_content}
 				  , #{b_grpno}
 				  , #{b_category}
-				  , #{b_grpord}
+				  , #{b_grpord} + 1
 				  , #{b_depth} + 1
 				   )
 
@@ -168,7 +206,7 @@
 			UPDATE BOARD SET 
 				b_grpord = b_grpord+1
 			WHERE b_grpno = #{b_grpno} 
-				AND b_grpord = #{b_grpord}
+				AND b_grpord > #{b_grpord}
 	
 	 </update>
 	 

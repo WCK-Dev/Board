@@ -63,13 +63,13 @@ $(document).ready(function() {
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_writer">작성자 : </label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user_id }" placeholder="작성자명을 입력해주세요." readonly>
+			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
 			  <div class="form-group">
 			    <div class="form-group">
 				  <label for="b_content">게시글 내용</label>
-				  <textarea class="form-control" rows="20" id="b_content" name="b_content"></textarea>
+				  <textarea class="form-control" rows="20" id="b_content" name="b_content" maxlength="2000"></textarea>
 				</div>
 			  </div>
 			<div class="panel-footer float-right">

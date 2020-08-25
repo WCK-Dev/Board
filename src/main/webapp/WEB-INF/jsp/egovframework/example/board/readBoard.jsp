@@ -33,12 +33,20 @@ function reply(b_no) {
 	location.href = "<c:url value='/replyWrite.do'/>?b_no=" + b_no;
 	
 }
+
+function update(b_no) {
+	location.href = "<c:url value='/updateBoard.do'/>?b_no=" + b_no;
+}
+
+function del(b_no, b_grpno) {
+	if(confirm("해당글을 삭제하시겠습니까? \r\n 글을 삭제한 후에는 복구할 수 없습니다.")){
+		location.href = "<c:url value='/deleteBoard.do'/>?b_no=" + b_no + "&b_grpno=" + b_grpno;
+	}
+}
 </script>
 </head>
 <body class="container">
-	<h1 class="text-center">게시글 상세</h1>
 	
-	<hr>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post">
@@ -55,6 +63,10 @@ function reply(b_no) {
 				<fmt:formatDate pattern='yyyy-MM-dd HH:mm' value="${boardVO.b_regdate }"/>
 			  </div>
 			  <div class="form-group">
+			    <label class="control-label col-sm-2 font-weight-bold h5">조회수 : </label>
+				<c:out value="${boardVO.b_readcnt }"/> 
+			  </div>
+			  <div class="form-group">
 				  <label class= "font-weight-bold ml-3 mb-5 h5" for="b_content">게시글 내용</label>
 				<div class="col-sm-10">
 				<c:out value="${fn:replace(boardVO.b_content, crcn, br)}" escapeXml="false"/> 
@@ -64,10 +76,10 @@ function reply(b_no) {
 		</div>
 		<div class="panel-footer float-right">
 			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id == boardVO.b_writer }">
-				<button type="button" class="btn btn-primary">수정</button>
-				<button type="button" class="btn btn-primary">삭제</button>
+				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
+				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_grpno})">삭제</button>
 			</c:if>
-			<c:if test="${sessionScope.user.id != '' }">
+			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id != null }">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
 			<button type="button" class="btn btn-primary" onclick="boardList()">닫기</button>
