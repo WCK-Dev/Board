@@ -44,8 +44,13 @@ public class BoardController {
 		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
 		List<?> boardList = boardService.selectBoardList(boardVO);
-		model.addAttribute("resultList", boardList);
+		model.addAttribute("boardList", boardList);
 		model.addAttribute("board", boardVO);
+		
+		List<?> noticeList = boardService.selectNoticeList(boardVO);
+		model.addAttribute("noticeList", noticeList);
+
+		System.err.println(noticeList);
 
 		int totCnt = boardService.selectBoardListTotCnt(boardVO);
 		paginationInfo.setTotalRecordCount(totCnt);
@@ -60,15 +65,15 @@ public class BoardController {
 		return "board/writeBoard";
 	}
 
+	@ResponseBody
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.POST)
-	public String writeBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	public void writeBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
 		boardVO.setB_grpno(b_no);
 		
 		boardService.insertBoard(boardVO);
-		return "redirect:/boardList.do";
 	}
 
 	@RequestMapping(value="readBoard.do")
@@ -95,8 +100,17 @@ public class BoardController {
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.POST)
 	public String updateBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
+		System.err.println("controller까지 동작확인");
+		
 		boardService.updateBoard(boardVO);
 		return "redirect:/readBoard.do?b_no=" + boardVO.getB_no();
+	}
+
+	@ResponseBody
+	@RequestMapping(value="deleteBoard.do")
+	public void deleteBoard(BoardVO boardVO) throws Exception{
+		
+		boardService.deleteBoard(boardVO);
 	}
 	
 	@RequestMapping(value="replyWrite.do", method =RequestMethod.GET)
@@ -107,21 +121,15 @@ public class BoardController {
 		return "board/writeReply";
 	}
 	
-	@RequestMapping(value="deleteBoard.do")
-	public String deleteBoard(BoardVO boardVO) throws Exception{
-		
-		boardService.deleteBoard(boardVO);
-		
-		return "redirect:/boardList.do";
-	}
-	
+	@ResponseBody
 	@RequestMapping(value="insertReply.do", method = RequestMethod.POST)
-	public String insertReply(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	public void insertReply(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+		
+		int b_no = boardService.selectMaxBno() + 1;
+		boardVO.setB_no(b_no);
 		
 		boardService.updateGrpord(boardVO);
 		boardService.insertReply(boardVO);
-		
-		return "redirect:/boardList.do";
 	}
 	
 	@RequestMapping(value="signUp.do", method = RequestMethod.GET)
@@ -167,7 +175,8 @@ public class BoardController {
 	@RequestMapping(value="logout.do")
 	public String logout(HttpServletRequest request) throws Exception {
 		
-		request.getSession().invalidate();
+		request.getSession().removeAttribute("user_id");
+		request.getSession().removeAttribute("user_name");
 		
 		return "redirect:/boardList.do";
 	}

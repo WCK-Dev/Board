@@ -39,6 +39,8 @@ public interface BoardService {
 
 	int selectBoardListTotCnt(BoardVO vo);
 	
+	List<?> selectNoticeList(BoardVO vo) throws Exception;
+	
 	String userIdCheck(String vo);
 	
 	void insertUser(UserVO vo);

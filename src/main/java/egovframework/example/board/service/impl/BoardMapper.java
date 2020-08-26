@@ -38,6 +38,8 @@ public interface BoardMapper {
 
 	int selectBoardListTotCnt(BoardVO vo);
 	
+	List<?> selectNoticeList(BoardVO vo) throws Exception;
+	
 	int selectMaxBno();
 	
 	int updateGrpord(BoardVO vo) throws Exception;

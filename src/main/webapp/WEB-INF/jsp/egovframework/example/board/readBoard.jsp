@@ -25,10 +25,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
-function boardList() {
-	location.href = "<c:url value='/boardList.do'/>";
-}
-
 function reply(b_no) {
 	location.href = "<c:url value='/replyWrite.do'/>?b_no=" + b_no;
 	
@@ -38,9 +34,27 @@ function update(b_no) {
 	location.href = "<c:url value='/updateBoard.do'/>?b_no=" + b_no;
 }
 
-function del(b_no, b_grpno) {
-	if(confirm("해당글을 삭제하시겠습니까? \r\n 글을 삭제한 후에는 복구할 수 없습니다.")){
-		location.href = "<c:url value='/deleteBoard.do'/>?b_no=" + b_no + "&b_grpno=" + b_grpno;
+function del(b_no, b_grpno) {		
+	
+	if(confirm("해당글을 삭제하시겠습니까?\r\n원본 게시글인 경우, 답글까지 모두 삭제됩니다.")){
+		
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/deleteBoard.do' />",
+			data : { "b_no" : b_no,
+					 "b_grpno": b_grpno},
+			
+			success : function(result) {
+				alert("글 삭제가 정상적으로 수행되었습니다.");
+				opener.location.reload();
+				window.close();
+			},
+			error : function(error) {
+		        alert("글 삭제에 오류가 발생했습니다.");
+				opener.location.reload();
+				window.close();
+		    }
+		});
 	}
 }
 </script>
@@ -49,30 +63,28 @@ function del(b_no, b_grpno) {
 	
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
-			<form class="form-horizontal" method="post">
-			  <div class="form-group">
-			    <label class="control-label col-sm-2 font-weight-bold h5">게시글 제목 : </label>
+			<div class="form-group">
+			   <label class="control-label col-sm-2 font-weight-bold h5">게시글 제목 : </label>
 				<c:out value="${boardVO.b_title }"/> 
-			  </div>
-			  <div class="form-group">
-			    <label class="control-label col-sm-2 font-weight-bold h5">작성자 : </label>
-				<c:out value="${boardVO.b_writer }"/> 
-			  </div>
-			  <div class="form-group">
-			    <label class="control-label col-sm-2 font-weight-bold h5">작성일 : </label>
-				<fmt:formatDate pattern='yyyy-MM-dd HH:mm' value="${boardVO.b_regdate }"/>
-			  </div>
-			  <div class="form-group">
-			    <label class="control-label col-sm-2 font-weight-bold h5">조회수 : </label>
-				<c:out value="${boardVO.b_readcnt }"/> 
-			  </div>
-			  <div class="form-group">
-				  <label class= "font-weight-bold ml-3 mb-5 h5" for="b_content">게시글 내용</label>
-				<div class="col-sm-10">
-				<c:out value="${fn:replace(boardVO.b_content, crcn, br)}" escapeXml="false"/> 
-			    </div>
 			 </div>
-			</form>
+			 <div class="form-group">
+			   <label class="control-label col-sm-2 font-weight-bold h5">작성자 : </label>
+				<c:out value="${boardVO.b_writer }"/> 
+			 </div>
+			 <div class="form-group">
+			   <label class="control-label col-sm-2 font-weight-bold h5">작성일 : </label>
+				<fmt:formatDate pattern='yyyy-MM-dd HH:mm' timeZone="UTC" value="${boardVO.b_regdate }"/>
+			 </div>
+			 <div class="form-group">
+			   <label class="control-label col-sm-2 font-weight-bold h5">조회수 : </label>
+				<c:out value="${boardVO.b_readcnt }"/> 
+			 </div>
+			 <div class="form-group">
+				  <label class= "font-weight-bold ml-3 mb-5 h5" for="b_content">게시글 내용</label>
+				<div class="col-sm-10" style="min-height: 300px">
+				<c:out value="${fn:replace(boardVO.b_content, crcn, br)}" escapeXml="false"/> 
+			   </div>
+			</div>
 		</div>
 		<div class="panel-footer float-right">
 			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id == boardVO.b_writer }">
@@ -82,7 +94,7 @@ function del(b_no, b_grpno) {
 			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id != null }">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
-			<button type="button" class="btn btn-primary" onclick="boardList()">닫기</button>
+			<button type="button" class="btn btn-primary" onclick="window.close()">닫기</button>
 		</div>
 	</div>
 		

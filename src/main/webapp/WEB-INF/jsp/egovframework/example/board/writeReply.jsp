@@ -18,14 +18,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
-$(document).ready(function() {
-	
-});
-	function boardList() {
-		location.href = "<c:url value='/boardList.do'/>"
+	function cancle() {
+		window.close();
 	}
 	
-	function insertReply() {
+	function testValidation() {
 		if( $("#b_title").val() == '' ){
 			alert("제목을 입력해야 합니다.");
 			$("#b_title").focus();
@@ -38,7 +35,40 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		return true;
+		insertReply();
+	}
+	
+	function insertReply(){
+		var b_title = $("#b_title").val();
+		var b_writer = $("#b_writer").val();
+		var b_content = $("#b_content").val();
+		var b_grpno = $("#b_grpno").val();
+		var b_grpord = $("#b_grpord").val();
+		var b_depth = $("#b_depth").val();
+		
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/insertReply.do' />",
+			dataType : "text",
+			data : {"b_title": b_title,
+					"b_writer": b_writer,
+					"b_content": b_content,
+					"b_grpno": b_grpno,
+					"b_grpord": b_grpord,
+					"b_depth": b_depth
+			},
+			
+			success : function(result) {
+				alert("답글이 정상적으로 등록되었습니다.");
+				opener.location.reload();
+				window.close();
+			},
+			error : function(error) {
+		        alert("글 등록에 에러가 발생했습니다.");
+				opener.location.reload();
+				window.close();
+		    }
+		});
 	}
 
 </script>
@@ -49,13 +79,13 @@ $(document).ready(function() {
 	<hr>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
-			<form class="form-horizontal" method="post" action="<c:url value='/insertReply.do' />" id="replyForm">
+			<form class="form-horizontal" method="post" id="replyForm">
 			<c:if test="${sessionScope.user_id == 'admin' }">
 				<input type="hidden" name="b_category" value="1">
 			</c:if>
-				<input type="hidden" name="b_grpno" value="${boardVO.b_grpno }">
-				<input type="hidden" name="b_grpord" value="${boardVO.b_grpord }">
-				<input type="hidden" name="b_depth" value="${boardVO.b_depth }">
+				<input type="hidden" id="b_grpno" name="b_grpno" value="${boardVO.b_grpno }">
+				<input type="hidden" id="b_grpord" name="b_grpord" value="${boardVO.b_grpord }">
+				<input type="hidden" id="b_depth" name="b_depth" value="${boardVO.b_depth }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
@@ -76,8 +106,8 @@ $(document).ready(function() {
 				</div>
 			  </div>
 			<div class="panel-footer float-right">
-				<button type="submit" class="btn btn-primary" onclick="return insertReply()">등록</button>
-				<button type="button" class="btn btn-primary" onclick="boardList()">취소</button>
+				<button type="button" class="btn btn-primary" onclick="testValidation();">등록</button>
+				<button type="button" class="btn btn-primary" onclick="cancel()">취소</button>
 			</div>
 			</form>
 		</div>

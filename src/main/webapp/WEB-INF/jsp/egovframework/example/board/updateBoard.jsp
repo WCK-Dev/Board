@@ -19,13 +19,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
-$(document).ready(function() {
-	
-});
-	function boardList() {
-		location.href = "<c:url value='/boardList.do'/>"
-	}
-	
 	function update() {
 		if( $("#b_title").val() == '' ){
 			alert("제목을 입력해야 합니다.");
@@ -51,7 +44,7 @@ $(document).ready(function() {
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" action="<c:url value='/updateBoard.do' />" id="updateForm">
-			<input type="hidden" name="b_no" value="${BoardVO.b_no }">
+			<input type="hidden" name="b_no" value="${boardVO.b_no }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
@@ -73,7 +66,7 @@ $(document).ready(function() {
 			  </div>
 			<div class="panel-footer float-right">
 				<button type="submit" class="btn btn-primary" onclick="return update()">수정</button>
-				<button type="button" class="btn btn-primary" onclick="boardList()">취소</button>
+				<button type="button" class="btn btn-primary" onclick="history.back()">취소</button>
 			</div>
 			</form>
 		</div>

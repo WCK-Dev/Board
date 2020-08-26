@@ -46,11 +46,14 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		LOGGER.debug(vo.toString());
 
 		boardDAO.insertBoard(vo);
+		
 		return vo.getB_no() + "";
 	}
 
 	@Override
 	public void updateBoard(BoardVO vo) throws Exception {
+		System.err.println("service까지 동작확인");
+
 		boardDAO.updateBoard(vo);
 	}
 
@@ -98,6 +101,11 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
+	public List<?> selectNoticeList(BoardVO vo) throws Exception {
+		return boardDAO.selectNoticeList(vo);
+	}
+	
+	@Override
 	public String userIdCheck(String user_id) {
 		return boardDAO.userIdCheck(user_id);
 	}
@@ -111,5 +119,6 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	public UserVO loginCheck(UserVO vo) {
 		return boardDAO.loginCheck(vo);
 	}
+
 
 }

@@ -18,14 +18,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
-$(document).ready(function() {
-	
-});
-	function boardList() {
-		location.href = "<c:url value='/boardList.do'/>"
+	function cancle() {
+		window.close();
 	}
 	
-	function insert() {
+	function testValidation() {
 		if( $("#b_title").val() == '' ){
 			alert("제목을 입력해야 합니다.");
 			$("#b_title").focus();
@@ -38,20 +35,51 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		return true;
+		insertBoard();
 	}
-
+	
+	function insertBoard(){
+		var b_title = $("#b_title").val();
+		var b_writer = $("#b_writer").val();
+		var b_content = $("#b_content").val();
+		var b_category = $("#b_category").val();
+		
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/writeBoard.do'/>",
+			dataType : "text",
+			data : {"b_title": b_title,
+					"b_writer": b_writer,
+					"b_content": b_content,
+					"b_category": b_category},
+			
+			success : function(result) {
+				alert("글이 정상적으로 등록되었습니다.");
+				opener.location.reload();
+				window.close();
+			},
+			error : function(error) {
+		        alert("글 등록에 에러가 발생했습니다.");
+				opener.location.reload();
+				window.close();
+		    }
+		});
+	}
 </script>
 </head>
 <body class="container">
+	<c:if test="${sessionScope.user_id == 'admin' }">
+	<h1 class="text-center">공지글 등록</h1>
+	</c:if>	
+	<c:if test="${sessionScope.user_id != 'admin' }">
 	<h1 class="text-center">게시글 등록</h1>
-	
+	</c:if>	
 	<hr>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
-			<form class="form-horizontal" method="post" action="<c:url value='/writeBoard.do' />" id="writeForm">
+			<form class="form-horizontal" method="post" id="writeForm">
 			<c:if test="${sessionScope.user_id == 'admin' }">
-				<input type="hidden" name="b_category" value="1">
+				<input type="hidden" id="b_category" name="b_category" value="1">
 			</c:if>
 			
 			  <div class="form-group">
@@ -73,8 +101,8 @@ $(document).ready(function() {
 				</div>
 			  </div>
 			<div class="panel-footer float-right">
-				<button type="submit" class="btn btn-primary" onclick="return insert()">등록</button>
-				<button type="button" class="btn btn-primary" onclick="boardList()">취소</button>
+				<button type="button" class="btn btn-primary" onclick="testValidation();">등록</button>
+				<button type="button" class="btn btn-primary" onclick="window.close();">취소</button>
 			</div>
 			</form>
 		</div>

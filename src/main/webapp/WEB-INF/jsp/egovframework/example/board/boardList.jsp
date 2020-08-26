@@ -13,24 +13,83 @@
 
 <!-- JQuery -->
 <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- bpopup -->
+<script type="text/javascript"src="${pageContext.request.contextPath }/js/jquery.bpopup.min.js"></script>
+<!-- cookie -->
+<script type="text/javascript"src="${pageContext.request.contextPath }/js/cookie.js"></script>
 <!-- Bootstrap core CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
+<style>
+	.Pstyle {
+	   opacity : 0;
+	   display : none;
+	   position : relative;
+	   width : 800px;
+	   border : 5px solid #fff;
+	   padding : 20px;
+	   background-color : #fff;
+	}
+	.b-close {
+	   position : absolute;
+	   right : 10px;
+	   top : 10px;
+	   padding : 0px; /* padding : 5px; */
+	   display : inline-block;
+	   cursor : pointer;
+	}
+</style>
 <script>
 $(document).ready(function(){
+	
+	$("#popup_user").bPopup();
+	
+	/* 오늘하루 보지않기 */
+	$('.today').click(function() {
+
+	  var cookieName = $(this).attr('data-code');
+	  setCookie( "todayCookie", "done" , 1);
+	   /* setCookie(cookieName, 'Y' , {expires:1}); */
+	  var msg = document.getElementById("popup_user");
+	  msg.style.display = 'none';
+	});
+
 	<c:if test="${!empty loginErrorMsg}">
 		alert("${loginErrorMsg}");
 	</c:if>
+	
+	$('.toggleButton').each(function(index, item) {
+		$(item).click(function() {
+			$('.toggleContent' + index).slideToggle();
+		});
+	});
+	getCookie();
+	
 });
 
+function setCookie ( name, value, expiredays ) {
+    var todayDate = new Date();
+    todayDate.setDate( todayDate.getDate() + expiredays );
+    document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+}
+function getCookie() {
+    var cookiedata = document.cookie;
+    if ( cookiedata.indexOf("todayCookie=done") < 0 ){
+         $(".Pstyle").show();
+    }
+    else {
+        $(".Pstyle").hide();
+    }
+}
+
 function writeBoard(){
-	location.href = "<c:url value='/writeBoard.do' />";
+	window.open("<c:url value='/writeBoard.do' />", "writeBoard", "width=500, height=900, left=500, top=50");
 }
 
 function readBoard(b_no){
-	location.href = "<c:url value='/readBoard.do' />?b_no=" + b_no;
+	window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "readBoard", "width=500, height=900, left=500, top=50");
 }
 
 function signUp(){
@@ -66,10 +125,28 @@ function fn_link_page(pageNo){
    	document.boardListForm.submit();
 }
 
+/* 팝업 레이어 오픈 */
+ function view_user(){
+	 $("#popup_user").bPopup(); 
+}
+/* 오늘하루 보지않기 */
+/* $('.today').click(function() {
+
+  var cookieName = $(this).attr('data-code');
+
+  if(typeof getCookie(cookieName) =='undefined') 
+  {
+   setCookie(cookieName, 'Y' , {expires:1});
+  }
+  var msg = document.getElementById("popup_user");
+  msg.css('display', 'none');
+});
+ */
 </script>
 </head>
 <body class="container">
 	<h1 class="text-center">eGov Board 메인</h1>
+	<button type="button" class="btn btn-primary" onclick="view_user()">팝업레이어</button>
 	
 	<hr>
 	<div class="panel panel-default">
@@ -95,6 +172,44 @@ function fn_link_page(pageNo){
 				<button type="button" class="btn btn-primary" onclick="logout();">로그아웃</button>
 			</c:if>
 		</div>
+		
+		<!-- 팝업 레이어 영역 -->
+		 <div id="popup_user" class="Pstyle">
+		     <span class="b-close">X</span>
+			<div class="content2" style="height:auto; width:100%;"> 
+				<div>
+					<h3>공지사항</h3>
+					<table class="table table-hover mb-3">
+						<!--Table head-->
+						<thead>
+							<tr>
+								<th class="text-left h6">Title</th>
+								<th width="20%" class="h6 text-center">Writer</th>
+								<th width="20%" class="h6 text-center">RegDate</th>
+								<th width="20%" class="text-center">Edit</th>
+							</tr>
+						</thead>
+						<!--Table body-->
+						<tbody>
+			    			<c:forEach var="notice" items="${noticeList }" varStatus="i">
+								<tr>
+									<td class="h6 toggleButton" style="cursor: pointer;">${notice.bTitle }</td>
+									<td class="h6 text-center">${notice.bWriter }</td>
+									<td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
+									<td class="text-center"><i class="fas fa-edit m-0 h5" style="cursor: pointer;" onclick=""></i></td>
+								</tr>
+								<tr class="toggleContent${i.index }" style="display: none;">
+									<td class="toggleContent${i.index }" colspan="6" style="display: none;"><div class="toggleContent${i.index }" style="display: none;">${notice.bContent }</div></td>			          			</tr>
+							</c:forEach>
+						</tbody>
+						<!--Table body-->
+					</table>
+				</div>
+				<!-- <div style="margin-top: 50px;"><input type="checkbox" onchange="" id="today"/>오늘하루 열지않기</div> -->
+				<input type="checkbox" class="today" id= "today" data-code="today1"> <label for="today"> 오늘 하루동안 동안 이창 열지 않기</label>
+								
+			</div>
+		 </div>
 		
 		<!-- 검색 영역 -->
 		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="post">
@@ -128,7 +243,6 @@ function fn_link_page(pageNo){
 			  <table class="table">
 			  	<thead class="thead-dark">
 			      <tr>
-
 			        <th width="*"><b>글 제목</b></th>
 			        <th width="10%"><b>작성자</b></th>
 			        <th width="20%"><b>작성일</b></th>
@@ -136,11 +250,11 @@ function fn_link_page(pageNo){
 			      </tr>
 			    </thead>
 			    <tbody>
-			    <c:forEach var="board" items="${resultList }">
+			    <c:forEach var="board" items="${boardList }">
 			      <tr>
 			        <td><a href="javascript:readBoard(${board.bNo });"><c:out value="${board.bTitle }" /></a></td>
 			        <td><c:out value="${board.bWriter }" /></td>
-			        <td><fmt:formatDate pattern='yyyy-MM-dd' value='${board.bRegdate }'/></td>
+			        <td><fmt:formatDate pattern='yyyy-MM-dd' timeZone="UTC" value='${board.bRegdate }'/></td>
 			        <td><c:out value="${board.bReadcnt }" /></td>
 			      </tr>
 			    </c:forEach>
