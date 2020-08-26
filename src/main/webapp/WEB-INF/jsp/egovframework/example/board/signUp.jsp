@@ -163,6 +163,7 @@
 		 	</div>
 			
 		    <button class="btn btn-primary btn-block" type="submit" onclick="return signUp()">회원가입하기</button>
+		    <button class="btn btn-danger btn-block mt-3" type="button" onclick="return boardList()">메인으로</button>
 		</form>
 	</div>
 </body>

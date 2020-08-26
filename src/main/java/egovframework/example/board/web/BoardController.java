@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.example.board.service.BoardService;
 import egovframework.example.board.service.BoardVO;
@@ -100,8 +101,6 @@ public class BoardController {
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.POST)
 	public String updateBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
-		System.err.println("controller까지 동작확인");
-		
 		boardService.updateBoard(boardVO);
 		return "redirect:/readBoard.do?b_no=" + boardVO.getB_no();
 	}
@@ -153,10 +152,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="login.do")
-	public String login(UserVO user, ModelMap model, HttpServletRequest request) throws Exception {
-		
-		System.out.println("user_id : " + user.getUser_id());
-		System.out.println("user_pwd : " + user.getUser_pwd());
+	public String login(UserVO user, RedirectAttributes ra, HttpServletRequest request) throws Exception {
 		
 		UserVO userVO = boardService.loginCheck(user);
 		
@@ -166,10 +162,10 @@ public class BoardController {
 		} else {
 			request.getSession().setAttribute("user_id", "");
 			request.getSession().setAttribute("user_name", "");
-			model.addAttribute("loginErrorMsg", "사용자 정보를 확인해주십시오.");
+			ra.addFlashAttribute("loginErrorMsg", "사용자 정보를 확인해주십시오.");
 		}
 		
-		return "forward:/boardList.do";
+		return "redirect:/boardList.do";
 	}
 	
 	@RequestMapping(value="logout.do")

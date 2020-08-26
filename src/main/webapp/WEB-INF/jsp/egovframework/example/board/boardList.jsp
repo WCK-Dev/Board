@@ -43,28 +43,27 @@
 </style>
 <script>
 $(document).ready(function(){
+	/* 로그인 실패 시 에러메시지 출력 */
+	<c:if test="${!empty loginErrorMsg}">
+		alert("${loginErrorMsg}");
+	</c:if>
 	
-	$("#popup_user").bPopup();
+	/* 공지사항 제목을 누를시 슬라이드 */
+	$('.toggleButton').each(function(index, item) {
+		$(item).click(function() {
+			$('.toggleContent' + index).slideToggle();
+		});
+	});
 	
 	/* 오늘하루 보지않기 */
 	$('.today').click(function() {
 
 	  var cookieName = $(this).attr('data-code');
 	  setCookie( "todayCookie", "done" , 1);
-	   /* setCookie(cookieName, 'Y' , {expires:1}); */
-	  var msg = document.getElementById("popup_user");
-	  msg.style.display = 'none';
+  		$("#popup_notice").bPopup().close();
 	});
-
-	<c:if test="${!empty loginErrorMsg}">
-		alert("${loginErrorMsg}");
-	</c:if>
 	
-	$('.toggleButton').each(function(index, item) {
-		$(item).click(function() {
-			$('.toggleContent' + index).slideToggle();
-		});
-	});
+	/* 오늘 보지않기 여부체크를 위한 Cookie체크 */
 	getCookie();
 	
 });
@@ -74,13 +73,12 @@ function setCookie ( name, value, expiredays ) {
     todayDate.setDate( todayDate.getDate() + expiredays );
     document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 }
+
 function getCookie() {
     var cookiedata = document.cookie;
+    /* 쿠키여부 체크시, 쿠키가 등록되어있지않으면 팝업창을 오픈 */
     if ( cookiedata.indexOf("todayCookie=done") < 0 ){
-         $(".Pstyle").show();
-    }
-    else {
-        $(".Pstyle").hide();
+    	$("#popup_notice").bPopup();
     }
 }
 
@@ -90,11 +88,6 @@ function writeBoard(){
 
 function readBoard(b_no){
 	window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "readBoard", "width=500, height=900, left=500, top=50");
-}
-
-function signUp(){
-	location.href = "<c:url value='/signUp.do' />";
-	
 }
 
 function loginCheck(){
@@ -110,12 +103,13 @@ function loginCheck(){
 	return true;
 }
 
-function logout(){
-	location.href = "<c:url value='/logout.do' />"
+function signUp(){
+	location.href = "<c:url value='/signUp.do' />";
+	
 }
 
-function changePageUnit(){
-	document.boardListForm.submit();
+function logout(){
+	location.href = "<c:url value='/logout.do' />"
 }
 
 /* pagination 페이지 링크 function */
@@ -127,27 +121,12 @@ function fn_link_page(pageNo){
 
 /* 팝업 레이어 오픈 */
  function view_user(){
-	 $("#popup_user").bPopup(); 
+	 $("#popup_notice").bPopup(); 
 }
-/* 오늘하루 보지않기 */
-/* $('.today').click(function() {
-
-  var cookieName = $(this).attr('data-code');
-
-  if(typeof getCookie(cookieName) =='undefined') 
-  {
-   setCookie(cookieName, 'Y' , {expires:1});
-  }
-  var msg = document.getElementById("popup_user");
-  msg.css('display', 'none');
-});
- */
 </script>
 </head>
 <body class="container">
 	<h1 class="text-center">eGov Board 메인</h1>
-	<button type="button" class="btn btn-primary" onclick="view_user()">팝업레이어</button>
-	
 	<hr>
 	<div class="panel panel-default">
 		<!-- 로그인관련 화면 (head) -->
@@ -174,7 +153,7 @@ function fn_link_page(pageNo){
 		</div>
 		
 		<!-- 팝업 레이어 영역 -->
-		 <div id="popup_user" class="Pstyle">
+		 <div id="popup_notice" class="Pstyle">
 		     <span class="b-close">X</span>
 			<div class="content2" style="height:auto; width:100%;"> 
 				<div>
@@ -205,7 +184,6 @@ function fn_link_page(pageNo){
 						<!--Table body-->
 					</table>
 				</div>
-				<!-- <div style="margin-top: 50px;"><input type="checkbox" onchange="" id="today"/>오늘하루 열지않기</div> -->
 				<input type="checkbox" class="today" id= "today" data-code="today1"> <label for="today"> 오늘 하루동안 동안 이창 열지 않기</label>
 								
 			</div>
@@ -218,7 +196,7 @@ function fn_link_page(pageNo){
 				<!-- Navbar brand -->
 				<div>
 					페이징 갯수
-					<select id="pageUnit" name="pageUnit" class="browser-default custom-select mr-2 mb-2" onchange="changePageUnit()">
+					<select id="pageUnit" name="pageUnit" class="browser-default custom-select mr-2 mb-2" onchange="document.boardListForm.submit();">
 						<option value="10" <c:if test="${board.pageUnit == '10' || board.pageUnit=='' }">selected</c:if>>10개</option>
 						<option value="30" <c:if test="${board.pageUnit == '30'}">selected</c:if>>30개</option>
 					  	<option value="50" <c:if test="${board.pageUnit == '50'}">selected</c:if>>50개</option>
@@ -261,9 +239,9 @@ function fn_link_page(pageNo){
 			    </tbody>
 			  </table>
 			</div>
-		<ul class="pagination" style="width: 100%; text-align:center;">
-       		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_link_page" />
-       	</ul>
+			<ul class="pagination" style="width: 100%; text-align:center;">
+	       		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_link_page" />
+	       	</ul>
       		<input type="hidden" id="pageIndex" name="pageIndex" value="1">
       	</form>
       	
