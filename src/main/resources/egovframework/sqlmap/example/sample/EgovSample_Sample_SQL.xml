@@ -4,15 +4,6 @@
 <sqlMap namespace="Sample">
 
 	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
-	<typeAlias  alias="searchVO" type="egovframework.example.sample.service.SampleDefaultVO"/>
-
-	<resultMap id="sample" class="egovframework.example.sample.service.SampleVO">
-		<result property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="description" column="description"/>
-		<result property="useYn" column="use_yn"/>
-		<result property="regUser" column="reg_user"/>
-	</resultMap>
 
 	<insert id="sampleDAO.insertSample">
 		<![CDATA[
@@ -48,7 +39,7 @@
 		]]>
 	</delete>
     
-    <select id="sampleDAO.selectSample" resultMap="sample">
+    <select id="sampleDAO.selectSample" >
         <![CDATA[
             SELECT
                 ID, NAME, DESCRIPTION, USE_YN, REG_USER
@@ -57,7 +48,7 @@
         ]]>
     </select>
 	
-	<select id="sampleDAO.selectSampleList" parameterClass="searchVO" resultClass="egovMap">
+	<select id="sampleDAO.selectSampleList" resultClass="egovMap">
 
 			SELECT
 				ID, NAME, DESCRIPTION, USE_YN, REG_USER
@@ -73,7 +64,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#		
 	</select>
 	
-	<select id="sampleDAO.selectSampleListTotCnt" parameterClass="searchVO" resultClass="int">
+	<select id="sampleDAO.selectSampleListTotCnt" resultClass="int">
 
 			SELECT COUNT(*) totcnt
 			FROM SAMPLE
