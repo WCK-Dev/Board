@@ -51,8 +51,6 @@ public class BoardController {
 		List<?> noticeList = boardService.selectNoticeList(boardVO);
 		model.addAttribute("noticeList", noticeList);
 
-		System.err.println(noticeList);
-
 		int totCnt = boardService.selectBoardListTotCnt(boardVO);
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
@@ -81,7 +79,7 @@ public class BoardController {
 	public String readBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
 		boardService.updateReadCnt(boardVO);
-		
+
 		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
 		
 		return "board/readBoard";
@@ -112,8 +110,8 @@ public class BoardController {
 		boardService.deleteBoard(boardVO);
 	}
 	
-	@RequestMapping(value="replyWrite.do", method =RequestMethod.GET)
-	public String replyWrite(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	@RequestMapping(value="writeReply.do", method =RequestMethod.GET)
+	public String writeReply(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
 		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
 		
@@ -151,21 +149,30 @@ public class BoardController {
 		return boardService.userIdCheck(user_id);
 	}
 	
-	@RequestMapping(value="login.do")
-	public String login(UserVO user, RedirectAttributes ra, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="login.do", method = RequestMethod.GET)
+	public String login(HttpServletRequest request) throws Exception {
 		
+		return "board/login";
+	}
+	
+	@RequestMapping(value="login.do", method = RequestMethod.POST)
+	public String login(UserVO user, String isPopUp, RedirectAttributes ra, HttpServletRequest request) throws Exception {
 		UserVO userVO = boardService.loginCheck(user);
 		
 		if( userVO != null ) {
 			request.getSession().setAttribute("user_id", userVO.getUser_id());
 			request.getSession().setAttribute("user_name", userVO.getUser_name());
+			ra.addFlashAttribute("loginSuccess", "Y");
 		} else {
 			request.getSession().setAttribute("user_id", "");
 			request.getSession().setAttribute("user_name", "");
 			ra.addFlashAttribute("loginErrorMsg", "사용자 정보를 확인해주십시오.");
 		}
 		
-		return "redirect:/boardList.do";
+		if(isPopUp != null && isPopUp.equals("true")) {
+			return "redirect:/login.do";
+		} 
+			return "redirect:/boardList.do";
 	}
 	
 	@RequestMapping(value="logout.do")

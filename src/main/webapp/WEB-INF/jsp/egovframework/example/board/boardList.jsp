@@ -6,11 +6,16 @@
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt"	   uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" 	   uri="http://java.sun.com/jsp/jstl/functions" %> 
+<%
+     //치환 변수 선언
+      pageContext.setAttribute("crcn", "\r\n"); //Space, Enter
+      pageContext.setAttribute("br", "<br/>"); //br 태그
+%> 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Board Main</title>
-
 <!-- JQuery -->
 <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- bpopup -->
@@ -21,7 +26,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
-
 <style>
 	.Pstyle {
 	   opacity : 0;
@@ -83,11 +87,15 @@ function getCookie() {
 }
 
 function writeBoard(){
-	window.open("<c:url value='/writeBoard.do' />", "writeBoard", "width=500, height=900, left=500, top=50");
+	window.open("<c:url value='/writeBoard.do' />", "popUpBoard", "width=500, height=900, left=500, top=50");
 }
 
 function readBoard(b_no){
-	window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "readBoard", "width=500, height=900, left=500, top=50");
+	window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50");
+}
+
+function updateNotice(b_no) {
+	window.open("<c:url value='/updateBoard.do'/>?b_no=" + b_no , "popUpBoard", "width=500, height=900, left=500, top=50");
 }
 
 function loginCheck(){
@@ -165,7 +173,6 @@ function fn_link_page(pageNo){
 								<th class="text-left h6">Title</th>
 								<th width="20%" class="h6 text-center">Writer</th>
 								<th width="20%" class="h6 text-center">RegDate</th>
-								<th width="20%" class="text-center">Edit</th>
 							</tr>
 						</thead>
 						<!--Table body-->
@@ -175,10 +182,16 @@ function fn_link_page(pageNo){
 									<td class="h6 toggleButton" style="cursor: pointer;">${notice.bTitle }</td>
 									<td class="h6 text-center">${notice.bWriter }</td>
 									<td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
-									<td class="text-center"><i class="fas fa-edit m-0 h5" style="cursor: pointer;" onclick=""></i></td>
 								</tr>
 								<tr class="toggleContent${i.index }" style="display: none;">
-									<td class="toggleContent${i.index }" colspan="6" style="display: none;"><div class="toggleContent${i.index }" style="display: none;">${notice.bContent }</div></td>			          			</tr>
+									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
+										<div class="toggleContent${i.index }" style="display: none;"><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/>
+											<c:if test= "${sessionScope.user_id != null && sessionScope.user_id == 'admin' }"><br>
+												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
+											</c:if>
+										</div>
+									</td>
+			          			</tr>
 							</c:forEach>
 						</tbody>
 						<!--Table body-->

@@ -31,6 +31,21 @@
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="language" />
     </bean>
+    
+    <!-- 로그인 체크 인터셉터 설정 -->
+    <bean id="loginAuthInterceptor" class="egovframework.example.cmmn.web.AuthInterceptor" />
+    
+    <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/writeBoard.do" />
+			<mvc:mapping path="/updateBoard.do" />
+			<mvc:mapping path="/deleteBoard.do" />
+			<mvc:mapping path="/writeReply.do" />
+			<mvc:mapping path="/insertReply.do" />
+			<ref bean="loginAuthInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!-- 인터셉터 설정 종료-->
 
     <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="defaultErrorView" value="cmmn/egovError"/>

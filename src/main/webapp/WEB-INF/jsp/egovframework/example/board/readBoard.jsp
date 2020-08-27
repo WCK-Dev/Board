@@ -25,8 +25,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
+$(document).ready(function(){
+	window.resizeTo(540, 900);
+});
+
 function reply(b_no) {
-	location.href = "<c:url value='/replyWrite.do'/>?b_no=" + b_no;
+	location.href = "<c:url value='/writeReply.do'/>?b_no=" + b_no;
 	
 }
 
@@ -91,7 +95,7 @@ function del(b_no, b_grpno) {
 				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
 				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_grpno})">삭제</button>
 			</c:if>
-			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id != null }">
+			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id != null && boardVO.b_category != 1}">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
 			<button type="button" class="btn btn-primary" onclick="window.close()">닫기</button>

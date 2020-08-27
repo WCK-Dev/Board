@@ -32,8 +32,8 @@
 		// 사용불가능한 아이디일 때, 폰트 컬러 초기화(빨강)  
 		$("#alertId").css("color", "red");
 		
-		if(!id.test(user_id) || (user_id.length > 20)) {
-			$("#alertId").text("아이디는 20자 이하의 영문 소문자와 숫자로 작성해주세요.");
+		if(!id.test(user_id) || (user_id.length > 20 || user_id.length <6)) {
+			$("#alertId").text("아이디는 6~20자의 영문 소문자와 숫자로 작성해주세요.");
 		}else{
 			$.ajax({
 				type : 'POST',
@@ -58,16 +58,24 @@
 	
 	//비밀번호 유효성 검사
 	function pwdCheck() {
+		var user_id = $("#user_id").val();
 		var user_pwd = $("#user_pwd").val();
 		var pwd = RegExp(/^[a-z0-9]+$/);
 		
-		if(!pwd.test(user_pwd) || (user_pwd.length > 20)) {
-			$("#alertPwd1").css("color", "red");
-			$("#alertPwd1").text("20자 이하의 영문 소문자와 숫자로 작성해주세요.");
+	    if(!pwd.test(user_pwd) || user_pwd.length > 20 || user_pwd.length < 6) {
+	    	$("#alertPwd1").css("color", "red");
+			$("#alertPwd1").text("6 ~ 20자의 영문 소문자와 숫자로 작성해주세요.");
+			$("#user_pwd2").val("");
+			$("#user_pwd2").attr("disabled", "disabled");
+			$("#alertPwd2").css("color", "red");
+	        $("#alertPwd2").text("");
 			isPass[1] = false;
+			isPass[2] = false;
 	    }else{
 	    	$("#alertPwd1").css("color", "#03C75A");
 			$("#alertPwd1").text("사용하실수 있는 비밀번호 입니다.");
+			$("#user_pwd2").val("");
+			$("#user_pwd2").removeAttr("disabled");
 			isPass[1] = true;
 	    }
 	}
@@ -93,7 +101,7 @@
 		var user_name = $("#user_name").val();
 		var name = RegExp(/^[가-힣]+$/);
 		
-		if(!name.test(user_name)) {
+		if(!name.test(user_name) || user_name.length < 2) {
 			$("#alertName").css("color", "red");
 			$("#alertName").text("띄어쓰기 없이 이름을 입력해주세요.");
 			isPass[3] = false;
@@ -112,10 +120,13 @@
 			return false;
 		}
 		if(!isPass[1]) {
-			alert("비밀번호를 재입력해주세요.");
+			alert("비밀번호를 입력해주세요.");
 			$("#user_pwd").focus();
 			return false;
 		}
+		
+		isSame();
+		
 		if(!isPass[2]) {
 			alert("비밀번호 확인란을 재입력해주세요.");
 			$("#user_pwd2").focus();
@@ -139,8 +150,7 @@
 			
 			<!-- ID -->
 			<div class="mb-4">
-		    	<input type="text" id="user_id" name="user_id" class="form-control" placeholder="ID를 입력하세요" maxlength="20" style="width: 70%; display:inline-block;">
-		    	<input type="button" id="user_id_check"name="user_id_check" class="btn btn-primary" value="중복확인" onclick="idCheck()">
+		    	<input type="text" id="user_id" name="user_id" class="form-control" placeholder="ID를 입력하세요" onchange="idCheck()" maxlength="20">
 		    	<p id="alertId" class="m-0 ml-2 text-left" style="font-size: 13px;"></p>
 		    </div>
 		    
@@ -152,7 +162,7 @@
 		    
 		     <!-- Password check -->
 		    <div class="mb-4">
-		    	<input type="password" id="user_pwd2" name="user_pwd2" class="form-control" placeholder="Password를 다시한번 입력하세요" onchange="isSame()" maxlength="20">
+		    	<input type="password" id="user_pwd2" name="user_pwd2" class="form-control" placeholder="Password를 다시한번 입력하세요" onchange="isSame()" disabled="disabled" maxlength="20">
 		    	<p id="alertPwd2" class="m-0 ml-2 text-left" style="font-size: 13px;"></p>
 		    </div>
 		    
