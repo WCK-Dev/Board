@@ -27,13 +27,13 @@ $(document).ready(function(){
 	}
 });
 	function update() {
-		if( $("#b_title").val() == '' ){
+		if( $("#b_title").val() == '' || $("#b_title").val().trim() == '' ){
 			alert("제목을 입력해야 합니다.");
 			$("#b_title").focus();
 			return false;
 		}
 		
-		if( $("#b_content").val() == '' ){
+		if( $("#b_content").val() == '' || $("#b_content").val().trim() == '' ){
 			alert("내용은 공백일 수 없습니다.");
 			$("#b_content").focus();
 			return false;

@@ -93,6 +93,7 @@ function getCookie() {
     /* 쿠키여부 체크시, 쿠키가 등록되어있지않으면 팝업창을 오픈 */
     if ( cookiedata.indexOf("todayCookie=done") < 0 ){
     	$("#popup_notice").bPopup();
+   	 	$("#popup_notice").bPopup().reposition(100);
     }
 }
 
@@ -140,7 +141,8 @@ function fn_link_page(pageNo){
 /* 팝업 레이어 오픈 */
  function view_notice(){
 	 $("#today").prop('checked', false);
-	 $("#popup_notice").bPopup(); 
+	 $("#popup_notice").bPopup();
+	 $("#popup_notice").bPopup().reposition(100); 
 }
 </script>
 </head>
@@ -177,7 +179,7 @@ function fn_link_page(pageNo){
 			<div class="content2" style="height:auto; width:100%;"> 
 				<div>
 					<h3>공지사항</h3>
-					<table class="table table-hover mb-3">
+					<table class="table table-hover mb-3" width="">
 						<!--Table head-->
 						<thead>
 							<tr>
@@ -190,13 +192,13 @@ function fn_link_page(pageNo){
 						<tbody>
 			    			<c:forEach var="notice" items="${noticeList }" varStatus="i">
 								<tr>
-									<td class="h6 toggleButton" style="cursor: pointer;">${notice.bTitle }</td>
-									<td class="h6 text-center">${notice.bWriter }</td>
-									<td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
+									<td width="60%" class="h6 toggleButton" style="cursor: pointer;"><b style="font-size: 15px;">${notice.bTitle }</b></td>
+									<td width="20%" class="h6 text-center">${notice.bWriter }</td>
+									<td width="20%" class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
 								</tr>
 								<tr class="toggleContent${i.index }" style="display: none;">
 									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
-										<div class="toggleContent${i.index }" style="display: none;"><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/>
+										<div class="toggleContent${i.index }" style="display: none;"><p style="font-size : 8px;"><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
 											<c:if test= "${sessionScope.user_id != null && sessionScope.user_id == 'admin' }"><br>
 												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
 											</c:if>
