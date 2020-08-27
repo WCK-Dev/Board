@@ -43,7 +43,7 @@ public interface BoardService {
 	
 	String userIdCheck(String vo);
 	
-	void insertUser(UserVO vo);
+	int insertUser(UserVO vo);
 	
 	UserVO loginCheck(UserVO vo);
 

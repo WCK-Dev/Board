@@ -26,9 +26,9 @@ public interface BoardMapper {
 
 	void insertBoard(BoardVO vo) throws Exception;
 
-	void updateBoard(BoardVO vo) throws Exception;
+	int updateBoard(BoardVO vo) throws Exception;
 
-	void deleteBoard(BoardVO vo) throws Exception;
+	int deleteBoard(BoardVO vo) throws Exception;
 
 	BoardVO selectBoard(BoardVO vo) throws Exception;
 
@@ -48,7 +48,7 @@ public interface BoardMapper {
 	
 	String userIdCheck(String user_id);
 	
-	void insertUser(UserVO vo);
+	int insertUser(UserVO vo);
 	
 	UserVO loginCheck(UserVO vo);
 

@@ -44,7 +44,7 @@
 			UPDATE BOARD
 			SET b_title=#{b_title}
 				, b_content=#{b_content}
-			WHERE b_no=#{b_no}
+			WHERE b_no=#{b_no} AND b_writer = #{b_writer}
 
 	</update>
 
@@ -56,8 +56,10 @@
 			</if>
 			<if test="b_no != b_grpno">
 				DELETE FROM BOARD
-				WHERE b_no=#{b_no}
+				WHERE b_no = #{b_no}
 			</if>
+			
+			AND b_writer = #{b_writer}
 			
 
 	</delete>
@@ -148,6 +150,7 @@
 			FROM BOARD
 			WHERE b_category=1
 			ORDER BY b_no DESC
+			LIMIT 3
 	</select>
 	
 	<select id="userIdCheck" parameterType="userVO" resultType="String">

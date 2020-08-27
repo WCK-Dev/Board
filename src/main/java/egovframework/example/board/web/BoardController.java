@@ -86,7 +86,9 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.GET)
-	public String updateBoard(int b_no, ModelMap model) throws Exception {
+	public String updateBoard(int b_no, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		model.addAttribute("session_user_id", request.getSession().getAttribute("user_id"));
 		
 		BoardVO boardVO = new BoardVO();
 		boardVO.setB_no(b_no);
@@ -97,17 +99,22 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.POST)
-	public String updateBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	public String updateBoard(@ModelAttribute("board")BoardVO boardVO, HttpServletRequest request, ModelMap model) throws Exception {
 		
+		boardVO.setB_writer((String)request.getSession().getAttribute("user_id"));
+
 		boardService.updateBoard(boardVO);
 		return "redirect:/readBoard.do?b_no=" + boardVO.getB_no();
 	}
 
 	@ResponseBody
-	@RequestMapping(value="deleteBoard.do")
-	public void deleteBoard(BoardVO boardVO) throws Exception{
+	@RequestMapping(value="deleteBoard.do", method = RequestMethod.POST)
+	public void deleteBoard(BoardVO boardVO, HttpServletRequest request) throws Exception{
+
+		boardVO.setB_writer((String)request.getSession().getAttribute("user_id"));
 		
 		boardService.deleteBoard(boardVO);
+		
 	}
 	
 	@RequestMapping(value="writeReply.do", method =RequestMethod.GET)
@@ -136,9 +143,13 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="signUp.do", method = RequestMethod.POST)
-	public String signUp(UserVO userVO) throws Exception{
+	public String signUp(UserVO userVO, RedirectAttributes ra) throws Exception{
 		
-		boardService.insertUser(userVO);
+		if(boardService.insertUser(userVO) == 1) {
+			ra.addFlashAttribute("joinSuccessMsg", "회원가입이 완료되었습니다.");
+		} else {
+			ra.addFlashAttribute("joinErrorMsg", "회원가입에 오류가 발생했습니다.");
+		};
 		
 		return "redirect:/boardList.do";
 	}

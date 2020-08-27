@@ -35,8 +35,8 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	private static final Logger LOGGER = LoggerFactory.getLogger(BoardServiceImpl.class);
 
 	// mybatis 사용
-	  @Resource(name="boardMapper")
-	  private BoardMapper boardDAO;
+	@Resource(name="boardMapper")
+	private BoardMapper boardDAO;
 
 	@Resource(name = "egovIdGnrService")
 	private EgovIdGnrService egovIdGnrService;
@@ -52,8 +52,6 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 
 	@Override
 	public void updateBoard(BoardVO vo) throws Exception {
-		System.err.println("service까지 동작확인");
-
 		boardDAO.updateBoard(vo);
 	}
 
@@ -111,8 +109,8 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
-	public void insertUser(UserVO vo) {
-		boardDAO.insertUser(vo);
+	public int insertUser(UserVO vo) {
+		return boardDAO.insertUser(vo);
 	}
 	
 	@Override

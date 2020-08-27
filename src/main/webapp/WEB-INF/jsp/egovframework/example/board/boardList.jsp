@@ -52,6 +52,16 @@ $(document).ready(function(){
 		alert("${loginErrorMsg}");
 	</c:if>
 	
+	/* 회원가입 정상수행 시 */
+	<c:if test="${!empty joinSuccessMsg}">
+		alert("${joinSuccessMsg}");
+	</c:if>
+	
+	/* 회원가입 오류발생시 */
+	<c:if test="${!empty joinErrorMsg}">
+		alert("${joinErrorMsg}");
+	</c:if>
+	
 	/* 공지사항 제목을 누를시 슬라이드 */
 	$('.toggleButton').each(function(index, item) {
 		$(item).click(function() {
@@ -99,11 +109,11 @@ function updateNotice(b_no) {
 }
 
 function loginCheck(){
-	if($('#user_id').val() == ''){
+	if($('#user_id').val() == '' || $('#user_id').val().trim() == ''){
 		alert("아이디를 입력해주세요.");
 		return false;
 	}
-	if($('#user_pwd').val() == ''){
+	if($('#user_pwd').val() == '' || $('#user_pwd').val().trim() == ''){
 		alert("비밀번호를 입력해주세요.");
 		return false;
 	}
@@ -128,13 +138,14 @@ function fn_link_page(pageNo){
 }
 
 /* 팝업 레이어 오픈 */
- function view_user(){
+ function view_notice(){
+	 $("#today").prop('checked', false);
 	 $("#popup_notice").bPopup(); 
 }
 </script>
 </head>
 <body class="container">
-	<h1 class="text-center">eGov Board 메인</h1>
+	<a href="boardList.do"><h1>eGov Board 메인</h1></a>
 	<hr>
 	<div class="panel panel-default">
 		<!-- 로그인관련 화면 (head) -->
@@ -260,6 +271,7 @@ function fn_link_page(pageNo){
       	
 		
 		<div class="panel-footer float-right">
+			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
 			<c:if test= "${sessionScope.user_id != null && sessionScope.user_id != '' && sessionScope.user_id != 'admin' }">
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">게시글 작성</button>
 			</c:if>

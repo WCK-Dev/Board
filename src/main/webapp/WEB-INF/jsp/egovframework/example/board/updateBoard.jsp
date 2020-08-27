@@ -19,6 +19,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
+$(document).ready(function(){
+	var b_writer = $("#b_writer").val();
+	if('${session_user_id}' != b_writer){
+		alert("글쓴이 본인만 게시글을 수정할 수 있습니다.\r\n현재 로그인 정보를 확인해주십시오.");
+		location.href="boardList.do";
+	}
+});
 	function update() {
 		if( $("#b_title").val() == '' ){
 			alert("제목을 입력해야 합니다.");
@@ -55,7 +62,7 @@
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_writer">작성자 : </label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
+			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${boardVO.b_writer }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
 			  <div class="form-group">

@@ -32,7 +32,7 @@
 		// 사용불가능한 아이디일 때, 폰트 컬러 초기화(빨강)  
 		$("#alertId").css("color", "red");
 		
-		if(!id.test(user_id) || (user_id.length > 20 || user_id.length <6)) {
+		if(!id.test(user_id) || (user_id.length > 20 || user_id.length < 6)) {
 			$("#alertId").text("아이디는 6~20자의 영문 소문자와 숫자로 작성해주세요.");
 		}else{
 			$.ajax({
