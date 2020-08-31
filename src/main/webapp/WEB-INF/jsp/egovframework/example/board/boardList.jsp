@@ -48,19 +48,19 @@
 <script>
 $(document).ready(function(){
 	/* 로그인 실패 시 에러메시지 출력 */
-	<c:if test="${!empty loginErrorMsg}">
-		alert("${loginErrorMsg}");
-	</c:if>
+	if('${loginErrorMsg}' != ''){
+		alert('${loginErrorMsg}');
+	}
 	
 	/* 회원가입 정상수행 시 */
-	<c:if test="${!empty joinSuccessMsg}">
-		alert("${joinSuccessMsg}");
-	</c:if>
+	if('${joinSuccessMsg}' != ''){
+		alert('${joinSuccessMsg}');
+	}
 	
 	/* 회원가입 오류발생시 */
-	<c:if test="${!empty joinErrorMsg}">
-		alert("${joinErrorMsg}");
-	</c:if>
+	if('${joinErrorMsg}' != ''){
+		alert('${joinErrorMsg}');
+	}
 	
 	/* 공지사항 제목을 누를시 슬라이드 */
 	$('.toggleButton').each(function(index, item) {
@@ -93,20 +93,23 @@ function getCookie() {
     /* 쿠키여부 체크시, 쿠키가 등록되어있지않으면 팝업창을 오픈 */
     if ( cookiedata.indexOf("todayCookie=done") < 0 ){
     	$("#popup_notice").bPopup();
-   	 	$("#popup_notice").bPopup().reposition(100);
+   	 	$("#popup_notice").bPopup().reposition(30);
     }
 }
 
 function writeBoard(){
-	window.open("<c:url value='/writeBoard.do' />", "popUpBoard", "width=500, height=900, left=500, top=50");
+	var newwin = window.open("<c:url value='/writeBoard.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
 }
 
 function readBoard(b_no){
-	window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50");
+	var newwin = window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
 }
 
 function updateNotice(b_no) {
-	window.open("<c:url value='/updateBoard.do'/>?b_no=" + b_no , "popUpBoard", "width=500, height=900, left=500, top=50");
+	var newwin = window.open("<c:url value='/updateBoard.do'/>?b_no=" + b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
 }
 
 function loginCheck(){
@@ -142,7 +145,7 @@ function fn_link_page(pageNo){
  function view_notice(){
 	 $("#today").prop('checked', false);
 	 $("#popup_notice").bPopup();
-	 $("#popup_notice").bPopup().reposition(100); 
+	 $("#popup_notice").bPopup().reposition(30); 
 }
 </script>
 </head>
@@ -192,13 +195,13 @@ function fn_link_page(pageNo){
 						<tbody>
 			    			<c:forEach var="notice" items="${noticeList }" varStatus="i">
 								<tr>
-									<td width="60%" class="h6 toggleButton" style="cursor: pointer;"><b style="font-size: 15px;">${notice.bTitle }</b></td>
+									<td width="60%" class="h6 toggleButton" style="cursor: pointer;"><p>${notice.bTitle }</p></td>
 									<td width="20%" class="h6 text-center">${notice.bWriter }</td>
 									<td width="20%" class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
 								</tr>
 								<tr class="toggleContent${i.index }" style="display: none;">
 									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
-										<div class="toggleContent${i.index }" style="display: none;"><p style="font-size : 8px;"><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
+										<div class="toggleContent${i.index }" style="display: none;"><p><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
 											<c:if test= "${sessionScope.user_id != null && sessionScope.user_id == 'admin' }"><br>
 												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
 											</c:if>
@@ -248,18 +251,22 @@ function fn_link_page(pageNo){
 			  	<thead class="thead-dark">
 			      <tr>
 			        <th width="*"><b>글 제목</b></th>
-			        <th width="10%"><b>작성자</b></th>
-			        <th width="20%"><b>작성일</b></th>
-			        <th width="10%"><b>조회수</b></th>
+			        <th class="text-center" width="10%"><b>작성자</b></th>
+			        <th class="text-center" width="20%"><b>작성일</b></th>
+			        <th class="text-center" width="10%"><b>조회수</b></th>
 			      </tr>
 			    </thead>
 			    <tbody>
 			    <c:forEach var="board" items="${boardList }">
 			      <tr>
-			        <td><a href="javascript:readBoard(${board.bNo });"><c:out value="${board.bTitle }" /></a></td>
-			        <td><c:out value="${board.bWriter }" /></td>
-			        <td><fmt:formatDate pattern='yyyy-MM-dd' timeZone="UTC" value='${board.bRegdate }'/></td>
-			        <td><c:out value="${board.bReadcnt }" /></td>
+			        <td><a href="javascript:readBoard(${board.bNo });">
+				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
+				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
+				        </a>
+			        </td>
+			        <td class="text-center"><c:out value="${board.bWriter }" /></td>
+			        <td class="text-center"><fmt:formatDate pattern='yyyy-MM-dd' timeZone="UTC" value='${board.bRegdate }'/></td>
+			        <td class="text-center"><c:out value="${board.bReadcnt }" /></td>
 			      </tr>
 			    </c:forEach>
 			    </tbody>

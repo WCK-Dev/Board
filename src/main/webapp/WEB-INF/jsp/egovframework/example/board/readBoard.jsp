@@ -9,7 +9,7 @@
 <%@ taglib prefix="fn" 	   uri="http://java.sun.com/jsp/jstl/functions" %> 
 <%
      //치환 변수 선언
-      pageContext.setAttribute("crcn", "\r\n"); //Space, Enter
+      pageContext.setAttribute("crcn", "\n"); // Enter
       pageContext.setAttribute("br", "<br/>"); //br 태그
 %> 
 <html>
@@ -38,7 +38,7 @@ function update(b_no) {
 	location.href = "<c:url value='/updateBoard.do'/>?b_no=" + b_no;
 }
 
-function del(b_no, b_grpno) {		
+function del(b_no, b_refno) {		
 	
 	if(confirm("해당글을 삭제하시겠습니까?\r\n원본 게시글인 경우, 답글까지 모두 삭제됩니다.")){
 		
@@ -46,7 +46,7 @@ function del(b_no, b_grpno) {
 			type : 'POST',
 			url : "<c:url value='/deleteBoard.do' />",
 			data : { "b_no" : b_no,
-					 "b_grpno": b_grpno},
+					 "b_refno": b_refno},
 			
 			success : function(result) {
 				alert("글 삭제가 정상적으로 수행되었습니다.");
@@ -64,36 +64,36 @@ function del(b_no, b_grpno) {
 </script>
 </head>
 <body class="container">
-	
+	<h2>게시글 상세보기</h2>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<div class="form-group">
-			   <label class="control-label col-sm-2 font-weight-bold h5">게시글 제목 : </label>
-				<c:out value="${boardVO.b_title }"/> 
+			   <label class="control-label col-sm-2 font-weight-bold h5">제목 : </label>
+				<p class="pl-3"><c:out value="${boardVO.b_title }"/></p>
 			 </div>
 			 <div class="form-group">
-			   <label class="control-label col-sm-2 font-weight-bold h5">작성자 : </label>
-				<c:out value="${boardVO.b_writer }"/> 
+			   <label class="control-label pl-3 pr-3 font-weight-bold h5">작성자 : </label>
+				<c:out value="${boardVO.b_writer }"/>
 			 </div>
 			 <div class="form-group">
-			   <label class="control-label col-sm-2 font-weight-bold h5">작성일 : </label>
+			   <label class="control-label pl-3 pr-3 font-weight-bold h5">작성일 : </label>
 				<fmt:formatDate pattern='yyyy-MM-dd HH:mm' timeZone="UTC" value="${boardVO.b_regdate }"/>
 			 </div>
 			 <div class="form-group">
-			   <label class="control-label col-sm-2 font-weight-bold h5">조회수 : </label>
-				<c:out value="${boardVO.b_readcnt }"/> 
+			   <label class="control-label pl-3 pr-3 font-weight-bold h5">조회수 : </label>
+				<c:out value="${boardVO.b_readcnt }"/>
 			 </div>
 			 <div class="form-group">
-				  <label class= "font-weight-bold ml-3 mb-5 h5" for="b_content">게시글 내용</label>
-				<div class="col-sm-10" style="min-height: 300px">
-				<c:out value="${fn:replace(boardVO.b_content, crcn, br)}" escapeXml="false"/> 
-			   </div>
+				  <label class= "font-weight-bold ml-3 mb-2 h5" for="b_content">게시글 내용</label>
+			 <div class="col-sm-10" style="min-height: 300px">
+				<c:out value="${fn:replace(boardVO.b_content, crcn, br)}" escapeXml="false"/>
+			 </div>
 			</div>
 		</div>
 		<div class="panel-footer float-right">
 			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id == boardVO.b_writer }">
 				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
-				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_grpno})">삭제</button>
+				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_refno})">삭제</button>
 			</c:if>
 			<c:if test="${sessionScope.user_id != '' && sessionScope.user_id != null && boardVO.b_category != 1}">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>

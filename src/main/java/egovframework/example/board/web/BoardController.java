@@ -68,9 +68,9 @@ public class BoardController {
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.POST)
 	public void writeBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
 		
+		
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
-		boardVO.setB_grpno(b_no);
 		
 		boardService.insertBoard(boardVO);
 	}
@@ -132,7 +132,6 @@ public class BoardController {
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
 		
-		boardService.updateGrpord(boardVO);
 		boardService.insertReply(boardVO);
 	}
 	
@@ -182,7 +181,7 @@ public class BoardController {
 		
 		if(isPopUp != null && isPopUp.equals("true")) {
 			return "redirect:/login.do";
-		} 
+		}
 			return "redirect:/boardList.do";
 	}
 	

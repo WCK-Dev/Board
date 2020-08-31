@@ -56,10 +56,7 @@ public class BoardVO extends BoardDefaultVO {
 	private int b_readcnt;
 
 	/** 원글 번호 */
-	private int b_grpno;
-	
-	/** 원글(답글 포함)에 대한 순서 */
-	private int b_grpord;
+	private int b_refno;
 	
 	/** 답글의 계층 */
 	private int b_depth;
@@ -104,7 +101,7 @@ public class BoardVO extends BoardDefaultVO {
 		return b_regdate;
 	}
 
-	public void setB_wdate(Timestamp b_regdate) {
+	public void setB_regdate(Timestamp b_regdate) {
 		this.b_regdate = b_regdate;
 	}
 
@@ -116,20 +113,12 @@ public class BoardVO extends BoardDefaultVO {
 		this.b_readcnt = b_readcnt;
 	}
 
-	public int getB_grpno() {
-		return b_grpno;
+	public int getB_refno() {
+		return b_refno;
 	}
 
-	public void setB_grpno(int b_grpno) {
-		this.b_grpno = b_grpno;
-	}
-
-	public int getB_grpord() {
-		return b_grpord;
-	}
-
-	public void setB_grpord(int b_grpord) {
-		this.b_grpord = b_grpord;
+	public void setB_refno(int b_refno) {
+		this.b_refno = b_refno;
 	}
 
 	public int getB_depth() {
@@ -146,6 +135,10 @@ public class BoardVO extends BoardDefaultVO {
 
 	public void setB_category(int b_category) {
 		this.b_category = b_category;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

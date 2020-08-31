@@ -9,8 +9,7 @@
 		<result property="b_content" column="b_content"/>
 		<result property="b_regdate" column="b_regdate"/>
 		<result property="b_readcnt" column="b_readcnt"/>
-		<result property="b_grpno" column="b_grpno"/>
-		<result property="b_grpord" column="b_grpord"/>
+		<result property="b_refno" column="b_refno"/>
 		<result property="b_depth" column="b_depth"/>
 		<result property="b_category" column="b_category"/>
 	</resultMap>
@@ -22,18 +21,18 @@
 				  ,	b_title
 				  , b_writer
 				  , b_content
-				  , b_grpno
+				  , b_refno
 				  , b_category
-				  , b_grpord
 				  , b_depth
+				  , b_readcnt
 				   )
 			VALUES ( #{b_no}
 				  ,	#{b_title}
 				  , #{b_writer}
 				  , #{b_content}
-				  , #{b_grpno}
+				  , #{b_refno}
 				  , #{b_category}
-				  , 0
+				  , 1
 				  , 0
 				   )
 
@@ -50,11 +49,11 @@
 
 	<delete id="deleteBoard">
 
-			<if test="b_no == b_grpno">
+			<if test="b_refno == 0">
 				DELETE FROM BOARD
-				WHERE b_grpno = #{b_no}
+				WHERE b_no = #{b_no} OR b_refno = #{b_no}
 			</if>
-			<if test="b_no != b_grpno">
+			<if test="b_refno != 0">
 				DELETE FROM BOARD
 				WHERE b_no = #{b_no}
 			</if>
@@ -67,7 +66,7 @@
 	<select id="selectBoard" resultMap="board">
 
 			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category
 			FROM BOARD
 			WHERE b_no=#{b_no}
 
@@ -83,10 +82,37 @@
 
 	<select id="selectBoardList" parameterType="boardVO" resultType="egovMap">
 
-			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
-			FROM BOARD
-			WHERE b_category=0
+			WITH RECURSIVE CTE AS (
+				SELECT b_no 
+						,b_title
+						,b_writer
+						,b_regdate
+						,b_content
+						,b_readcnt
+						,b_refno
+						,b_depth
+						,b_category
+						,CAST(LPAD(b_no, 10, 0) AS CHAR(3000)) path
+				FROM board
+				WHERE b_refno = 0
+				UNION ALL
+				SELECT b.b_no
+						,b.b_title
+						,b.b_writer
+						,b.b_regdate
+						,b.b_content
+						,b.b_readcnt
+						,b.b_refno
+						,b.b_depth
+						,b.b_category
+						,CONCAT(a.path, ',', b.b_no) AS path
+				FROM CTE a
+				INNER JOIN board b ON a.b_no = b.b_refno
+			)
+			
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path
+			FROM CTE
+			WHERE 1 = 1
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
 		            <when test="searchCondition == 0">
@@ -110,15 +136,16 @@
 					</when>
 				</choose>
 			</if>
-			ORDER BY b_grpno DESC, b_grpord ASC
+			ORDER BY path ASC 
 			LIMIT #{firstIndex}, #{recordCountPerPage}
+
 	</select>
 
 	<select id="selectBoardListTotCnt" parameterType="boardVO" resultType="int">
 
 			SELECT COUNT(*) totcnt
 			FROM BOARD
-			WHERE 1=1
+			WHERE 1 = 1 AND b_category != 1
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
 		            <when test="searchCondition == 0">
@@ -146,7 +173,7 @@
 	
 	<select id="selectNoticeList" resultType="egovMap">
 			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_grpno, b_grpord, b_depth, b_category
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category
 			FROM BOARD
 			WHERE b_category=1
 			ORDER BY b_no DESC
@@ -197,30 +224,21 @@
 				  , b_title
 				  , b_writer
 				  , b_content
-				  , b_grpno
+				  , b_refno
 				  , b_category
-				  , b_grpord
 				  , b_depth
+				  , b_readcnt
 				   )
 			VALUES ( #{b_no} 
 			      , #{b_title}
 				  , #{b_writer}
 				  , #{b_content}
-				  , #{b_grpno}
+				  , #{b_refno}
 				  , #{b_category}
-				  , #{b_grpord} + 1
 				  , #{b_depth} + 1
+				  , 0
 				   )
 
 	</insert>
 	
-	<update id="updateGrpord" parameterType="boardVO">
-	
-			UPDATE BOARD SET 
-				b_grpord = b_grpord+1
-			WHERE b_grpno = #{b_grpno} 
-				AND b_grpord > #{b_grpord}
-	
-	 </update>
-	 
 </mapper>

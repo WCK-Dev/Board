@@ -18,10 +18,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
 <script>
-	function cancle() {
-		window.close();
-	}
-	
 	function testValidation() {
 		
 		if( $("#b_title").val() == '' || $("#b_title").val().trim() == '' ){
@@ -40,11 +36,10 @@
 	}
 	
 	function insertReply(){
+		var b_no = $("#b_no").val();
 		var b_title = $("#b_title").val();
 		var b_writer = $("#b_writer").val();
 		var b_content = $("#b_content").val();
-		var b_grpno = $("#b_grpno").val();
-		var b_grpord = $("#b_grpord").val();
 		var b_depth = $("#b_depth").val();
 		
 		$.ajax({
@@ -54,8 +49,7 @@
 			data : {"b_title": b_title,
 					"b_writer": b_writer,
 					"b_content": b_content,
-					"b_grpno": b_grpno,
-					"b_grpord": b_grpord,
+					"b_refno": b_no,
 					"b_depth": b_depth
 			},
 			
@@ -75,7 +69,7 @@
 </script>
 </head>
 <body class="container">
-	<h1 class="text-center">게시글 등록</h1>
+	<h1 class="text-center">답글작성</h1>
 	
 	<hr>
 	<div class="panel panel-default">
@@ -84,14 +78,13 @@
 			<c:if test="${sessionScope.user_id == 'admin' }">
 				<input type="hidden" name="b_category" value="1">
 			</c:if>
-				<input type="hidden" id="b_grpno" name="b_grpno" value="${boardVO.b_grpno }">
-				<input type="hidden" id="b_grpord" name="b_grpord" value="${boardVO.b_grpord }">
+				<input type="hidden" id="b_no" name="b_no" value="${boardVO.b_no }">
 				<input type="hidden" id="b_depth" name="b_depth" value="${boardVO.b_depth }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="b_title" name="b_title" value="RE: ${boardVO.b_title }" placeholder="제목을 입력해주세요." maxlength="100">
+			      <input type="text" class="form-control" id="b_title" name="b_title" value="${boardVO.b_title } 의 답글" placeholder="제목을 입력해주세요." maxlength="100">
 			    </div>
 			  </div>
 			  <div class="form-group">
@@ -108,7 +101,7 @@
 			  </div>
 			<div class="panel-footer float-right">
 				<button type="button" class="btn btn-primary" onclick="testValidation();">등록</button>
-				<button type="button" class="btn btn-primary" onclick="cancel()">취소</button>
+				<button type="button" class="btn btn-primary" onclick="history.back()">취소</button>
 			</div>
 			</form>
 		</div>
