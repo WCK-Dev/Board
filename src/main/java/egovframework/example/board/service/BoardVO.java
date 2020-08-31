@@ -63,7 +63,8 @@ public class BoardVO extends BoardDefaultVO {
 	
 	/** 글유형 (공지, 일반) */
 	private int b_category;
-
+	
+	private int b_order;
 	
 	public int getB_no() {
 		return b_no;
@@ -136,9 +137,16 @@ public class BoardVO extends BoardDefaultVO {
 	public void setB_category(int b_category) {
 		this.b_category = b_category;
 	}
+	
+	public int getB_order() {
+		return b_order;
+	}
+
+	public void setB_order(int b_order) {
+		this.b_order = b_order;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 }

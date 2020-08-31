@@ -71,6 +71,7 @@ public class BoardController {
 		
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
+		boardVO.setB_order(b_no);
 		
 		boardService.insertBoard(boardVO);
 	}

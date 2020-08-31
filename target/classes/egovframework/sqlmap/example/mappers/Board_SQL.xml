@@ -25,6 +25,7 @@
 				  , b_category
 				  , b_depth
 				  , b_readcnt
+				  , b_order
 				   )
 			VALUES ( #{b_no}
 				  ,	#{b_title}
@@ -34,6 +35,7 @@
 				  , #{b_category}
 				  , 1
 				  , 0
+				  , #{b_order}
 				   )
 
 	</insert>
@@ -66,7 +68,7 @@
 	<select id="selectBoard" resultMap="board">
 
 			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category, b_order
 			FROM BOARD
 			WHERE b_no=#{b_no}
 
@@ -93,6 +95,7 @@
 						,b_depth
 						,b_category
 						,CAST(LPAD(b_no, 10, 0) AS CHAR(3000)) path
+						,b_order
 				FROM board
 				WHERE b_refno = 0
 				UNION ALL
@@ -106,11 +109,12 @@
 						,b.b_depth
 						,b.b_category
 						,CONCAT(a.path, ',', b.b_no) AS path
+						,b.b_order
 				FROM CTE a
 				INNER JOIN board b ON a.b_no = b.b_refno
 			)
 			
-			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_order
 			FROM CTE
 			WHERE 1 = 1
 			<if test="searchKeyword != null and searchKeyword != ''">
@@ -136,7 +140,7 @@
 					</when>
 				</choose>
 			</if>
-			ORDER BY path ASC 
+			ORDER BY b_order DESC, path ASC
 			LIMIT #{firstIndex}, #{recordCountPerPage}
 
 	</select>
@@ -228,6 +232,7 @@
 				  , b_category
 				  , b_depth
 				  , b_readcnt
+				  , b_order
 				   )
 			VALUES ( #{b_no} 
 			      , #{b_title}
@@ -237,6 +242,7 @@
 				  , #{b_category}
 				  , #{b_depth} + 1
 				  , 0
+				  , #{b_order}
 				   )
 
 	</insert>
