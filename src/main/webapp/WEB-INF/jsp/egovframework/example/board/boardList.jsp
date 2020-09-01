@@ -280,12 +280,12 @@ function fn_link_page(pageNo){
 		
 		<div class="panel-footer float-right">
 			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
-			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.user_id != 'admin' }">
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.write_YN == 'Y' }">
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">게시글 작성</button>
 			</c:if>
-			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.admin_YN == 'Y' }">
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">공지글 작성</button>
-				<button type="button" class="btn btn-primary" onclick="adminMain()">게시판 관리</button>
+				<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
 			</c:if>
 		</div>
 	</div>

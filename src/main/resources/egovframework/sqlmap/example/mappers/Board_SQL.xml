@@ -252,7 +252,37 @@
 			SELECT * 
 			FROM user
 			WHERE user_id != 'master'
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND user_id LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 1">
+						AND user_name LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+				</choose>
+			</if>
+			LIMIT #{firstIndex}, #{recordCountPerPage}
 
+	</select>
+	
+	<select id="selectUserListTotCnt" parameterType="userVO" resultType="int">
+
+
+			SELECT COUNT(*) totcnt
+			FROM user
+			WHERE user_id != 'master'
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND user_id LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 1">
+						AND user_name LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+				</choose>
+			</if>
+			
 	</select>
 	
 	<select id="selectUser" parameterType="userVO" resultType="userVO">
@@ -299,6 +329,13 @@
 				)
 				
 	</insert>
+	
+	<delete id="deleteComment" parameterType="commentVO">
+	
+			DELETE FROM comment
+			WHERE c_no = #{c_no} AND c_writer = #{c_writer}
+	
+	</delete>
 	
 	<select id="selectCommentList" parameterType="boardVO" resultType="egovMap">
 	

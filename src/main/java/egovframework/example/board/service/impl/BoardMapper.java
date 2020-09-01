@@ -55,6 +55,8 @@ public interface BoardMapper {
 	
 	List<?> selectUserList(UserVO vo);
 	
+	int selectUserListTotCnt(UserVO vo);
+	
 	UserVO selectUser(UserVO vo);
 
 	int updateUser(UserVO vo);
@@ -62,6 +64,8 @@ public interface BoardMapper {
 	int selectMaxCno();
 	
 	int insertComment(CommentVO vo);
+	
+	int deleteComment(CommentVO vo);
 
 	List<?> selectCommentList(BoardVO vo);
 

@@ -199,12 +199,25 @@ public class BoardController {
 	}
 
 	@RequestMapping(value="managementUser.do")
-	public String managementUser(ModelMap model, HttpServletRequest request) {
+	public String managementUser(ModelMap model, UserVO userVO) {
 		
-		UserVO userVO = (UserVO)request.getSession().getAttribute("user");
-		
+		/** pageing setting */
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(userVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(userVO.getPageUnit());
+		paginationInfo.setPageSize(userVO.getPageSize());
+
+		userVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		userVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		userVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
 		model.addAttribute("userList", boardService.selectUserList(userVO));
+		model.addAttribute("user", userVO);
 		
+		int totCnt = boardService.selectUserListTotCnt(userVO);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addAttribute("paginationInfo", paginationInfo);
+
 		return "board/managementUser";
 	}
 	
@@ -229,12 +242,19 @@ public class BoardController {
 		return "board/managementBoard";
 	}
 	
-	@RequestMapping(value="writeComment.do", method=RequestMethod.POST)
+	@RequestMapping(value="insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String writeComment(CommentVO commentVO) {
+	public String insertComment(CommentVO commentVO) {
 		
 		commentVO.setC_no(boardService.selectMaxCno() + 1);
 		
 		return boardService.insertComment(commentVO) + "";
+	}
+	
+	@RequestMapping(value="deleteComment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String deleteComment(CommentVO commentVO) {
+		
+		return boardService.deleteComment(commentVO) + "";
 	}
 }

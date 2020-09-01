@@ -1,6 +1,8 @@
 package egovframework.example.board.service;
 
-public class UserVO {
+public class UserVO extends BoardDefaultVO {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String user_id;
 	private String user_pwd;

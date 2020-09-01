@@ -125,6 +125,11 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
+	public int selectUserListTotCnt(UserVO vo) {
+		return boardDAO.selectUserListTotCnt(vo);
+	}
+	
+	@Override
 	public UserVO selectUser(UserVO vo) {
 		return boardDAO.selectUser(vo);
 	}
@@ -143,10 +148,16 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	public int insertComment(CommentVO vo) {
 		return boardDAO.insertComment(vo);
 	}
+	
+	@Override
+	public int deleteComment(CommentVO vo) {
+		return boardDAO.deleteComment(vo);
+	}
 
 	@Override
 	public List<?> selectCommentList(BoardVO vo) {
 		return boardDAO.selectCommentList(vo);
 	}
+
 	
 }

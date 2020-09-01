@@ -68,7 +68,7 @@ function writeComment(b_no) {
 	
 	$.ajax({
 		type : 'POST',
-		url : "<c:url value='/writeComment.do'/>",
+		url : "<c:url value='/insertComment.do'/>",
 		dataType : "text",
 		data : {"b_no" : b_no,
 				"c_writer": c_writer,
@@ -85,6 +85,35 @@ function writeComment(b_no) {
 			}
 		}
 	});
+}
+
+function deleteComment(c_no, c_writer, user_id) {
+	
+	if(c_writer != user_id) {
+		alert("댓글 삭제는 등록자로 로그인 된 경우에만 가능합니다.");
+		location.reload(true);
+	}
+	
+	if(confirm("정말 댓글을 삭제하시겠습니까?")){
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/deleteComment.do'/>",
+			dataType : "text",
+			data : {"c_no" : c_no,
+					"c_writer": c_writer
+					},
+			
+			success : function (result) {
+				
+				if(result == 1){
+					alert("댓글을 삭제했습니다.");
+					location.reload(true);
+				} else {
+					alert("댓글삭제에 오류가 발생했습니다.")
+				}
+			}
+		});
+	}
 }
 </script>
 </head>
@@ -121,33 +150,40 @@ function writeComment(b_no) {
 		<div class="text-center border border-light" >
 		    <div class="text-left mb-3"><b>전체 댓글</b> <span id="commentCnt">0</span>개</div>
 			<table class="table">
-				<tbody id="replyList">
-					<c:forEach var="comment" items="${commentList }" varStatus="i">
-						<tr>
-							<th width='15%' scope='row'><b>${comment.cWriter }</b></th>
-							<td width='*' class='text-left'>${comment.cContent }</td>
-							<td width='10%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			  	<tfoot>
-				    <tr>
-				   		<th width="20%" class="font-weight-bold pt-4">작성자 : </th>
-				   		<td colspan="2"><input type="text" id="c_writer" class="form-control" value="${sessionScope.user.user_id }" readonly></td>
-				    </tr>   
-				    <tr>
-					   	<td  colspan="2">
-					   		<input type="text" id="c_content" class="form-control" placeholder="댓글 내용을 작성하세요" maxlength="100">
-					   	</td>
-					   	<td width="20%">
-				   			<button style="width: 100px; padding:5px;" class="btn btn-dark mb-3" type="button" onclick="writeComment(${boardVO.b_no})">댓글 입력</button>
-				   		</td>
-				    </tr>
-				</tfoot>
+				<c:forEach var="comment" items="${commentList }" varStatus="i">
+					<tr>
+						<th width='*' scope='row'><b>${comment.cWriter }</b></th>
+						<td width='23%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
+					</tr>
+					<tr>
+						<td class='text-left'>${comment.cContent }</td>
+						<td>
+							<c:if test="${comment.cWriter == sessionScope.user.user_id }">
+								<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">댓글 삭제</div>
+							</c:if>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+			<table>
+				<tr>
+					<td colspan="2" style="text-align: center">
+						<b class="h4">댓글 작성</b>
+					</td>
+				</tr>
+			    <tr>
+			   		<td width="20%"><input type="text" id="c_writer" class="form-control" value="${sessionScope.user.user_id }" readonly></td>
+				   	<td width="80%"><input type="text" id="c_content" class="form-control" placeholder="댓글 내용을 작성하세요" maxlength="100"></td>
+			    </tr>
+			    <tr>
+			    	<td colspan="2" style="text-align: right">
+						<button class="btn btn-info" onclick="writeComment(${boardVO.b_no})">댓글 작성</button>
+					</td>
+			    </tr>
 			</table>
 		</div>
 		
-		<div class="panel-footer float-right">
+		<div class="panel-footer float-right mt-5">
 			<c:if test="${sessionScope.user.user_id != '' && sessionScope.user.user_id == boardVO.b_writer }">
 				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
 				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_refno})">삭제</button>

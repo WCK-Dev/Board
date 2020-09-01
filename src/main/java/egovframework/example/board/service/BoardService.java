@@ -48,6 +48,8 @@ public interface BoardService {
 	UserVO loginCheck(UserVO vo);
 	
 	List<?> selectUserList(UserVO vo);
+	
+	int selectUserListTotCnt(UserVO vo);
 
 	UserVO selectUser(UserVO vo);
 
@@ -56,6 +58,8 @@ public interface BoardService {
 	int selectMaxCno();
 	
 	int insertComment(CommentVO vo);
+	
+	int deleteComment(CommentVO vo);
 	
 	List<?> selectCommentList(BoardVO vo);
 	
