@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.example.board.service.BoardService;
 import egovframework.example.board.service.BoardVO;
+import egovframework.example.board.service.CommentVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -83,13 +84,15 @@ public class BoardController {
 
 		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
 		
+		model.addAttribute("commentList", boardService.selectCommentList(boardVO));
+		
 		return "board/readBoard";
 	}
 	
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.GET)
 	public String updateBoard(int b_no, ModelMap model, HttpServletRequest request) throws Exception {
 		
-		model.addAttribute("session_user_id", request.getSession().getAttribute("user_id"));
+		model.addAttribute("session_user_id", ((UserVO)request.getSession().getAttribute("user")).getUser_id());
 		
 		BoardVO boardVO = new BoardVO();
 		boardVO.setB_no(b_no);
@@ -169,29 +172,69 @@ public class BoardController {
 	@RequestMapping(value="login.do", method = RequestMethod.POST)
 	public String login(UserVO user, String isPopUp, RedirectAttributes ra, HttpServletRequest request) throws Exception {
 		UserVO userVO = boardService.loginCheck(user);
+
+		request.getSession().setAttribute("user", userVO);
 		
 		if( userVO != null ) {
-			request.getSession().setAttribute("user_id", userVO.getUser_id());
-			request.getSession().setAttribute("user_name", userVO.getUser_name());
 			ra.addFlashAttribute("loginSuccess", "Y");
+			return "redirect:/boardList.do";
 		} else {
-			request.getSession().setAttribute("user_id", "");
-			request.getSession().setAttribute("user_name", "");
 			ra.addFlashAttribute("loginErrorMsg", "사용자 정보를 확인해주십시오.");
-		}
-		
-		if(isPopUp != null && isPopUp.equals("true")) {
 			return "redirect:/login.do";
 		}
-			return "redirect:/boardList.do";
 	}
 	
 	@RequestMapping(value="logout.do")
 	public String logout(HttpServletRequest request) throws Exception {
 		
-		request.getSession().removeAttribute("user_id");
-		request.getSession().removeAttribute("user_name");
+		request.getSession().removeAttribute("user");
 		
-		return "redirect:/boardList.do";
+		return "redirect:/login.do";
+	}
+	
+	@RequestMapping(value="adminMain.do")
+	public String adminMain() {
+		
+		return "board/adminMain";
+	}
+
+	@RequestMapping(value="managementUser.do")
+	public String managementUser(ModelMap model, HttpServletRequest request) {
+		
+		UserVO userVO = (UserVO)request.getSession().getAttribute("user");
+		
+		model.addAttribute("userList", boardService.selectUserList(userVO));
+		
+		return "board/managementUser";
+	}
+	
+	@RequestMapping(value="updateUser.do", method=RequestMethod.GET)
+	public String updateUser(ModelMap model, UserVO userVO) {
+		
+		model.addAttribute("userInfo", boardService.selectUser(userVO));
+		
+		return "board/updateUser";
+	}
+	
+	@RequestMapping(value="updateUser.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String updateUser(UserVO userVO) {
+		
+		return boardService.updateUser(userVO) + "";
+	}
+	
+	@RequestMapping(value="managementBoard.do")
+	public String managementBoard() {
+		
+		return "board/managementBoard";
+	}
+	
+	@RequestMapping(value="writeComment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String writeComment(CommentVO commentVO) {
+		
+		commentVO.setC_no(boardService.selectMaxCno() + 1);
+		
+		return boardService.insertComment(commentVO) + "";
 	}
 }

@@ -97,6 +97,10 @@ function getCookie() {
     }
 }
 
+function adminMain(){
+	location.href = "<c:url value='/adminMain.do' />"
+}
+
 function writeBoard(){
 	var newwin = window.open("<c:url value='/writeBoard.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
 	newwin.focus();
@@ -125,11 +129,6 @@ function loginCheck(){
 	return true;
 }
 
-function signUp(){
-	location.href = "<c:url value='/signUp.do' />";
-	
-}
-
 function logout(){
 	location.href = "<c:url value='/logout.do' />"
 }
@@ -155,7 +154,7 @@ function fn_link_page(pageNo){
 	<div class="panel panel-default">
 		<!-- 로그인관련 화면 (head) -->
 		<div class="panel-heading">
-			<c:if test="${sessionScope.user_id == null || sessionScope.user_id == '' }">
+			<c:if test="${sessionScope.user.user_id == null || sessionScope.user.user_id == '' }">
 				<form class="form-inline" method="post" action="<c:url value='/login.do' />">
 				  <div class="form-group">
 				    <label for="user_id">User ID : </label>
@@ -170,8 +169,8 @@ function fn_link_page(pageNo){
 				</form>
 			</c:if>
 			
-			<c:if test= "${sessionScope.user_id != null && sessionScope.user_id != '' }">
-				${sessionScope.user_name }(${sessionScope.user_id })님 환영합니다.
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' }">
+				${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
 				<button type="button" class="btn btn-primary" onclick="logout();">로그아웃</button>
 			</c:if>
 		</div>
@@ -202,7 +201,7 @@ function fn_link_page(pageNo){
 								<tr class="toggleContent${i.index }" style="display: none;">
 									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
 										<div class="toggleContent${i.index }" style="display: none;"><p><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
-											<c:if test= "${sessionScope.user_id != null && sessionScope.user_id == 'admin' }"><br>
+											<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id == 'admin' }"><br>
 												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
 											</c:if>
 										</div>
@@ -281,11 +280,12 @@ function fn_link_page(pageNo){
 		
 		<div class="panel-footer float-right">
 			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
-			<c:if test= "${sessionScope.user_id != null && sessionScope.user_id != '' && sessionScope.user_id != 'admin' }">
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.user_id != 'admin' }">
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">게시글 작성</button>
 			</c:if>
-			<c:if test= "${sessionScope.user_id != null && sessionScope.user_id == 'admin' }">
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.admin_YN == 'Y' }">
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">공지글 작성</button>
+				<button type="button" class="btn btn-primary" onclick="adminMain()">게시판 관리</button>
 			</c:if>
 		</div>
 	</div>

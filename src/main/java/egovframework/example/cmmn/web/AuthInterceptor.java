@@ -6,6 +6,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import egovframework.example.board.service.UserVO;
+
 public class AuthInterceptor extends HandlerInterceptorAdapter{
 
 	
@@ -15,9 +17,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
 		
 		HttpSession session = request.getSession();
 		
-		Object obj = session.getAttribute("user_id");
+		Object obj = session.getAttribute("user");
 		
-		if(obj == null || obj.equals("")) { 
+		if(obj == null || ((UserVO)obj).getUser_id().equals("")) { 
 			response.sendRedirect("/Board/login.do");
 			return false;
 		}

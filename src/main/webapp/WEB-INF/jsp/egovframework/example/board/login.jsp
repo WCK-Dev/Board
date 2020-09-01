@@ -17,17 +17,26 @@
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
+<style type="text/css">
+	.container { width: 30%;}
+</style>
 <script>
 $(document).ready(function(){
-	window.resizeTo(480, 420)
 	
-	<c:if test="${!empty loginErrorMsg}">
-		alert("${loginErrorMsg}");
-	</c:if>
-	<c:if test="${!empty loginSuccess}">
-		self.close(); 
-	</c:if>
+	/* 로그인 메시지 출력 */
+	if('${loginErrorMsg}' != ''){
+		alert('${loginErrorMsg}');
+	}
+	
+	if('${loginSuccess}' != ''){
+		alert('${loginSuccess}');
+	}
 });
+
+function signUp(){
+	location.href = "<c:url value='/signUp.do' />";
+}
+
 
 </script>
 </head>
@@ -44,6 +53,7 @@ $(document).ready(function(){
 		<p class="text-danger" style="font-size: 13px">${alert }</p>
 		
 	    <button class="btn btn-primary btn-block my-4" type="submit">로그인</button>
+	    <button class="btn btn-danger btn-block my-4" type="button" onclick="signUp()">회원가입</button>
 	</form>
 </div>
 </body>

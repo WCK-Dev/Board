@@ -46,5 +46,17 @@ public interface BoardService {
 	int insertUser(UserVO vo);
 	
 	UserVO loginCheck(UserVO vo);
+	
+	List<?> selectUserList(UserVO vo);
 
+	UserVO selectUser(UserVO vo);
+
+	int updateUser(UserVO vo);
+	
+	int selectMaxCno();
+	
+	int insertComment(CommentVO vo);
+	
+	List<?> selectCommentList(BoardVO vo);
+	
 }

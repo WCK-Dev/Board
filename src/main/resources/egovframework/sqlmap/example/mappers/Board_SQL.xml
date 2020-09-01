@@ -247,4 +247,65 @@
 
 	</insert>
 	
+	<select id="selectUserList" parameterType="userVO" resultType="egovMap">
+
+			SELECT * 
+			FROM user
+			WHERE user_id != 'master'
+
+	</select>
+	
+	<select id="selectUser" parameterType="userVO" resultType="userVO">
+	
+			SELECT *
+			FROM user
+			WHERE user_id = #{user_id}
+			
+	</select>
+	
+	<update id="updateUser" parameterType="userVO">
+		
+			UPDATE user 
+			SET write_YN = #{write_YN}
+			   ,update_YN = #{update_YN}
+			   ,delete_YN = #{delete_YN}
+			   ,reply_YN = #{reply_YN}
+			   ,comment_YN = #{comment_YN}
+			   ,read_YN = #{read_YN}
+			   ,admin_YN = #{admin_YN}
+			WHERE user_id = #{user_id} 
+		
+	</update>
+	
+	<select id="selectMaxCno" resultType="int">
+	
+			SELECT IFNULL(MAX(c_no), 0) FROM comment
+			
+	</select>
+	
+	<insert id="insertComment" parameterType="commentVO">
+		
+			INSERT INTO comment
+				( c_no
+				 ,c_writer
+				 ,c_content
+				 ,b_no
+				 )
+			VALUES 
+				( #{c_no}
+				 ,#{c_writer}
+				 ,#{c_content}
+				 ,#{b_no}
+				)
+				
+	</insert>
+	
+	<select id="selectCommentList" parameterType="boardVO" resultType="egovMap">
+	
+			SELECT *
+			FROM comment
+			WHERE b_no = #{b_no}
+	
+	</select>
+	
 </mapper>

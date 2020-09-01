@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.example.board.service.BoardService;
 import egovframework.example.board.service.BoardVO;
+import egovframework.example.board.service.CommentVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
@@ -118,5 +119,34 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		return boardDAO.loginCheck(vo);
 	}
 
+	@Override
+	public List<?> selectUserList(UserVO vo) {
+		return boardDAO.selectUserList(vo);
+	}
+	
+	@Override
+	public UserVO selectUser(UserVO vo) {
+		return boardDAO.selectUser(vo);
+	}
+	
+	@Override
+	public int updateUser(UserVO vo) {
+		return boardDAO.updateUser(vo);
+	}
+	
+	@Override
+	public int selectMaxCno() {
+		return boardDAO.selectMaxCno();
+	}
+	
+	@Override
+	public int insertComment(CommentVO vo) {
+		return boardDAO.insertComment(vo);
+	}
 
+	@Override
+	public List<?> selectCommentList(BoardVO vo) {
+		return boardDAO.selectCommentList(vo);
+	}
+	
 }

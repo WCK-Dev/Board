@@ -77,7 +77,7 @@
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" id="replyForm">
-			<c:if test="${sessionScope.user_id == 'admin' }">
+			<c:if test="${sessionScope.user.user_id == 'admin' }">
 				<input type="hidden" name="b_category" value="1">
 			</c:if>
 				<input type="hidden" id="b_no" name="b_no" value="${boardVO.b_no }">
@@ -93,7 +93,7 @@
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_writer">작성자 : </label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
+			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
 			  <div class="form-group">

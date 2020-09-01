@@ -18,6 +18,7 @@ package egovframework.example.board.service.impl;
 import java.util.List;
 
 import egovframework.example.board.service.BoardVO;
+import egovframework.example.board.service.CommentVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -51,5 +52,17 @@ public interface BoardMapper {
 	int insertUser(UserVO vo);
 	
 	UserVO loginCheck(UserVO vo);
+	
+	List<?> selectUserList(UserVO vo);
+	
+	UserVO selectUser(UserVO vo);
+
+	int updateUser(UserVO vo);
+	
+	int selectMaxCno();
+	
+	int insertComment(CommentVO vo);
+
+	List<?> selectCommentList(BoardVO vo);
 
 }
