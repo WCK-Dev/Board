@@ -21,7 +21,7 @@
 <script>
 $(document).ready(function(){
 	var b_writer = $("#b_writer").val();
-	if('${session_user_id}' != b_writer){
+	if('${sessionScope.user.user_id}' != b_writer){
 		alert("글쓴이 본인만 게시글을 수정할 수 있습니다.\r\n현재 로그인 정보를 확인해주십시오.");
 		history.back();
 	}

@@ -65,6 +65,12 @@ public class BoardController {
 		
 		return "board/writeBoard";
 	}
+	
+	@RequestMapping(value="writeNotice.do" , method = RequestMethod.GET)
+	public String writeNotice() throws Exception {
+		
+		return "board/writeNotice";
+	}
 
 	@ResponseBody
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.POST)
@@ -100,8 +106,6 @@ public class BoardController {
 	
 	@RequestMapping(value="updateBoard.do", method = RequestMethod.GET)
 	public String updateBoard(int b_no, ModelMap model, HttpServletRequest request) throws Exception {
-		
-		model.addAttribute("session_user_id", ((UserVO)request.getSession().getAttribute("user")).getUser_id());
 		
 		BoardVO boardVO = new BoardVO();
 		boardVO.setB_no(b_no);
@@ -265,5 +269,13 @@ public class BoardController {
 	public String deleteComment(CommentVO commentVO) {
 		
 		return boardService.deleteComment(commentVO) + "";
+	}
+	
+	@RequestMapping(value="boardPwdCheck.do")
+	public String boardPwdCheck(BoardVO boardVO, ModelMap model) {
+		
+		model.addAttribute("board", boardVO);
+		
+		return "board/boardPwdCheck";
 	}
 }

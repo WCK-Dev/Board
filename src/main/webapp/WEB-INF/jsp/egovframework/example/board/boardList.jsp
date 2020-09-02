@@ -106,8 +106,31 @@ function writeBoard(){
 	newwin.focus();
 }
 
-function readBoard(b_no){
-	var newwin = window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+function writeNotice(){
+	var newwin = window.open("<c:url value='/writeNotice.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
+}
+
+function readBoard(b_no, b_writer, b_secret, login_id, b_pwd){
+	if(b_secret == 1 && b_writer != login_id){
+		//확인 윈도우 오픈
+		var newwin = window.open("<c:url value='/boardPwdCheck.do' />", "popUpBoard", "width=400, height=250, left=500, top=50, scrollbars=1");
+		
+		var formObj = $('<form>', {'id': 'formObj' ,'action': 'boardPwdCheck.do', 'method' : 'post', 'target':'popUpBoard'});
+		var inpb_no = $('<input>', {'name': 'b_no', 'value': b_no, 'type': 'hidden' });
+		var inpb_pwd = $('<input>', {'name': 'b_pwd', 'value': b_pwd, 'type': 'hidden'  });
+		
+		formObj.append(inpb_no);
+		formObj.append(inpb_pwd);
+		$(document.body).append(formObj);
+		$("#formObj").submit();
+		
+	} else {
+		var newwin = window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	}
+	
+	
+	
 	newwin.focus();
 }
 
@@ -256,7 +279,7 @@ function fn_link_page(pageNo){
 			        	<c:if test="${board.bSecret == 1 }">
 			        		<div class="badge badge-primary text-wrap">비밀글</div>
 			        	</c:if>			        	
-			        	<a href="javascript:readBoard(${board.bNo });">
+			        	<a href="javascript:readBoard(${board.bNo }, '${board.bWriter }', '${board.bSecret }', '${sessionScope.user.user_id }' , '${board.bPwd }');">
 				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
 				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
 				        </a>
@@ -282,7 +305,7 @@ function fn_link_page(pageNo){
 				<button type="button" class="btn btn-primary" onclick="writeBoard()">게시글 작성</button>
 			</c:if>
 			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-				<button type="button" class="btn btn-primary" onclick="writeBoard()">공지글 작성</button>
+				<button type="button" class="btn btn-primary" onclick="writeNotice()">공지글 작성</button>
 				<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
 			</c:if>
 		</div>

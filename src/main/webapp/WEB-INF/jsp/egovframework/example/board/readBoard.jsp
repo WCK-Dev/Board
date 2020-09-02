@@ -153,7 +153,6 @@ function deleteComment(c_no, c_writer, user_id) {
 		<!-- 댓글란 -->
 		
 		<div class="text-center border border-light" >
-		    <div class="text-left mb-3"><b>전체 댓글</b> <span id="commentCnt">0</span>개</div>
 			<table class="table">
 				<c:forEach var="comment" items="${commentList }" varStatus="i">
 					<tr>
@@ -170,6 +169,9 @@ function deleteComment(c_no, c_writer, user_id) {
 					</tr>
 				</c:forEach>
 			</table>
+			
+			<!-- 댓글 작성란  -->
+			<c:if test="${sessionScope.user.comment_YN == 'Y' || sessionScope.user.admin_YN == 'Y'}">
 			<table>
 				<tr>
 					<td colspan="2" style="text-align: center">
@@ -186,14 +188,17 @@ function deleteComment(c_no, c_writer, user_id) {
 					</td>
 			    </tr>
 			</table>
+			</c:if>
 		</div>
 		
 		<div class="panel-footer float-right mt-5">
-			<c:if test="${sessionScope.user.user_id != '' && sessionScope.user.user_id == boardVO.b_writer }">
+			<c:if test="${(sessionScope.user.user_id == boardVO.b_writer && sessionScope.user.update_YN == 'Y' )|| sessionScope.user.admin_YN == 'Y'}">
 				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
+			</c:if>
+			<c:if test="${(sessionScope.user.user_id == boardVO.b_writer && sessionScope.user.delete_YN == 'Y' )|| sessionScope.user.admin_YN == 'Y'}">
 				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_refno})">삭제</button>
 			</c:if>
-			<c:if test="${sessionScope.user.user_id != '' && sessionScope.user.user_id != null && boardVO.b_notice != 1}">
+			<c:if test="${sessionScope.user.reply_YN == 'Y' || sessionScope.user.admin_YN == 'Y'}">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
 			<button type="button" class="btn btn-primary" onclick="window.close()">닫기</button>

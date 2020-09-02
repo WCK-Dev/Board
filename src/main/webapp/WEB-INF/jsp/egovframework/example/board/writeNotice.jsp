@@ -51,13 +51,6 @@
 			return false;
 		}
 		
-		if( b_secret == '1' && $("#b_pwd").val() == '') {
-			alert("비밀글 작성시에는 비밀번호를 입력해야합니다.")
-			$("#b_pwd").focus();
-			return false;
-		}
-		
-		
 		insertBoard();
 	}
 	
@@ -65,9 +58,6 @@
 		var b_title = $("#b_title").val();
 		var b_writer = $("#b_writer").val();
 		var b_content = $("#b_content").val();
-		var b_category = $("#b_category").val();
-		var b_secret = $(":radio[name='b_secret']:checked").val();
-		var b_pwd = $("#b_pwd").val();
 		
 		$.ajax({
 			type : 'POST',
@@ -76,9 +66,7 @@
 			data : {"b_title": b_title
 				   ,"b_writer": b_writer
 				   ,"b_content": b_content
-				   ,"b_category": b_category
-				   ,"b_secret": b_secret
-				   ,"b_pwd": b_pwd
+				   ,"b_notice": '1'
 					},
 			
 			success : function(result) {
@@ -96,13 +84,13 @@
 </script>
 </head>
 <body class="container">
-	<h1 class="text-center">게시글 등록</h1>
+	<h1 class="text-center">공지글등록</h1>
 	<hr>
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" id="writeForm">
 			  <div class="form-group">
-			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
+			    <label class="control-label col-sm-2" for="b_title">공지글 제목 : </label>
 			    <div class="col-sm-10">
 			      <input type="text" class="form-control" id="b_title" name="b_title" placeholder="제목을 입력해주세요." maxlength="100">
 			    </div>
@@ -113,18 +101,9 @@
 			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
-			  <div style="width: 100%">
-			      <b>게시글 유형 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="b_secret" value="0" checked onchange="isSecret()">&nbsp;일반글 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="b_secret" value="1" onchange="isSecret()">&nbsp;비밀글
-			  </div>
-			  <div>
-			  	  <b>게시글 비밀번호 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="password" id="b_pwd" name="b_pwd" class="form-control" style="width:63%; display:inline-block;" disabled="disabled" maxlength="20">
-			  </div>
 			  <div class="form-group">
 			    <div class="form-group">
-				  <label for="b_content">게시글 내용</label>
+				  <label for="b_content">공지글 내용</label>
 				  <textarea class="form-control" rows="20" id="b_content" name="b_content" maxlength="2000"></textarea>
 				</div>
 			  </div>

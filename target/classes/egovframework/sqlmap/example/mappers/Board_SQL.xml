@@ -124,7 +124,7 @@
 			
 			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd
 			FROM CTE
-			WHERE 1 = 1
+			WHERE b_notice != 1
 			<if test="b_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
 			</if>
@@ -160,7 +160,7 @@
 
 			SELECT COUNT(*) totcnt
 			FROM BOARD
-			WHERE 1 = 1 AND b_notice != 1
+			WHERE b_notice != 1
 			<if test="b_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
 			</if>
