@@ -62,9 +62,16 @@ public class BoardVO extends BoardDefaultVO {
 	private int b_depth;
 	
 	/** 글유형 (공지, 일반) */
-	private int b_category;
+	private int b_notice;
 	
-	private int b_order;
+	/** 게시글 정렬 순서(원글 -댓글 그룹핑) */
+	private int b_origin;
+	
+	/** 비밀글 여부(일반 글 = 0, 비밀글 = 1) */
+	private int b_secret;
+	
+	/** 게시글 비밀번호(일반 글에는 NULL) */
+	private String b_pwd;
 	
 	public int getB_no() {
 		return b_no;
@@ -130,20 +137,36 @@ public class BoardVO extends BoardDefaultVO {
 		this.b_depth = b_depth;
 	}
 
-	public int getB_category() {
-		return b_category;
+	public int getb_notice() {
+		return b_notice;
 	}
 
-	public void setB_category(int b_category) {
-		this.b_category = b_category;
+	public void setb_notice(int b_notice) {
+		this.b_notice = b_notice;
 	}
 	
-	public int getB_order() {
-		return b_order;
+	public int getB_origin() {
+		return b_origin;
 	}
 
-	public void setB_order(int b_order) {
-		this.b_order = b_order;
+	public void setB_origin(int b_origin) {
+		this.b_origin = b_origin;
+	}
+	
+	public int getB_secret() {
+		return b_secret;
+	}
+
+	public void setB_secret(int b_secret) {
+		this.b_secret = b_secret;
+	}
+
+	public String getB_pwd() {
+		return b_pwd;
+	}
+
+	public void setB_pwd(String b_pwd) {
+		this.b_pwd = b_pwd;
 	}
 
 	public static long getSerialversionuid() {

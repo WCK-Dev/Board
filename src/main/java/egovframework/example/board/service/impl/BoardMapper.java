@@ -19,6 +19,7 @@ import java.util.List;
 
 import egovframework.example.board.service.BoardVO;
 import egovframework.example.board.service.CommentVO;
+import egovframework.example.board.service.HistoryVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -68,5 +69,9 @@ public interface BoardMapper {
 	int deleteComment(CommentVO vo);
 
 	List<?> selectCommentList(BoardVO vo);
+	
+	int insertHistory(HistoryVO vo);
 
+	int checkHistory(HistoryVO vo);
+	
 }

@@ -63,4 +63,7 @@ public interface BoardService {
 	
 	List<?> selectCommentList(BoardVO vo);
 	
+	int insertHistory(HistoryVO vo);
+	
+	int checkHistory(HistoryVO vo);
 }

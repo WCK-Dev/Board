@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import egovframework.example.board.service.BoardService;
 import egovframework.example.board.service.BoardVO;
 import egovframework.example.board.service.CommentVO;
+import egovframework.example.board.service.HistoryVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
@@ -159,5 +160,14 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		return boardDAO.selectCommentList(vo);
 	}
 
+	@Override
+	public int insertHistory(HistoryVO vo) {
+		return boardDAO.insertHistory(vo);
+	}
+	
+	@Override
+	public int checkHistory(HistoryVO vo) {
+		return boardDAO.checkHistory(vo);
+	}
 	
 }

@@ -66,25 +66,30 @@ function writeComment(b_no) {
 	var c_writer = $("#c_writer").val();
 	var c_content = $("#c_content").val();
 	
-	$.ajax({
-		type : 'POST',
-		url : "<c:url value='/insertComment.do'/>",
-		dataType : "text",
-		data : {"b_no" : b_no,
-				"c_writer": c_writer,
-				"c_content": c_content
-				},
-		
-		success : function (result) {
+	if(!c_content){
+		alert("댓글내용을 입력해야합니다.");
+	} else {
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/insertComment.do'/>",
+			dataType : "text",
+			data : {"b_no" : b_no,
+					"c_writer": c_writer,
+					"c_content": c_content
+					},
 			
-			if(result == 1){
-				alert("댓글을 등록했습니다.");
-				location.reload(true);
-			} else {
-				alert("댓글등록에 오류가 발생했습니다.")
+			success : function (result) {
+				
+				if(result == 1){
+					alert("댓글을 등록했습니다.");
+					location.reload(true);
+				} else {
+					alert("댓글등록에 오류가 발생했습니다.")
+				}
 			}
-		}
-	});
+		});
+	}
+	
 }
 
 function deleteComment(c_no, c_writer, user_id) {
@@ -188,7 +193,7 @@ function deleteComment(c_no, c_writer, user_id) {
 				<button type="button" class="btn btn-primary" onclick="update(${boardVO.b_no})">수정</button>
 				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_refno})">삭제</button>
 			</c:if>
-			<c:if test="${sessionScope.user.user_id != '' && sessionScope.user.user_id != null && boardVO.b_category != 1}">
+			<c:if test="${sessionScope.user.user_id != '' && sessionScope.user.user_id != null && boardVO.b_notice != 1}">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
 			<button type="button" class="btn btn-primary" onclick="window.close()">닫기</button>

@@ -41,7 +41,7 @@
 		var b_writer = $("#b_writer").val();
 		var b_content = $("#b_content").val();
 		var b_depth = $("#b_depth").val();
-		var b_order = $("#b_order").val();
+		var b_origin = $("#b_origin").val();
 		
 		$.ajax({
 			type : 'POST',
@@ -52,7 +52,7 @@
 					"b_content": b_content,
 					"b_refno": b_no,
 					"b_depth": b_depth,
-					"b_order": b_order
+					"b_origin": b_origin
 			},
 			
 			success : function(result) {
@@ -78,11 +78,11 @@
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" id="replyForm">
 			<c:if test="${sessionScope.user.user_id == 'admin' }">
-				<input type="hidden" name="b_category" value="1">
+				<input type="hidden" name="" value="1">
 			</c:if>
 				<input type="hidden" id="b_no" name="b_no" value="${boardVO.b_no }">
 				<input type="hidden" id="b_depth" name="b_depth" value="${boardVO.b_depth }">
-				<input type="hidden" id="b_order" name="b_order" value="${boardVO.b_order }">
+				<input type="hidden" id="b_origin" name="b_origin" value="${boardVO.b_origin }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>

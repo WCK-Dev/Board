@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import egovframework.example.board.service.BoardService;
 import egovframework.example.board.service.BoardVO;
 import egovframework.example.board.service.CommentVO;
+import egovframework.example.board.service.HistoryVO;
 import egovframework.example.board.service.UserVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -72,18 +73,26 @@ public class BoardController {
 		
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
-		boardVO.setB_order(b_no);
+		boardVO.setB_origin(b_no);
 		
 		boardService.insertBoard(boardVO);
 	}
 
 	@RequestMapping(value="readBoard.do")
-	public String readBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	public String readBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		/** 유저의 게시글 읽은 내역 저장 */
+		HistoryVO historyVO = new HistoryVO();
+		String loginId = ((UserVO)request.getSession().getAttribute("user")).getUser_id();
+		historyVO.setUser_id(loginId);
+		historyVO.setB_no(boardVO.getB_no());
+		
+		if(boardService.checkHistory(historyVO) != 1) {
+			boardService.insertHistory(historyVO);
+		}
 		
 		boardService.updateReadCnt(boardVO);
-
 		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
-		
 		model.addAttribute("commentList", boardService.selectCommentList(boardVO));
 		
 		return "board/readBoard";

@@ -22,7 +22,23 @@
 		window.close();
 	}
 	
+	function isSecret() {
+		var b_pwd = $("#b_pwd");
+		var b_secret = $(":radio[name='b_secret']:checked").val();
+		
+		if(b_secret == '0') {
+			b_pwd.val('');
+			b_pwd.attr('disabled', 'disabled');
+			
+		} else if (b_secret == '1') {
+			b_pwd.removeAttr('disabled');
+		}
+	}
+	
+	
 	function testValidation() {
+		var b_secret = $(":radio[name='b_secret']:checked").val();
+		
 		if( $("#b_title").val() == '' || $("#b_title").val().trim() == '' ){
 			alert("제목을 입력해야 합니다.");
 			$("#b_title").focus();
@@ -35,6 +51,13 @@
 			return false;
 		}
 		
+		if( b_secret == '1' && $("#b_pwd").val() == '') {
+			alert("비밀글 작성시에는 비밀번호를 입력해야합니다.")
+			$("#b_pwd").focus();
+			return false;
+		}
+		
+		
 		insertBoard();
 	}
 	
@@ -42,16 +65,21 @@
 		var b_title = $("#b_title").val();
 		var b_writer = $("#b_writer").val();
 		var b_content = $("#b_content").val();
-		var b_category = $("#b_category").val();
+		var b_notice = $("#b_notice").val();
+		var b_secret = $(":radio[name='b_secret']:checked").val();
+		var b_pwd = $("#b_pwd").val();
 		
 		$.ajax({
 			type : 'POST',
 			url : "<c:url value='/writeBoard.do'/>",
 			dataType : "text",
-			data : {"b_title": b_title,
-					"b_writer": b_writer,
-					"b_content": b_content,
-					"b_category": b_category},
+			data : {"b_title": b_title
+				   ,"b_writer": b_writer
+				   ,"b_content": b_content
+				   ,"b_notice": b_notice
+				   ,"b_secret": b_secret
+				   ,"b_pwd": b_pwd
+					},
 			
 			success : function(result) {
 				alert("글이 정상적으로 등록되었습니다.");
@@ -79,7 +107,7 @@
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" id="writeForm">
 			<c:if test="${sessionScope.user.admin_YN == 'Y' }">
-				<input type="hidden" id="b_category" name="b_category" value="1">
+				<input type="hidden" id="b_notice" name="b_notice" value="1">
 			</c:if>
 			
 			  <div class="form-group">
@@ -93,6 +121,15 @@
 			    <div class="col-sm-10">
 			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
+			  </div>
+			  <div style="width: 100%">
+			      <b>게시글 유형 : &nbsp;&nbsp;&nbsp;</b>
+			      <input type="radio" name="b_secret" value="0" checked onchange="isSecret()">&nbsp;일반글 &nbsp;&nbsp;&nbsp;
+			      <input type="radio" name="b_secret" value="1" onchange="isSecret()">&nbsp;비밀글
+			  </div>
+			  <div>
+			  	  <b>게시글 비밀번호 : &nbsp;&nbsp;&nbsp;</b>
+			      <input type="password" id="b_pwd" name="b_pwd" class="form-control" style="width:63%; display:inline-block;" disabled="disabled" maxlength="20">
 			  </div>
 			  <div class="form-group">
 			    <div class="form-group">

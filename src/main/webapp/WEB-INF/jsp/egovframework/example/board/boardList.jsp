@@ -154,25 +154,8 @@ function fn_link_page(pageNo){
 	<div class="panel panel-default">
 		<!-- 로그인관련 화면 (head) -->
 		<div class="panel-heading">
-			<c:if test="${sessionScope.user.user_id == null || sessionScope.user.user_id == '' }">
-				<form class="form-inline" method="post" action="<c:url value='/login.do' />">
-				  <div class="form-group">
-				    <label for="user_id">User ID : </label>
-				    <input type="text" class="form-control" id="user_id" name="user_id" maxlength="20">
-				  </div>
-				  <div class="form-group pl-2">
-				    <label class="pr-3" for="user_pwd">Password : </label>
-				    <input type="password" class="form-control" id="user_pwd" name="user_pwd" maxlength="20">
-				  </div>
-				  <button type="submit" class="btn btn-primary ml-3" onclick="return loginCheck();">로그인</button>
-				  <button type="button" class="btn btn-primary ml-1" onclick="signUp();">회원가입</button>
-				</form>
-			</c:if>
-			
-			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' }">
-				${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
-				<button type="button" class="btn btn-primary" onclick="logout();">로그아웃</button>
-			</c:if>
+			${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
+			<button type="button" class="btn btn-primary" onclick="logout();">로그아웃</button>
 		</div>
 		
 		<!-- 팝업 레이어 영역 -->
@@ -218,7 +201,8 @@ function fn_link_page(pageNo){
 		 </div>
 		
 		<!-- 검색 영역 -->
-		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="post">
+		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="get">
+		<input type="hidden" id="loginId" name="loginId" value="${sessionScope.user.user_id }">
 		<div>
 			<nav class="navbar">
 				<!-- Navbar brand -->
@@ -244,6 +228,16 @@ function fn_link_page(pageNo){
 			</nav>
 		</div>
 		
+		<div style="width: 100%" class="mt-2 mb-2 text-center">
+			<h4>게시판 유형 선택</h4>
+			<input type="radio" id="b_type" name="b_type" value="0" <c:if test="${board.b_type == 0 }">checked</c:if> onchange="document.boardListForm.submit();">&nbsp;일반형 &nbsp;&nbsp;&nbsp;
+			<input type="radio" id="b_type" name="b_type" value="1" <c:if test="${board.b_type == 1 }">checked</c:if> onchange="document.boardListForm.submit();">&nbsp;알림형
+		</div>
+		
+		<c:if test="${board.b_type == 1 }">
+		<div style="width: 100%" class="mb-2 text-right">해당 게시판의 읽지 않은 게시글 수 : ${paginationInfo.totalRecordCount }</div>
+		</c:if>
+		
 		<!-- 테이블(게시글) 영역  -->
 			<div class="table-responsive table-hover">
 			  <table class="table">
@@ -258,7 +252,11 @@ function fn_link_page(pageNo){
 			    <tbody>
 			    <c:forEach var="board" items="${boardList }">
 			      <tr>
-			        <td><a href="javascript:readBoard(${board.bNo });">
+			        <td>
+			        	<c:if test="${board.bSecret == 1 }">
+			        		<div class="badge badge-primary text-wrap">비밀글</div>
+			        	</c:if>			        	
+			        	<a href="javascript:readBoard(${board.bNo });">
 				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
 				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
 				        </a>

@@ -11,7 +11,7 @@
 		<result property="b_readcnt" column="b_readcnt"/>
 		<result property="b_refno" column="b_refno"/>
 		<result property="b_depth" column="b_depth"/>
-		<result property="b_category" column="b_category"/>
+		<result property="b_notice" column="b_notice"/>
 	</resultMap>
 
 	<insert id="insertBoard" parameterType="boardVO">
@@ -22,20 +22,24 @@
 				  , b_writer
 				  , b_content
 				  , b_refno
-				  , b_category
+				  , b_notice
 				  , b_depth
 				  , b_readcnt
-				  , b_order
+				  , b_origin
+				  , b_secret
+				  , b_pwd
 				   )
 			VALUES ( #{b_no}
 				  ,	#{b_title}
 				  , #{b_writer}
 				  , #{b_content}
 				  , #{b_refno}
-				  , #{b_category}
+				  , #{b_notice}
 				  , 1
 				  , 0
-				  , #{b_order}
+				  , #{b_origin}
+				  , #{b_secret}
+				  , #{b_pwd}
 				   )
 
 	</insert>
@@ -68,7 +72,7 @@
 	<select id="selectBoard" resultMap="board">
 
 			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category, b_order
+				*
 			FROM BOARD
 			WHERE b_no=#{b_no}
 
@@ -93,9 +97,11 @@
 						,b_readcnt
 						,b_refno
 						,b_depth
-						,b_category
+						,b_notice
 						,CAST(LPAD(b_no, 10, 0) AS CHAR(3000)) path
-						,b_order
+						,b_origin
+						,b_secret
+						,b_pwd
 				FROM board
 				WHERE b_refno = 0
 				UNION ALL
@@ -107,16 +113,21 @@
 						,b.b_readcnt
 						,b.b_refno
 						,b.b_depth
-						,b.b_category
+						,b.b_notice
 						,CONCAT(a.path, ',', b.b_no) AS path
-						,b.b_order
+						,b.b_origin
+						,b.b_secret
+						,b.b_pwd
 				FROM CTE a
 				INNER JOIN board b ON a.b_no = b.b_refno
 			)
 			
-			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_order
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd
 			FROM CTE
 			WHERE 1 = 1
+			<if test="b_type == 1">
+				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
+			</if>
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
 		            <when test="searchCondition == 0">
@@ -140,7 +151,7 @@
 					</when>
 				</choose>
 			</if>
-			ORDER BY b_order DESC, path ASC
+			ORDER BY b_origin DESC, path ASC
 			LIMIT #{firstIndex}, #{recordCountPerPage}
 
 	</select>
@@ -149,7 +160,10 @@
 
 			SELECT COUNT(*) totcnt
 			FROM BOARD
-			WHERE 1 = 1 AND b_category != 1
+			WHERE 1 = 1 AND b_notice != 1
+			<if test="b_type == 1">
+				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
+			</if>
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
 		            <when test="searchCondition == 0">
@@ -177,9 +191,9 @@
 	
 	<select id="selectNoticeList" resultType="egovMap">
 			SELECT
-				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_category
+				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_notice
 			FROM BOARD
-			WHERE b_category=1
+			WHERE b_notice=1
 			ORDER BY b_no DESC
 			LIMIT 3
 	</select>
@@ -229,20 +243,20 @@
 				  , b_writer
 				  , b_content
 				  , b_refno
-				  , b_category
+				  , b_notice
 				  , b_depth
 				  , b_readcnt
-				  , b_order
+				  , b_origin
 				   )
 			VALUES ( #{b_no} 
 			      , #{b_title}
 				  , #{b_writer}
 				  , #{b_content}
 				  , #{b_refno}
-				  , #{b_category}
+				  , #{b_notice}
 				  , #{b_depth} + 1
 				  , 0
-				  , #{b_order}
+				  , #{b_origin}
 				   )
 
 	</insert>
@@ -343,6 +357,26 @@
 			FROM comment
 			WHERE b_no = #{b_no}
 	
+	</select>
+	
+	<insert id="insertHistory" parameterType="historyVO">
+	
+			INSERT INTO history
+				( b_no
+				 ,user_id
+				)
+			VALUES 
+				( #{b_no}
+				 ,#{user_id}
+				)
+	
+	</insert> 
+	
+	<select id="checkHistory" parameterType="historyVO" resultType="int">
+	
+			SELECT COUNT(*)
+			FROM history
+			WHERE user_id = #{user_id} AND b_no = #{b_no}
 	</select>
 	
 </mapper>
