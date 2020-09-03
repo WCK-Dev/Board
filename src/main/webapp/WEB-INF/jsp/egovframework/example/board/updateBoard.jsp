@@ -21,8 +21,8 @@
 <script>
 $(document).ready(function(){
 	var b_writer = $("#b_writer").val();
-	if('${sessionScope.user.user_id}' != b_writer){
-		alert("글쓴이 본인만 게시글을 수정할 수 있습니다.\r\n현재 로그인 정보를 확인해주십시오.");
+	if('${sessionScope.user.user_id}' != b_writer && '${sessionScope.user.admin_YN}' != 'Y'){
+		alert("글쓴이 본인과 관리자만 게시글을 수정할 수 있습니다.\r\n현재 로그인 정보를 확인해주십시오.");
 		history.back();
 	}
 });
@@ -37,6 +37,20 @@ $(document).ready(function(){
 			alert("내용은 공백일 수 없습니다.");
 			$("#b_content").focus();
 			return false;
+		}
+		
+		if( '${boardVO.b_secret}' == 1 && '${sessionScope.user.admin_YN}' != 'Y'){
+			if($("#b_pwd").val() == '' || $("#b_pwd").val().trim() == ''){
+				alert("비밀글 수정을 위해서는 글 비밀번호를 입력해야합니다.");
+				$("#b_pwd").focus();
+				return false;
+			} 
+			
+			if($("#b_pwd").val() != '${boardVO.b_pwd}'){
+				alert("게시글 비밀번호가 틀립니다.");
+				return false;
+			}
+			
 		}
 		
 		return true;
@@ -65,6 +79,15 @@ $(document).ready(function(){
 			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${boardVO.b_writer }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
+			  
+			  <!-- 비밀글일때만 비밀번호 입력란 출력 -->
+			  <c:if test="${sessionScope.user.admin_YN != 'Y' && boardVO.b_secret == 1}">
+				  <div class="form-group mt-1">
+				  	  <b>게시글 비밀번호 : &nbsp;&nbsp;&nbsp;</b>
+				      <input type="password" id="b_pwd" name="b_pwd" class="form-control" style="width:63%; display:inline-block;" maxlength="20">
+				  </div>
+			  </c:if>
+			  
 			  <div class="form-group">
 			    <div class="form-group">
 				  <label for="b_content">게시글 내용</label>

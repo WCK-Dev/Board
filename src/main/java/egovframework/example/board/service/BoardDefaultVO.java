@@ -69,9 +69,6 @@ public class BoardDefaultVO implements Serializable {
 	/** recordCountPerPage */
 	private int recordCountPerPage = 10;
 	
-	/** 게시판 유형 (0이면 일반형 1이면 알림형) */
-	private int b_type;
-	
 	/** 현재 로그인 된 아이디 */
 	private String loginId;
 
@@ -147,15 +144,6 @@ public class BoardDefaultVO implements Serializable {
 		this.pageSize = pageSize;
 	}
 
-
-	public int getB_type() {
-		return b_type;
-	}
-
-	public void setB_type(int b_type) {
-		this.b_type = b_type;
-	}
-	
 	public String getLoginId() {
 		return loginId;
 	}

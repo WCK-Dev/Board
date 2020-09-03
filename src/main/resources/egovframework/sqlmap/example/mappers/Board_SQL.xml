@@ -2,18 +2,67 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.example.board.service.impl.BoardMapper">
 
-	<resultMap id="board" type="egovframework.example.board.service.BoardVO">
-		<result property="b_no" column="b_no"/>
-		<result property="b_title" column="b_title"/>
-		<result property="b_writer" column="b_writer"/>
-		<result property="b_content" column="b_content"/>
-		<result property="b_regdate" column="b_regdate"/>
-		<result property="b_readcnt" column="b_readcnt"/>
-		<result property="b_refno" column="b_refno"/>
-		<result property="b_depth" column="b_depth"/>
-		<result property="b_notice" column="b_notice"/>
-	</resultMap>
+	
+	
+	<select id="selectBoardKinds" parameterType="boardVO" resultType="boardVO">
+	
+			SELECT * FROM boardkinds
+			WHERE bk_bseq = #{bk_bseq}
+	
+	</select>
+	
+	<select id="selectBoardKindsList" parameterType="boardVO" resultType="egovMap">
 
+			SELECT * FROM boardkinds
+
+	</select>
+	
+	<select id="selectMaxBseq" resultType="int">
+	
+			SELECT IFNULL(MAX(bk_bseq), 0) FROM boardkinds
+			
+	</select>
+	
+	<select id="selectMaxBkOrder" resultType="int">
+			
+			SELECT IFNULL(MAX(bk_order), 0) FROM boardkinds
+	
+	</select>
+	
+	<insert id="insertBoardKinds" parameterType="boardVO">
+	
+			INSERT INTO boardkinds
+				( bk_bseq
+				 ,bk_type
+				 ,bk_order
+				 ,bk_bname
+				 ,bk_breply_YN
+				 ,bk_bcomment_YN
+				 ,bk_bsecret_YN
+				)
+			VALUES ( #{bk_bseq}
+					,#{bk_type}
+					,#{bk_order}
+					,#{bk_bname}
+					,#{bk_breply_YN}
+					,#{bk_bcomment_YN}
+					,#{bk_bsecret_YN}
+					)
+	
+	</insert>
+	
+	<update id="updateBoardKinds" parameterType="boardVO">
+
+		UPDATE boardkinds
+		SET bk_bname = #{bk_bname}
+		   ,bk_type = #{bk_type}
+		   ,bk_breply_YN = #{bk_breply_YN}
+		   ,bk_bcomment_YN = #{bk_bcomment_YN}
+		   ,bk_bsecret_YN = #{bk_bsecret_YN}
+		WHERE bk_bseq = #{bk_bseq} 
+	
+	</update>
+	
 	<insert id="insertBoard" parameterType="boardVO">
 
 			INSERT INTO BOARD
@@ -28,6 +77,7 @@
 				  , b_origin
 				  , b_secret
 				  , b_pwd
+				  , b_bseq
 				   )
 			VALUES ( #{b_no}
 				  ,	#{b_title}
@@ -40,6 +90,7 @@
 				  , #{b_origin}
 				  , #{b_secret}
 				  , #{b_pwd}
+				  , #{b_bseq}
 				   )
 
 	</insert>
@@ -49,7 +100,7 @@
 			UPDATE BOARD
 			SET b_title=#{b_title}
 				, b_content=#{b_content}
-			WHERE b_no=#{b_no} AND b_writer = #{b_writer}
+			WHERE b_no=#{b_no}
 
 	</update>
 
@@ -57,19 +108,16 @@
 
 			<if test="b_refno == 0">
 				DELETE FROM BOARD
-				WHERE b_no = #{b_no} OR b_refno = #{b_no}
+				WHERE b_no = #{b_no} OR b_origin = #{b_no}
 			</if>
 			<if test="b_refno != 0">
 				DELETE FROM BOARD
 				WHERE b_no = #{b_no}
 			</if>
 			
-			AND b_writer = #{b_writer}
-			
-
 	</delete>
 
-	<select id="selectBoard" resultMap="board">
+	<select id="selectBoard" resultType="boardVO">
 
 			SELECT
 				*
@@ -102,6 +150,7 @@
 						,b_origin
 						,b_secret
 						,b_pwd
+						,b_bseq
 				FROM board
 				WHERE b_refno = 0
 				UNION ALL
@@ -118,14 +167,15 @@
 						,b.b_origin
 						,b.b_secret
 						,b.b_pwd
+						,b.b_bseq
 				FROM CTE a
 				INNER JOIN board b ON a.b_no = b.b_refno
 			)
 			
-			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq
 			FROM CTE
-			WHERE b_notice != 1
-			<if test="b_type == 1">
+			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
+			<if test="bk_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
 			</if>
 			<if test="searchKeyword != null and searchKeyword != ''">
@@ -160,8 +210,8 @@
 
 			SELECT COUNT(*) totcnt
 			FROM BOARD
-			WHERE b_notice != 1
-			<if test="b_type == 1">
+			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
+			<if test="bk_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
 			</if>
 			<if test="searchKeyword != null and searchKeyword != ''">
@@ -193,7 +243,7 @@
 			SELECT
 				b_no, b_title, b_writer, b_content, b_regdate, b_readcnt, b_refno, b_depth, b_notice
 			FROM BOARD
-			WHERE b_notice=1
+			WHERE b_notice=1 AND b_bseq = #{b_bseq}
 			ORDER BY b_no DESC
 			LIMIT 3
 	</select>
@@ -247,6 +297,7 @@
 				  , b_depth
 				  , b_readcnt
 				  , b_origin
+				  , b_bseq
 				   )
 			VALUES ( #{b_no} 
 			      , #{b_title}
@@ -257,6 +308,7 @@
 				  , #{b_depth} + 1
 				  , 0
 				  , #{b_origin}
+				  , #{b_bseq}
 				   )
 
 	</insert>

@@ -38,7 +38,16 @@ function update(b_no) {
 	location.href = "<c:url value='/updateBoard.do'/>?b_no=" + b_no;
 }
 
-function del(b_no, b_refno) {		
+function del(b_no, b_refno) {
+	
+	if('${boardVO.b_secret}' == '1' && '${sessionScope.user.admin_YN}' != 'Y'){
+		var inputPwd = prompt("비밀글 삭제를 위해 게시글 비밀번호를 입력해주세요.");
+		
+		if(inputPwd != '${boardVO.b_pwd}'){
+			alert("게시글 비밀번호를 확인해주세요.");
+			return false;
+		}
+	}
 	
 	if(confirm("해당글을 삭제하시겠습니까?\r\n원본 게시글인 경우, 답글까지 모두 삭제됩니다.")){
 		
@@ -152,8 +161,8 @@ function deleteComment(c_no, c_writer, user_id) {
 		
 		<!-- 댓글란 -->
 		
-		<div class="text-center border border-light" >
-			<table class="table">
+		<div class="text-center" >
+			<table class="table border border-light">
 				<c:forEach var="comment" items="${commentList }" varStatus="i">
 					<tr>
 						<th width='*' scope='row'><b>${comment.cWriter }</b></th>

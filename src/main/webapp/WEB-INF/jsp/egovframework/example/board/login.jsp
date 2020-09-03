@@ -31,7 +31,33 @@ $(document).ready(function(){
 	if('${loginSuccess}' != ''){
 		alert('${loginSuccess}');
 	}
+	
+	/* 회원가입 정상수행 시 */
+	if('${joinSuccessMsg}' != ''){
+		alert('${joinSuccessMsg}');
+	}
+	
+	/* 회원가입 오류발생시 */
+	if('${joinErrorMsg}' != ''){
+		alert('${joinErrorMsg}');
+	}
 });
+
+function loginCheck(){
+	if($('#user_id').val() == '' || $('#user_id').val().trim() == ''){
+		alert("아이디를 입력해주세요.");
+		$('#user_id').focus();
+		return false;
+	}
+	if($('#user_pwd').val() == '' || $('#user_pwd').val().trim() == ''){
+		alert("비밀번호를 입력해주세요.");
+		$('#user_id').focus();
+		return false;
+	}
+	
+	return true;
+}
+
 
 function signUp(){
 	location.href = "<c:url value='/signUp.do' />";
@@ -42,13 +68,13 @@ function signUp(){
 </head>
 <body>
 <div class="container wrapper">
-	<form class="text-center border border-light p-5" action="<c:url value='/login.do' />" method="post">
+	<form class="text-center border border-light p-5" action="<c:url value='/login.do' />" method="post" onsubmit="return loginCheck()">
 		<p class="h4 mb-4">로그인</p>
 		<input type="hidden" name="isPopUp" value="true">
 		
-	    <input type="text" name="user_id" class="form-control mb-4" placeholder="아이디를 입력해주세요">
+	    <input type="text" id="user_id" name="user_id" class="form-control mb-4" placeholder="아이디를 입력해주세요">
 	
-	    <input type="password" name="user_pwd" class="form-control mb-4" placeholder="비밀번호를 입력해주세요">
+	    <input type="password" id="user_pwd" name="user_pwd" class="form-control mb-4" placeholder="비밀번호를 입력해주세요">
 		
 		<p class="text-danger" style="font-size: 13px">${alert }</p>
 		

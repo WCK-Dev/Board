@@ -33,7 +33,7 @@ import java.sql.Timestamp;
  *
  *  Copyright (C) by MOPAS All right reserved.
  */
-public class BoardVO extends BoardDefaultVO {
+public class BoardVO extends BoardKindsVO {
 
 	private static final long serialVersionUID = 1L;
 
@@ -73,6 +73,10 @@ public class BoardVO extends BoardDefaultVO {
 	/** 게시글 비밀번호(일반 글에는 NULL) */
 	private String b_pwd;
 	
+	/** 게시판 번호 */
+	private int b_bseq;
+
+
 	public int getB_no() {
 		return b_no;
 	}
@@ -137,14 +141,14 @@ public class BoardVO extends BoardDefaultVO {
 		this.b_depth = b_depth;
 	}
 
-	public int getb_notice() {
+	public int getB_notice() {
 		return b_notice;
 	}
 
-	public void setb_notice(int b_notice) {
+	public void setB_notice(int b_notice) {
 		this.b_notice = b_notice;
 	}
-	
+
 	public int getB_origin() {
 		return b_origin;
 	}
@@ -152,7 +156,7 @@ public class BoardVO extends BoardDefaultVO {
 	public void setB_origin(int b_origin) {
 		this.b_origin = b_origin;
 	}
-	
+
 	public int getB_secret() {
 		return b_secret;
 	}
@@ -167,6 +171,14 @@ public class BoardVO extends BoardDefaultVO {
 
 	public void setB_pwd(String b_pwd) {
 		this.b_pwd = b_pwd;
+	}
+
+	public int getB_bseq() {
+		return b_bseq;
+	}
+
+	public void setB_bseq(int b_bseq) {
+		this.b_bseq = b_bseq;
 	}
 
 	public static long getSerialversionuid() {

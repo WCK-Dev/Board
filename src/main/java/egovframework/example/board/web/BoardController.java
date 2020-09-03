@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,31 @@ public class BoardController {
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
 
+	
+	
+	@RequestMapping(value="boardMain.do")
+	public String boardMain(BoardVO boardVO, ModelMap model) {
+		
+		model.addAttribute("boardKindsList", boardService.selectBoardKindsList());
+		
+		return "board/boardMain";
+	}
+	
 	@RequestMapping(value="boardList.do")
 	public String boardList(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+		
+		model.addAttribute("boardKindsList", boardService.selectBoardKindsList());
+		
+		/** boardKinds setting (선택된 게시판정보를 VO에 추가) */
+		BoardVO bk = new BoardVO();
+		bk.setBk_bseq(boardVO.getB_bseq());
+		bk = boardService.selectBoardKinds(bk);
+		boardVO.setBk_type(bk.getBk_type());
+		boardVO.setBk_order(bk.getBk_order());
+		boardVO.setBk_bname(bk.getBk_bname());
+		boardVO.setBk_breply_YN(bk.getBk_breply_YN());
+		boardVO.setBk_bcomment_YN(bk.getBk_bcomment_YN());
+		boardVO.setBk_bsecret_YN(bk.getBk_bsecret_YN());
 		
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();
@@ -61,13 +85,17 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.GET)
-	public String writeBoard() throws Exception {
+	public String writeBoard(BoardVO boardVO, Model model) throws Exception {
+		
+		model.addAttribute("board", boardVO);
 		
 		return "board/writeBoard";
 	}
 	
 	@RequestMapping(value="writeNotice.do" , method = RequestMethod.GET)
-	public String writeNotice() throws Exception {
+	public String writeNotice(BoardVO boardVO, Model model) throws Exception {
+		
+		model.addAttribute("board", boardVO);
 		
 		return "board/writeNotice";
 	}
@@ -80,6 +108,8 @@ public class BoardController {
 		int b_no = boardService.selectMaxBno() + 1;
 		boardVO.setB_no(b_no);
 		boardVO.setB_origin(b_no);
+		
+		System.err.println(boardVO.getB_bseq());
 		
 		boardService.insertBoard(boardVO);
 	}
@@ -126,12 +156,9 @@ public class BoardController {
 
 	@ResponseBody
 	@RequestMapping(value="deleteBoard.do", method = RequestMethod.POST)
-	public void deleteBoard(BoardVO boardVO, HttpServletRequest request) throws Exception{
-
-		boardVO.setB_writer((String)request.getSession().getAttribute("user_id"));
+	public void deleteBoard(BoardVO boardVO) throws Exception{
 		
 		boardService.deleteBoard(boardVO);
-		
 	}
 	
 	@RequestMapping(value="writeReply.do", method =RequestMethod.GET)
@@ -167,12 +194,12 @@ public class BoardController {
 			ra.addFlashAttribute("joinErrorMsg", "회원가입에 오류가 발생했습니다.");
 		};
 		
-		return "redirect:/boardList.do";
+		return "redirect:/login.do";
 	}
 	
 	@RequestMapping(value="idCheck.do")
 	@ResponseBody
-	public String idCheck(@RequestParam String user_id) {
+	public String idCheck(@RequestParam String user_id) throws Exception {
 		return boardService.userIdCheck(user_id);
 	}
 	
@@ -190,7 +217,7 @@ public class BoardController {
 		
 		if( userVO != null ) {
 			ra.addFlashAttribute("loginSuccess", "Y");
-			return "redirect:/boardList.do";
+			return "redirect:/boardMain.do";
 		} else {
 			ra.addFlashAttribute("loginErrorMsg", "사용자 정보를 확인해주십시오.");
 			return "redirect:/login.do";
@@ -212,7 +239,7 @@ public class BoardController {
 	}
 
 	@RequestMapping(value="managementUser.do")
-	public String managementUser(ModelMap model, UserVO userVO) {
+	public String managementUser(UserVO userVO, ModelMap model)  throws Exception {
 		
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();
@@ -235,7 +262,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="updateUser.do", method=RequestMethod.GET)
-	public String updateUser(ModelMap model, UserVO userVO) {
+	public String updateUser(UserVO userVO, ModelMap model)  throws Exception {
 		
 		model.addAttribute("userInfo", boardService.selectUser(userVO));
 		
@@ -244,20 +271,54 @@ public class BoardController {
 	
 	@RequestMapping(value="updateUser.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String updateUser(UserVO userVO) {
+	public String updateUser(UserVO userVO) throws Exception {
 		
 		return boardService.updateUser(userVO) + "";
 	}
 	
 	@RequestMapping(value="managementBoard.do")
-	public String managementBoard() {
+	public String managementBoard(ModelMap model) throws Exception {
+		
+		model.addAttribute("boardKindsList", boardService.selectBoardKindsList());
 		
 		return "board/managementBoard";
 	}
 	
+	@RequestMapping(value="newBoardKinds.do")
+	public String newBoardKinds() {
+		
+		return "board/newBoardKinds";
+	}
+	
+	@RequestMapping(value="insertBoardKinds.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String insertBoardKinds(BoardVO boardVO) throws Exception {
+		
+		boardVO.setBk_bseq(boardService.selectMaxBseq() + 1);
+		boardVO.setBk_order(boardService.selectMaxBkOrder() + 1);
+		
+		return boardService.insertBoardKinds(boardVO) + "";
+	}
+
+	@RequestMapping(value="updateBoardKinds", method=RequestMethod.POST)
+	@ResponseBody
+	public String updateBoardKinds(BoardVO boardVO) throws Exception{
+		
+		return boardService.updateBoardKinds(boardVO) + "";
+	}
+	
+	
+	@RequestMapping(value="managementBoardKinds.do")
+	public String managementBoardKinds(BoardVO boardVO, ModelMap model) throws Exception {
+		
+		model.addAttribute("boardKinds", boardService.selectBoardKinds(boardVO));
+		
+		return "board/managementBoardKinds";
+	}
+	
 	@RequestMapping(value="insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String insertComment(CommentVO commentVO) {
+	public String insertComment(CommentVO commentVO) throws Exception {
 		
 		commentVO.setC_no(boardService.selectMaxCno() + 1);
 		
@@ -266,7 +327,7 @@ public class BoardController {
 	
 	@RequestMapping(value="deleteComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String deleteComment(CommentVO commentVO) {
+	public String deleteComment(CommentVO commentVO) throws Exception {
 		
 		return boardService.deleteComment(commentVO) + "";
 	}

@@ -45,141 +45,25 @@
 	   cursor : pointer;
 	}
 </style>
-<script>
-$(document).ready(function(){
-	/* 로그인 실패 시 에러메시지 출력 */
-	if('${loginErrorMsg}' != ''){
-		alert('${loginErrorMsg}');
-	}
-	
-	/* 회원가입 정상수행 시 */
-	if('${joinSuccessMsg}' != ''){
-		alert('${joinSuccessMsg}');
-	}
-	
-	/* 회원가입 오류발생시 */
-	if('${joinErrorMsg}' != ''){
-		alert('${joinErrorMsg}');
-	}
-	
-	/* 공지사항 제목을 누를시 슬라이드 */
-	$('.toggleButton').each(function(index, item) {
-		$(item).click(function() {
-			$('.toggleContent' + index).slideToggle();
-		});
-	});
-	
-	/* 오늘하루 보지않기 */
-	$('.today').click(function() {
-
-	  var cookieName = $(this).attr('data-code');
-	  setCookie( "todayCookie", "done" , 1);
-  		$("#popup_notice").bPopup().close();
-	});
-	
-	/* 오늘 보지않기 여부체크를 위한 Cookie체크 */
-	getCookie();
-	
-});
-
-function setCookie ( name, value, expiredays ) {
-    var todayDate = new Date();
-    todayDate.setDate( todayDate.getDate() + expiredays );
-    document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
-}
-
-function getCookie() {
-    var cookiedata = document.cookie;
-    /* 쿠키여부 체크시, 쿠키가 등록되어있지않으면 팝업창을 오픈 */
-    if ( cookiedata.indexOf("todayCookie=done") < 0 ){
-    	$("#popup_notice").bPopup();
-   	 	$("#popup_notice").bPopup().reposition(30);
-    }
-}
-
-function adminMain(){
-	location.href = "<c:url value='/adminMain.do' />"
-}
-
-function writeBoard(){
-	var newwin = window.open("<c:url value='/writeBoard.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
-	newwin.focus();
-}
-
-function writeNotice(){
-	var newwin = window.open("<c:url value='/writeNotice.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
-	newwin.focus();
-}
-
-function readBoard(b_no, b_writer, b_secret, login_id, b_pwd){
-	if(b_secret == 1 && b_writer != login_id){
-		//확인 윈도우 오픈
-		var newwin = window.open("<c:url value='/boardPwdCheck.do' />", "popUpBoard", "width=400, height=250, left=500, top=50, scrollbars=1");
-		
-		var formObj = $('<form>', {'id': 'formObj' ,'action': 'boardPwdCheck.do', 'method' : 'post', 'target':'popUpBoard'});
-		var inpb_no = $('<input>', {'name': 'b_no', 'value': b_no, 'type': 'hidden' });
-		var inpb_pwd = $('<input>', {'name': 'b_pwd', 'value': b_pwd, 'type': 'hidden'  });
-		
-		formObj.append(inpb_no);
-		formObj.append(inpb_pwd);
-		$(document.body).append(formObj);
-		$("#formObj").submit();
-		
-	} else {
-		var newwin = window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
-	}
-	
-	
-	
-	newwin.focus();
-}
-
-function updateNotice(b_no) {
-	var newwin = window.open("<c:url value='/updateBoard.do'/>?b_no=" + b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
-	newwin.focus();
-}
-
-function loginCheck(){
-	if($('#user_id').val() == '' || $('#user_id').val().trim() == ''){
-		alert("아이디를 입력해주세요.");
-		return false;
-	}
-	if($('#user_pwd').val() == '' || $('#user_pwd').val().trim() == ''){
-		alert("비밀번호를 입력해주세요.");
-		return false;
-	}
-	
-	return true;
-}
-
-function logout(){
-	location.href = "<c:url value='/logout.do' />"
-}
-
-/* pagination 페이지 링크 function */
-function fn_link_page(pageNo){
-	document.boardListForm.pageIndex.value = pageNo;
-	document.boardListForm.action = "<c:url value='/boardList.do'/>";
-   	document.boardListForm.submit();
-}
-
-/* 팝업 레이어 오픈 */
- function view_notice(){
-	 $("#today").prop('checked', false);
-	 $("#popup_notice").bPopup();
-	 $("#popup_notice").bPopup().reposition(30); 
-}
-</script>
 </head>
 <body class="container">
-	<a href="boardList.do"><h1>eGov Board 메인</h1></a>
+	<a href="boardMain.do"><h1>eGov Board 메인</h1></a>
+	<!-- 유저정보 영역 -->
+	<div class="panel-heading text-right">
+		${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
+		<button type="button" class="btn btn-danger" onclick="logout();">로그아웃</button>
+		<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
+			<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
+		</c:if>
+	</div>
+	<!-- 게시판 리스트 영역 -->
+	<div class="mt-3 mb-2">
+		<c:forEach items="${boardKindsList }" var="boardKinds">
+			<a href='boardList.do?b_bseq=${boardKinds.bkBseq }'><b>${boardKinds.bkBname }</b> &nbsp;&nbsp;&nbsp;</a>
+		</c:forEach>
+	</div>
 	<hr>
 	<div class="panel panel-default">
-		<!-- 로그인관련 화면 (head) -->
-		<div class="panel-heading">
-			${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
-			<button type="button" class="btn btn-primary" onclick="logout();">로그아웃</button>
-		</div>
 		
 		<!-- 팝업 레이어 영역 -->
 		 <div id="popup_notice" class="Pstyle">
@@ -222,10 +106,21 @@ function fn_link_page(pageNo){
 								
 			</div>
 		 </div>
-		
-		<!-- 검색 영역 -->
+		 
+		 <!-- 알림형 게시판 -->
+		<c:if test="${board.bk_type == 1 }">
+			<div style="width: 100%" class="mt-2 mb-2 text-center">
+				<h4>알림형게시판입니다.</h4>
+		 	</div>
+		 	
+			<div style="width: 100%" class="mb-2 text-center">새로운 게시글 수 : ${paginationInfo.totalRecordCount }</div>
+		</c:if>
+		 
+		<!-- 일반형 게시판  -->
+		<c:if test="${board.bk_type == 0 }">
 		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="get">
 		<input type="hidden" id="loginId" name="loginId" value="${sessionScope.user.user_id }">
+		<input type="hidden" id="b_bseq" name="b_bseq" value="${board.b_bseq }">
 		<div>
 			<nav class="navbar">
 				<!-- Navbar brand -->
@@ -250,16 +145,6 @@ function fn_link_page(pageNo){
 					 <button type="submit" class="btn btn-primary">검색</button>
 			</nav>
 		</div>
-		
-		<div style="width: 100%" class="mt-2 mb-2 text-center">
-			<h4>게시판 유형 선택</h4>
-			<input type="radio" id="b_type" name="b_type" value="0" <c:if test="${board.b_type == 0 }">checked</c:if> onchange="document.boardListForm.submit();">&nbsp;일반형 &nbsp;&nbsp;&nbsp;
-			<input type="radio" id="b_type" name="b_type" value="1" <c:if test="${board.b_type == 1 }">checked</c:if> onchange="document.boardListForm.submit();">&nbsp;알림형
-		</div>
-		
-		<c:if test="${board.b_type == 1 }">
-		<div style="width: 100%" class="mb-2 text-right">해당 게시판의 읽지 않은 게시글 수 : ${paginationInfo.totalRecordCount }</div>
-		</c:if>
 		
 		<!-- 테이블(게시글) 영역  -->
 			<div class="table-responsive table-hover">
@@ -297,18 +182,122 @@ function fn_link_page(pageNo){
 	       	</ul>
       		<input type="hidden" id="pageIndex" name="pageIndex" value="1">
       	</form>
+      	</c:if>
+      	
       	
 		
 		<div class="panel-footer float-right">
 			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
 			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.write_YN == 'Y' }">
-				<button type="button" class="btn btn-primary" onclick="writeBoard()">게시글 작성</button>
+				<button type="button" class="btn btn-primary" onclick="writeBoard('${board.b_bseq}')">게시글 작성</button>
 			</c:if>
 			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-				<button type="button" class="btn btn-primary" onclick="writeNotice()">공지글 작성</button>
-				<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
+				<button type="button" class="btn btn-primary" onclick="writeNotice('${board.b_bseq}')">공지글 작성</button>
 			</c:if>
 		</div>
 	</div>
 </body>
+
+
+<script>
+$(document).ready(function(){
+	/* 게시판 진입 권한이 없을 경우 boardMain으로 이동  */
+	if('${sessionScope.user.read_YN}' == 'N'){
+		alert("게시판 진입권한이 없습니다..\r\n관리자가 권한을 부여한 후 이용해주세요.");
+		location.href="boardMain.do"
+	}
+	
+	/* 공지사항 제목을 누를시 슬라이드 */
+	$('.toggleButton').each(function(index, item) {
+		$(item).click(function() {
+			$('.toggleContent' + index).slideToggle();
+		});
+	});
+	
+	/* 오늘하루 보지않기 */
+	$('.today').click(function() {
+
+	  var cookieName = $(this).attr('data-code');
+	  setCookie( "todayCookie", "done" , 1);
+  		$("#popup_notice").bPopup().close();
+	});
+	
+	/* 오늘 보지않기 여부체크를 위한 Cookie체크 */
+	getCookie();
+	
+});
+
+function setCookie ( name, value, expiredays ) {
+    var todayDate = new Date();
+    todayDate.setDate( todayDate.getDate() + expiredays );
+    document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+}
+
+function getCookie() {
+    var cookiedata = document.cookie;
+    /* 쿠키여부 체크시, 쿠키가 등록되어있지않으면 팝업창을 오픈 */
+    if ( cookiedata.indexOf("todayCookie=done") < 0 ){
+    	$("#popup_notice").bPopup();
+   	 	$("#popup_notice").bPopup().reposition(30);
+    }
+}
+
+function adminMain(){
+	location.href = "<c:url value='/adminMain.do' />"
+}
+
+function writeBoard(b_seq){
+	var newwin = window.open("<c:url value='/writeBoard.do' />?b_bseq="+ b_seq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
+}
+
+function writeNotice(b_seq){
+	var newwin = window.open("<c:url value='/writeNotice.do' />?b_bseq="+ b_seq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
+}
+
+function readBoard(b_no, b_writer, b_secret, login_id, b_pwd){
+	if(b_secret == 1 && b_writer != login_id && '${sessionScope.user.admin_YN}' == 'N'){
+		//확인 윈도우 오픈
+		var newwin = window.open("<c:url value='/boardPwdCheck.do' />", "popUpBoard", "width=400, height=250, left=500, top=50, scrollbars=1");
+		
+		var formObj = $('<form>', {'id': 'formObj' ,'action': 'boardPwdCheck.do', 'method' : 'post', 'target':'popUpBoard'});
+		var inpb_no = $('<input>', {'name': 'b_no', 'value': b_no, 'type': 'hidden' });
+		var inpb_pwd = $('<input>', {'name': 'b_pwd', 'value': b_pwd, 'type': 'hidden'  });
+		
+		formObj.append(inpb_no);
+		formObj.append(inpb_pwd);
+		$(document.body).append(formObj);
+		$("#formObj").submit();
+		
+	} else {
+		var newwin = window.open("<c:url value='/readBoard.do' />?b_no="+b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	}
+	
+	newwin.focus();
+}
+
+function updateNotice(b_no) {
+	var newwin = window.open("<c:url value='/updateBoard.do'/>?b_no=" + b_no , "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+	newwin.focus();
+}
+
+function logout(){
+	location.href = "<c:url value='/logout.do' />"
+}
+
+/* pagination 페이지 링크 function */
+function fn_link_page(pageNo){
+	document.boardListForm.pageIndex.value = pageNo;
+	document.boardListForm.action = "<c:url value='/boardList.do'/>";
+   	document.boardListForm.submit();
+}
+
+/* 팝업 레이어 오픈 */
+ function view_notice(){
+	 $("#today").prop('checked', false);
+	 $("#popup_notice").bPopup();
+	 $("#popup_notice").bPopup().reposition(30); 
+}
+</script>
 </html>

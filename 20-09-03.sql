@@ -35,7 +35,10 @@ CREATE TABLE `board` (
   `b_origin` int NOT NULL,
   `b_secret` int NOT NULL DEFAULT '0',
   `b_pwd` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`b_no`)
+  `b_bseq` int NOT NULL DEFAULT '0' COMMENT '게시판 번호(boardKinds 테이블 참조)',
+  PRIMARY KEY (`b_no`),
+  KEY `FK_bseq` (`b_bseq`),
+  CONSTRAINT `FK_bseq` FOREIGN KEY (`b_bseq`) REFERENCES `boardkinds` (`bk_bseq`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='게시글테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,8 +48,37 @@ CREATE TABLE `board` (
 
 LOCK TABLES `board` WRITE;
 /*!40000 ALTER TABLE `board` DISABLE KEYS */;
-INSERT INTO `board` VALUES (1,0,0,1,'원글 작성 테스트','원글을 작성합니다.\n\n감사합니다.','2020-08-31 01:03:07','wck',29,1,0,NULL),(2,0,1,2,'원글 작성 테스트 의 답글1','111','2020-08-31 01:03:19','wck',11,1,0,NULL),(3,0,1,2,'원글 작성 테스트 의 답글22','22','2020-08-31 01:03:25','wck',4,1,0,NULL),(4,0,1,2,'원글 작성 테스트 의 답글33','33','2020-08-31 01:03:33','wck',2,1,0,NULL),(5,0,2,3,'원글 작성 테스트 의 답글1 의 답글1','1234','2020-08-31 01:06:47','wck',4,1,0,NULL),(6,0,3,3,'원글 작성 테스트 의 답글22 의 답글1','1234','2020-08-31 01:06:57','wck',1,1,0,NULL),(7,0,2,3,'원글 작성 테스트 의 답글1 의 답글2','2','2020-08-31 01:07:03','wck',2,1,0,NULL),(8,0,0,1,'두번째 원글 작성 테스트','1234','2020-08-31 04:56:36','wck',7,8,0,NULL),(9,0,8,2,'두번째 원글의 첫번째 답글','1313','2020-08-31 05:36:54','wck',5,8,0,NULL),(10,0,0,1,'user의 원글작성','1212','2020-08-31 06:17:03','user',2,10,0,NULL),(11,0,0,1,'수정용 글을 작성합니다.(수정)','1234','2020-08-31 08:03:31','user',16,11,0,NULL),(12,0,0,1,'1313','1313','2020-08-31 08:20:54','user',144,12,0,NULL),(13,0,12,2,'1313 의 답글','333','2020-08-31 08:21:04','user',6,12,0,NULL),(14,0,0,1,'마지막원글','원글','2020-08-31 09:09:22','user',228,14,0,NULL),(15,0,14,2,'마지막원글 의 답글1','1','2020-08-31 09:14:04','user',9,14,0,NULL),(16,0,0,1,'일반글 작성 테스트','일반글 작성 테스트\n\n입니다.','2020-09-02 04:43:57','wck',58,16,0,''),(17,0,16,2,'일반글 작성 테스트 의 답글','1313','2020-09-02 04:44:08','wck',13,16,0,NULL),(18,0,0,1,'비밀글 작성 테스트!','비밀글 작성 테스트\n\n입니다.','2020-09-02 04:44:30','wck',30,18,1,'wck1234'),(19,0,0,1,'1234','1234','2020-09-02 08:02:39','master',4,19,0,''),(21,0,0,1,'마스터계정 비밀글 등록','마스터계정으로 비밀글을 등록합니다','2020-09-02 08:06:42','master',2,21,1,'master1234'),(22,1,0,1,'마스터계정 공지글등록','마스터계정으로 공지글을 등록합니다.','2020-09-02 08:07:01','master',0,22,0,NULL),(23,1,0,1,'공지글등록 테스트 2','공지글등록 테스트 2','2020-09-02 08:09:33','master',0,23,0,NULL);
+INSERT INTO `board` VALUES (8,0,0,1,'두번째 원글 작성 테스트','1234','2020-08-31 04:56:36','wck',8,8,0,'',1),(9,0,8,2,'두번째 원글의 첫번째 답글','1313','2020-08-31 05:36:54','wck',7,8,0,'',1),(11,0,0,1,'수정용 글을 작성합니다.(관리자수정)','관리자가 게시글 내용을 수정하였습니다.','2020-08-31 08:03:31','user',20,11,0,'',1),(19,0,0,1,'1234','1234','2020-09-02 08:02:39','master',9,19,0,'',1),(21,0,0,1,'마스터계정 비밀글 등록','마스터계정으로 비밀글을 등록합니다','2020-09-02 08:06:42','master',6,21,1,'master1234',1),(22,1,0,1,'마스터계정 공지글등록','마스터계정으로 공지글을 등록합니다.','2020-09-02 08:07:01','master',0,22,0,'',1),(23,1,0,1,'공지글등록 테스트 2','공지글등록 테스트 2','2020-09-02 08:09:33','master',0,23,0,'',1),(24,0,0,1,'13','13','2020-09-03 08:05:08','admin',1,24,0,'',1),(25,0,0,1,'관리자 비밀글 수정','관리자 비밀글 !\r\n\r\n수정합니다.','2020-09-03 08:06:22','admin',4,25,1,'admin1234',1),(26,0,0,1,'유저 게시글 작성','유저 게시글 작성입니다.','2020-09-03 08:06:50','user',3,26,0,'',1),(27,0,0,1,'유저 비밀글 작성!','유저 비밀글 작성입니다.','2020-09-03 08:07:11','user',2,27,1,'12341234',1),(28,1,0,1,'관리자 공지글 작성 테스트','공지글 내용입니다.','2020-09-03 08:08:15','admin',0,28,0,'',1),(29,0,0,1,'세번째 게시판에 게시글 작성!','세번째 게시판에 게시글 작성!','2020-09-03 08:47:47','admin',2,29,0,'',3),(30,0,0,1,'세번째 게시판에 비밀글 작성!','1234','2020-09-03 08:48:10','admin',0,30,1,'1234',3),(31,0,0,1,'세번째 게시판에 유저 게시글 작성','1234','2020-09-03 08:49:01','wck',1,31,0,'',3),(32,0,0,1,'세번째 게시판에 유저 비밀글 등록','1234','2020-09-03 08:49:12','wck',1,32,1,'1234',3),(33,0,31,2,'세번째 게시판에 유저 답글작성','답글작성!','2020-09-03 08:55:01','wck',1,31,0,NULL,3),(34,0,0,1,'13131','131313','2020-09-03 09:15:39','wck',0,34,0,'',2),(35,0,0,1,'131313123215123','13131424515123145','2020-09-03 09:15:46','wck',0,35,0,'',2);
 /*!40000 ALTER TABLE `board` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `boardkinds`
+--
+
+DROP TABLE IF EXISTS `boardkinds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `boardkinds` (
+  `bk_bseq` int NOT NULL DEFAULT '0' COMMENT '게시판번호',
+  `bk_type` int NOT NULL DEFAULT '0' COMMENT '게시판유형',
+  `bk_order` int NOT NULL DEFAULT '0' COMMENT '게시판 노출순서',
+  `bk_bname` varchar(100) NOT NULL DEFAULT '기본게시판' COMMENT '게시판이름',
+  `bk_breply_YN` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Y' COMMENT '게시판 답글 사용여부',
+  `bk_bcomment_YN` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Y' COMMENT '게시판 댓글 사용여부',
+  `bk_bsecret_YN` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Y' COMMENT '게시판 비밀글 사용여부',
+  PRIMARY KEY (`bk_bseq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `boardkinds`
+--
+
+LOCK TABLES `boardkinds` WRITE;
+/*!40000 ALTER TABLE `boardkinds` DISABLE KEYS */;
+INSERT INTO `boardkinds` VALUES (1,0,1,'첫번째게시판','Y','Y','Y'),(2,1,2,'두번째게시판','N','Y','N'),(3,0,3,'세번째게시판','N','Y','N');
+/*!40000 ALTER TABLE `boardkinds` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -74,7 +106,7 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (1,'wck','3333','2020-09-01 09:08:02',14),(2,'wck','테스트 댓글 작성입니다 111','2020-09-01 09:47:22',14),(3,'wck','131314555','2020-09-01 09:47:43',14),(4,'wck','131314555','2020-09-01 09:48:04',14),(5,'wck','412512413215','2020-09-01 09:48:22',14),(6,'wck','123123','2020-09-01 09:49:08',14),(7,'wck','3535','2020-09-01 09:49:16',14),(8,'wck','','2020-09-02 02:50:19',1),(9,'wck','1313','2020-09-02 02:54:31',1),(10,'wck','','2020-09-02 02:54:49',1);
+INSERT INTO `comment` VALUES (1,'user','1313','2020-09-03 08:07:16',27);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +133,7 @@ CREATE TABLE `history` (
 
 LOCK TABLES `history` WRITE;
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
-INSERT INTO `history` VALUES ('wck',11),('wck',1),('wck',8),('wck',9),('wck',14),('wck',2),('wck',10),('user',15),('user',10),('user',13),('user',14),('user',11),('user',8),('user',9),('user',1),('user',2),('user',5),('user',3),('user',6),('user',7),('user',4),('fusion1',14),('fusion1',15),('fusion1',12),('fusion1',13),('fusion1',11),('fusion1',9),('fusion1',2),('fusion1',5),('wck',13),('wck',16),('wck',18),('user',18),('user',16),('user',17),('sjh1991',18),('master',21),('master',19),('master',16),('wck',21),('wck',17),('admin',16),('admin',19),('admin',17),('wck',15);
+INSERT INTO `history` VALUES ('wck',11),('wck',8),('wck',9),('user',11),('user',8),('user',9),('fusion1',11),('fusion1',9),('master',21),('master',19),('wck',21),('wck',19),('user',21),('user',19),('fusion1',19),('admin',21),('admin',19),('admin',11),('admin',9),('admin',25),('admin',24),('user',26),('user',27),('user',25),('admin',29),('wck',32),('wck',29),('wck',31),('wck',33);
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +191,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('admin','1234','관리자','Y','Y','Y','Y','Y','Y','Y'),('fusion1','fusion1234','우치경','Y','Y','Y','Y','N','Y','N'),('fusion11','fusion1234','우치경','Y','Y','Y','Y','Y','Y','Y'),('fusion1234','fusion1234','우치경','Y','Y','Y','Y','Y','Y','Y'),('ktw1989','xodn1989','김태우','Y','N','N','N','N','N','N'),('master','master1234','마스터계정','Y','Y','Y','Y','Y','Y','Y'),('sjh1991','sjh1991','신지훈','N','N','N','N','N','N','N'),('syj1991','syj1991','송영주','N','N','N','N','N','N','N'),('user','1234','이용자','Y','Y','Y','Y','Y','Y','Y'),('wck','1234','우치경','Y','Y','Y','Y','N','N','N'),('wck1111','wck1111','우치경','N','N','N','N','N','N','N'),('wck1234','wck1234','우치경','Y','N','N','N','N','N','N'),('wck1991','wck1991','김철수','N','N','N','N','N','N','N'),('yhs1111','asd123','현수임','N','N','N','N','N','N','N'),('yhsyhs1','asd123','현수임','N','N','N','N','N','N','N');
+INSERT INTO `user` VALUES ('admin','1234','관리자','Y','Y','Y','Y','Y','Y','Y'),('fusion1','fusion1234','우치경','Y','Y','Y','Y','N','Y','N'),('fusion11','fusion1234','우치경','Y','Y','Y','Y','Y','Y','Y'),('fusion1234','fusion1234','우치경','Y','Y','Y','Y','Y','Y','Y'),('ktw1989','xodn1989','김태우','Y','N','N','N','N','N','N'),('master','master1234','마스터계정','Y','Y','Y','Y','Y','Y','Y'),('sjh1991','sjh1991','신지훈','N','N','N','N','N','N','N'),('syj1991','syj1991','송영주','N','N','N','N','N','N','N'),('user','1234','이용자','Y','Y','Y','Y','Y','Y','N'),('wck','1234','우치경','Y','Y','Y','Y','N','Y','N'),('wck1111','wck1111','우치경','N','N','N','N','N','N','N'),('wck1234','wck1234','우치경','Y','N','N','N','N','N','N'),('wck1991','wck1991','김철수','N','N','N','N','N','N','N'),('yhs1111','asd123','현수임','N','N','N','N','N','N','N'),('yhsyhs1','asd123','현수임','N','N','N','N','N','N','N');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -172,4 +204,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-02 17:53:59
+-- Dump completed on 2020-09-03 18:32:11

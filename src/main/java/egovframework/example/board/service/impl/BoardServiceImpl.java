@@ -44,6 +44,36 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	private EgovIdGnrService egovIdGnrService;
 
 	@Override
+	public BoardVO selectBoardKinds(BoardVO vo) throws Exception {
+		return boardDAO.selectBoardKinds(vo);
+	}
+	
+	@Override
+	public List<?> selectBoardKindsList() {
+		return boardDAO.selectBoardKindsList();
+	}
+	
+	@Override
+	public int selectMaxBseq() throws Exception {
+		return boardDAO.selectMaxBseq();
+	}
+	
+	@Override
+	public int selectMaxBkOrder() throws Exception {
+		return boardDAO.selectMaxBkOrder();
+	}
+	
+	@Override
+	public int insertBoardKinds(BoardVO vo) throws Exception {
+		return boardDAO.insertBoardKinds(vo);
+	}
+	
+	@Override
+	public int updateBoardKinds(BoardVO vo) throws Exception {
+		return boardDAO.updateBoardKinds(vo);
+	}
+	
+	@Override
 	public String insertBoard(BoardVO vo) throws Exception {
 		LOGGER.debug(vo.toString());
 
@@ -106,67 +136,67 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
-	public String userIdCheck(String user_id) {
+	public String userIdCheck(String user_id) throws Exception {
 		return boardDAO.userIdCheck(user_id);
 	}
 	
 	@Override
-	public int insertUser(UserVO vo) {
+	public int insertUser(UserVO vo) throws Exception {
 		return boardDAO.insertUser(vo);
 	}
 	
 	@Override
-	public UserVO loginCheck(UserVO vo) {
+	public UserVO loginCheck(UserVO vo) throws Exception {
 		return boardDAO.loginCheck(vo);
 	}
 
 	@Override
-	public List<?> selectUserList(UserVO vo) {
+	public List<?> selectUserList(UserVO vo) throws Exception {
 		return boardDAO.selectUserList(vo);
 	}
 	
 	@Override
-	public int selectUserListTotCnt(UserVO vo) {
+	public int selectUserListTotCnt(UserVO vo) throws Exception {
 		return boardDAO.selectUserListTotCnt(vo);
 	}
 	
 	@Override
-	public UserVO selectUser(UserVO vo) {
+	public UserVO selectUser(UserVO vo) throws Exception {
 		return boardDAO.selectUser(vo);
 	}
 	
 	@Override
-	public int updateUser(UserVO vo) {
+	public int updateUser(UserVO vo) throws Exception {
 		return boardDAO.updateUser(vo);
 	}
 	
 	@Override
-	public int selectMaxCno() {
+	public int selectMaxCno() throws Exception {
 		return boardDAO.selectMaxCno();
 	}
 	
 	@Override
-	public int insertComment(CommentVO vo) {
+	public int insertComment(CommentVO vo) throws Exception {
 		return boardDAO.insertComment(vo);
 	}
 	
 	@Override
-	public int deleteComment(CommentVO vo) {
+	public int deleteComment(CommentVO vo) throws Exception {
 		return boardDAO.deleteComment(vo);
 	}
 
 	@Override
-	public List<?> selectCommentList(BoardVO vo) {
+	public List<?> selectCommentList(BoardVO vo) throws Exception {
 		return boardDAO.selectCommentList(vo);
 	}
 
 	@Override
-	public int insertHistory(HistoryVO vo) {
+	public int insertHistory(HistoryVO vo) throws Exception {
 		return boardDAO.insertHistory(vo);
 	}
 	
 	@Override
-	public int checkHistory(HistoryVO vo) {
+	public int checkHistory(HistoryVO vo) throws Exception {
 		return boardDAO.checkHistory(vo);
 	}
 	

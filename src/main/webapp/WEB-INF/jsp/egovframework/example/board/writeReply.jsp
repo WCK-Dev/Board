@@ -42,17 +42,20 @@
 		var b_content = $("#b_content").val();
 		var b_depth = $("#b_depth").val();
 		var b_origin = $("#b_origin").val();
+		var b_bseq = $("#b_bseq").val()
 		
 		$.ajax({
 			type : 'POST',
 			url : "<c:url value='/insertReply.do' />",
 			dataType : "text",
-			data : {"b_title": b_title,
-					"b_writer": b_writer,
-					"b_content": b_content,
-					"b_refno": b_no,
-					"b_depth": b_depth,
-					"b_origin": b_origin
+			data : {"b_title": b_title
+				   ,"b_writer": b_writer
+				   ,"b_content": b_content
+				   ,"b_refno": b_no
+				   ,"b_depth": b_depth
+				   ,"b_origin": b_origin
+				   ,"b_bseq": b_bseq
+					
 			},
 			
 			success : function(result) {
@@ -83,6 +86,7 @@
 				<input type="hidden" id="b_no" name="b_no" value="${boardVO.b_no }">
 				<input type="hidden" id="b_depth" name="b_depth" value="${boardVO.b_depth }">
 				<input type="hidden" id="b_origin" name="b_origin" value="${boardVO.b_origin }">
+				<input type="hidden" id="b_bseq" name="b_bseq" value="${boardVO.b_bseq }">
 			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>

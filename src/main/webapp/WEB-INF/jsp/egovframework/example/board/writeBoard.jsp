@@ -62,6 +62,7 @@
 	}
 	
 	function insertBoard(){
+		var b_bseq = $("#b_bseq").val();
 		var b_title = $("#b_title").val();
 		var b_writer = $("#b_writer").val();
 		var b_content = $("#b_content").val();
@@ -69,11 +70,14 @@
 		var b_secret = $(":radio[name='b_secret']:checked").val();
 		var b_pwd = $("#b_pwd").val();
 		
+		if( b_pwd == '' || b_pwd.trim() == '') { b_pwd = null};
+		
 		$.ajax({
 			type : 'POST',
 			url : "<c:url value='/writeBoard.do'/>",
 			dataType : "text",
-			data : {"b_title": b_title
+			data : {"b_bseq": b_bseq
+				   ,"b_title": b_title
 				   ,"b_writer": b_writer
 				   ,"b_content": b_content
 				   ,"b_category": b_category
@@ -101,6 +105,7 @@
 	<div class="panel panel-default">
 		<div class="panel-body mt-5">
 			<form class="form-horizontal" method="post" id="writeForm">
+			<input type="hidden" id="b_bseq" name="b_bseq" value="${board.b_bseq }">
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="b_title">게시글 제목 : </label>
 			    <div class="col-sm-10">

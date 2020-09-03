@@ -25,6 +25,18 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper("boardMapper")
 public interface BoardMapper {
+	
+	BoardVO selectBoardKinds(BoardVO vo) throws Exception;
+	
+	List<?> selectBoardKindsList();
+	
+	int selectMaxBseq() throws Exception;
+	
+	int selectMaxBkOrder() throws Exception;
+	
+	int insertBoardKinds(BoardVO vo) throws Exception;
+	
+	int updateBoardKinds(BoardVO vo) throws Exception;
 
 	void insertBoard(BoardVO vo) throws Exception;
 
@@ -42,36 +54,36 @@ public interface BoardMapper {
 	
 	List<?> selectNoticeList(BoardVO vo) throws Exception;
 	
-	int selectMaxBno();
+	int selectMaxBno() throws Exception;
 	
 	int updateGrpord(BoardVO vo) throws Exception;
 	
 	int insertReply(BoardVO vo) throws Exception;
 	
-	String userIdCheck(String user_id);
+	String userIdCheck(String user_id) throws Exception;
 	
-	int insertUser(UserVO vo);
+	int insertUser(UserVO vo) throws Exception;
 	
-	UserVO loginCheck(UserVO vo);
+	UserVO loginCheck(UserVO vo) throws Exception;
 	
-	List<?> selectUserList(UserVO vo);
+	List<?> selectUserList(UserVO vo) throws Exception;
 	
-	int selectUserListTotCnt(UserVO vo);
+	int selectUserListTotCnt(UserVO vo) throws Exception;
 	
-	UserVO selectUser(UserVO vo);
+	UserVO selectUser(UserVO vo) throws Exception;
 
-	int updateUser(UserVO vo);
+	int updateUser(UserVO vo) throws Exception;
 	
-	int selectMaxCno();
+	int selectMaxCno() throws Exception;
 	
-	int insertComment(CommentVO vo);
+	int insertComment(CommentVO vo) throws Exception;
 	
-	int deleteComment(CommentVO vo);
+	int deleteComment(CommentVO vo) throws Exception;
 
-	List<?> selectCommentList(BoardVO vo);
+	List<?> selectCommentList(BoardVO vo) throws Exception;
 	
-	int insertHistory(HistoryVO vo);
+	int insertHistory(HistoryVO vo) throws Exception;
 
-	int checkHistory(HistoryVO vo);
+	int checkHistory(HistoryVO vo) throws Exception;
 	
 }
