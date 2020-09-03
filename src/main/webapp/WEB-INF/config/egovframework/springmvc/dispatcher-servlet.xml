@@ -37,6 +37,7 @@
     
     <mvc:interceptors>
 		<mvc:interceptor>
+			<mvc:mapping path="/boardMain.do" />
 			<mvc:mapping path="/boardList.do" />
 			<mvc:mapping path="/readBoard.do" />
 			<mvc:mapping path="/writeBoard.do" />

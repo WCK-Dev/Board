@@ -45,7 +45,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="boardList.do")
-	public String boardList(@ModelAttribute("board")BoardVO boardVO, ModelMap model) throws Exception {
+	public String boardList(@ModelAttribute("board")BoardVO boardVO, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		UserVO user = (UserVO)request.getSession().getAttribute("user");
+		boardVO.setLoginId(user.getUser_id());
 		
 		model.addAttribute("boardKindsList", boardService.selectBoardKindsList());
 		
@@ -82,6 +85,29 @@ public class BoardController {
 		model.addAttribute("paginationInfo", paginationInfo);
 
 		return "board/boardList";
+	}
+	
+	@RequestMapping(value="alarmList.do")
+	public String alarmList(BoardVO boardVO, ModelMap model) throws Exception{
+		
+		BoardVO bk = new BoardVO();
+		bk.setBk_bseq(boardVO.getB_bseq());
+		bk = boardService.selectBoardKinds(bk);
+		boardVO.setBk_type(bk.getBk_type());
+		boardVO.setBk_order(bk.getBk_order());
+		boardVO.setBk_bname(bk.getBk_bname());
+		boardVO.setBk_breply_YN(bk.getBk_breply_YN());
+		boardVO.setBk_bcomment_YN(bk.getBk_bcomment_YN());
+		boardVO.setBk_bsecret_YN(bk.getBk_bsecret_YN());
+		
+		List<?> boardList = boardService.selectBoardList(boardVO);
+		model.addAttribute("boardList", boardList);
+		
+		int totCnt = boardService.selectBoardListTotCnt(boardVO);
+		model.addAttribute("totCnt", totCnt);
+		
+		
+		return "board/alarmList";
 	}
 	
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.GET)

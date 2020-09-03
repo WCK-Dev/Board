@@ -202,7 +202,10 @@
 				</choose>
 			</if>
 			ORDER BY b_origin DESC, path ASC
+			<if test="bk_type == 0">
 			LIMIT #{firstIndex}, #{recordCountPerPage}
+			</if>
+			
 
 	</select>
 

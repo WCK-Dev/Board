@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.20, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
 -- Host: localhost    Database: board
 -- ------------------------------------------------------
--- Server version	8.0.20
+-- Server version	8.0.18
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,19 +23,19 @@ DROP TABLE IF EXISTS `board`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `board` (
-  `b_no` int NOT NULL COMMENT '글번호(PK)',
-  `b_notice` int NOT NULL COMMENT '게시글 / 공지글 여부',
-  `b_refno` int DEFAULT NULL,
-  `b_depth` int NOT NULL,
+  `b_no` int(11) NOT NULL COMMENT '글번호(PK)',
+  `b_notice` int(11) NOT NULL COMMENT '게시글 / 공지글 여부',
+  `b_refno` int(11) DEFAULT NULL,
+  `b_depth` int(11) NOT NULL,
   `b_title` varchar(300) NOT NULL,
   `b_content` varchar(6000) NOT NULL,
   `b_regdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `b_writer` varchar(20) NOT NULL,
-  `b_readcnt` int DEFAULT NULL,
-  `b_origin` int NOT NULL,
-  `b_secret` int NOT NULL DEFAULT '0',
+  `b_readcnt` int(11) DEFAULT NULL,
+  `b_origin` int(11) NOT NULL,
+  `b_secret` int(11) NOT NULL DEFAULT '0',
   `b_pwd` varchar(30) DEFAULT NULL,
-  `b_bseq` int NOT NULL DEFAULT '0' COMMENT '게시판 번호(boardKinds 테이블 참조)',
+  `b_bseq` int(11) NOT NULL DEFAULT '0' COMMENT '게시판 번호(boardKinds 테이블 참조)',
   PRIMARY KEY (`b_no`),
   KEY `FK_bseq` (`b_bseq`),
   CONSTRAINT `FK_bseq` FOREIGN KEY (`b_bseq`) REFERENCES `boardkinds` (`bk_bseq`) ON DELETE CASCADE
@@ -48,7 +48,7 @@ CREATE TABLE `board` (
 
 LOCK TABLES `board` WRITE;
 /*!40000 ALTER TABLE `board` DISABLE KEYS */;
-INSERT INTO `board` VALUES (8,0,0,1,'두번째 원글 작성 테스트','1234','2020-08-31 04:56:36','wck',8,8,0,'',1),(9,0,8,2,'두번째 원글의 첫번째 답글','1313','2020-08-31 05:36:54','wck',7,8,0,'',1),(11,0,0,1,'수정용 글을 작성합니다.(관리자수정)','관리자가 게시글 내용을 수정하였습니다.','2020-08-31 08:03:31','user',20,11,0,'',1),(19,0,0,1,'1234','1234','2020-09-02 08:02:39','master',9,19,0,'',1),(21,0,0,1,'마스터계정 비밀글 등록','마스터계정으로 비밀글을 등록합니다','2020-09-02 08:06:42','master',6,21,1,'master1234',1),(22,1,0,1,'마스터계정 공지글등록','마스터계정으로 공지글을 등록합니다.','2020-09-02 08:07:01','master',0,22,0,'',1),(23,1,0,1,'공지글등록 테스트 2','공지글등록 테스트 2','2020-09-02 08:09:33','master',0,23,0,'',1),(24,0,0,1,'13','13','2020-09-03 08:05:08','admin',1,24,0,'',1),(25,0,0,1,'관리자 비밀글 수정','관리자 비밀글 !\r\n\r\n수정합니다.','2020-09-03 08:06:22','admin',4,25,1,'admin1234',1),(26,0,0,1,'유저 게시글 작성','유저 게시글 작성입니다.','2020-09-03 08:06:50','user',3,26,0,'',1),(27,0,0,1,'유저 비밀글 작성!','유저 비밀글 작성입니다.','2020-09-03 08:07:11','user',2,27,1,'12341234',1),(28,1,0,1,'관리자 공지글 작성 테스트','공지글 내용입니다.','2020-09-03 08:08:15','admin',0,28,0,'',1),(29,0,0,1,'세번째 게시판에 게시글 작성!','세번째 게시판에 게시글 작성!','2020-09-03 08:47:47','admin',2,29,0,'',3),(30,0,0,1,'세번째 게시판에 비밀글 작성!','1234','2020-09-03 08:48:10','admin',0,30,1,'1234',3),(31,0,0,1,'세번째 게시판에 유저 게시글 작성','1234','2020-09-03 08:49:01','wck',1,31,0,'',3),(32,0,0,1,'세번째 게시판에 유저 비밀글 등록','1234','2020-09-03 08:49:12','wck',1,32,1,'1234',3),(33,0,31,2,'세번째 게시판에 유저 답글작성','답글작성!','2020-09-03 08:55:01','wck',1,31,0,NULL,3),(34,0,0,1,'13131','131313','2020-09-03 09:15:39','wck',0,34,0,'',2),(35,0,0,1,'131313123215123','13131424515123145','2020-09-03 09:15:46','wck',0,35,0,'',2);
+INSERT INTO `board` VALUES (8,0,0,1,'두번째 원글 작성 테스트','1234','2020-08-31 04:56:36','wck',8,8,0,'',1),(9,0,8,2,'두번째 원글의 첫번째 답글','1313','2020-08-31 05:36:54','wck',7,8,0,'',1),(11,0,0,1,'수정용 글을 작성합니다.(관리자수정)','관리자가 게시글 내용을 수정하였습니다.','2020-08-31 08:03:31','user',20,11,0,'',1),(19,0,0,1,'1234','1234','2020-09-02 08:02:39','master',9,19,0,'',1),(21,0,0,1,'마스터계정 비밀글 등록','마스터계정으로 비밀글을 등록합니다','2020-09-02 08:06:42','master',6,21,1,'master1234',1),(22,1,0,1,'마스터계정 공지글등록','마스터계정으로 공지글을 등록합니다.','2020-09-02 08:07:01','master',0,22,0,'',1),(23,1,0,1,'공지글등록 테스트 2','공지글등록 테스트 2','2020-09-02 08:09:33','master',0,23,0,'',1),(24,0,0,1,'13','13','2020-09-03 08:05:08','admin',1,24,0,'',1),(25,0,0,1,'관리자 비밀글 수정','관리자 비밀글 !\r\n\r\n수정합니다.','2020-09-03 08:06:22','admin',4,25,1,'admin1234',1),(26,0,0,1,'유저 게시글 작성','유저 게시글 작성입니다.','2020-09-03 08:06:50','user',3,26,0,'',1),(27,0,0,1,'유저 비밀글 작성!','유저 비밀글 작성입니다.','2020-09-03 08:07:11','user',2,27,1,'12341234',1),(28,1,0,1,'관리자 공지글 작성 테스트','공지글 내용입니다.','2020-09-03 08:08:15','admin',0,28,0,'',1),(29,0,0,1,'세번째 게시판에 게시글 작성!','세번째 게시판에 게시글 작성!','2020-09-03 08:47:47','admin',2,29,0,'',3),(30,0,0,1,'세번째 게시판에 비밀글 작성!','1234','2020-09-03 08:48:10','admin',0,30,1,'1234',3),(31,0,0,1,'세번째 게시판에 유저 게시글 작성','1234','2020-09-03 08:49:01','wck',1,31,0,'',3),(32,0,0,1,'세번째 게시판에 유저 비밀글 등록','1234','2020-09-03 08:49:12','wck',1,32,1,'1234',3),(33,0,31,2,'세번째 게시판에 유저 답글작성','답글작성!','2020-09-03 08:55:01','wck',1,31,0,NULL,3),(34,0,0,1,'13131','131313','2020-09-03 09:15:39','wck',1,34,0,'',2),(35,0,0,1,'131313123215123','13131424515123145','2020-09-03 09:15:46','wck',1,35,0,'',2),(36,0,0,1,'첫번째 게시판에 게시글 작성','1234','2020-09-03 10:03:19','wck',0,36,0,'',1),(37,0,0,1,'더미게시글 1','더미게시글 2','2020-09-03 10:04:01','wck',0,37,0,'',1),(38,0,0,1,'더미게시글 3','더미게시글3','2020-09-03 10:04:20','wck',0,38,1,'wck1234',1),(39,0,0,1,'더미게시글 4','더미게시글 4','2020-09-03 10:04:28','wck',0,39,1,'1313',1),(40,0,0,1,'더미게시글 5','더미게시글 5','2020-09-03 10:04:55','wck',0,40,0,'',1),(41,0,0,1,'더미게시글 6','더미게시글 6','2020-09-03 10:05:09','user',0,41,0,'',1),(42,0,0,1,'더미게시글 7','더미게시글 7','2020-09-03 10:05:20','user',0,42,1,'1234',1),(43,0,0,1,'더미게시글 8','더미게시글 8','2020-09-03 10:05:33','user',0,43,0,'',1),(44,0,0,1,'더미게시글 9','더미게시글 9','2020-09-03 10:05:33','user',0,44,0,'',1),(45,0,0,1,'더미게시글 10','더미게시글 10','2020-09-03 10:05:33','user',0,45,0,'',1),(46,0,0,1,'더미게시글 11','더미게시글 11','2020-09-03 10:05:33','user',0,46,0,'',1),(47,0,0,1,'더미게시글 12','더미게시글 12','2020-09-03 10:05:33','user',0,47,0,'',1),(48,0,0,1,'더미게시글 13','더미게시글 13','2020-09-03 10:05:33','user',0,48,0,NULL,1),(49,0,0,1,'더미게시글 14','더미게시글 14','2020-09-03 10:05:33','user',0,49,0,NULL,1),(50,0,0,1,'더미게시글 15','더미게시글 15','2020-09-03 10:05:33','user',0,50,0,NULL,1),(51,0,0,1,'1234','1234','2020-09-03 13:31:25','wck',1,51,0,'',2);
 /*!40000 ALTER TABLE `board` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,9 +60,9 @@ DROP TABLE IF EXISTS `boardkinds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `boardkinds` (
-  `bk_bseq` int NOT NULL DEFAULT '0' COMMENT '게시판번호',
-  `bk_type` int NOT NULL DEFAULT '0' COMMENT '게시판유형',
-  `bk_order` int NOT NULL DEFAULT '0' COMMENT '게시판 노출순서',
+  `bk_bseq` int(11) NOT NULL DEFAULT '0' COMMENT '게시판번호',
+  `bk_type` int(11) NOT NULL DEFAULT '0' COMMENT '게시판유형',
+  `bk_order` int(11) NOT NULL DEFAULT '0' COMMENT '게시판 노출순서',
   `bk_bname` varchar(100) NOT NULL DEFAULT '기본게시판' COMMENT '게시판이름',
   `bk_breply_YN` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Y' COMMENT '게시판 답글 사용여부',
   `bk_bcomment_YN` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Y' COMMENT '게시판 댓글 사용여부',
@@ -89,11 +89,11 @@ DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `comment` (
-  `c_no` int NOT NULL,
+  `c_no` int(11) NOT NULL,
   `c_writer` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'unknown',
   `c_content` varchar(300) NOT NULL,
   `c_regdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `b_no` int NOT NULL,
+  `b_no` int(11) NOT NULL,
   PRIMARY KEY (`c_no`),
   KEY `FK1_bno` (`b_no`),
   CONSTRAINT `FK1_bno` FOREIGN KEY (`b_no`) REFERENCES `board` (`b_no`) ON DELETE CASCADE
@@ -119,7 +119,7 @@ DROP TABLE IF EXISTS `history`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `history` (
   `user_id` varchar(20) NOT NULL DEFAULT '',
-  `b_no` int NOT NULL,
+  `b_no` int(11) NOT NULL,
   KEY `FK_user_id` (`user_id`),
   KEY `FK_b_no` (`b_no`),
   CONSTRAINT `FK_b_no` FOREIGN KEY (`b_no`) REFERENCES `board` (`b_no`) ON DELETE CASCADE,
@@ -133,7 +133,7 @@ CREATE TABLE `history` (
 
 LOCK TABLES `history` WRITE;
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
-INSERT INTO `history` VALUES ('wck',11),('wck',8),('wck',9),('user',11),('user',8),('user',9),('fusion1',11),('fusion1',9),('master',21),('master',19),('wck',21),('wck',19),('user',21),('user',19),('fusion1',19),('admin',21),('admin',19),('admin',11),('admin',9),('admin',25),('admin',24),('user',26),('user',27),('user',25),('admin',29),('wck',32),('wck',29),('wck',31),('wck',33);
+INSERT INTO `history` VALUES ('wck',11),('wck',8),('wck',9),('user',11),('user',8),('user',9),('fusion1',11),('fusion1',9),('master',21),('master',19),('wck',21),('wck',19),('user',21),('user',19),('fusion1',19),('admin',21),('admin',19),('admin',11),('admin',9),('admin',25),('admin',24),('user',26),('user',27),('user',25),('admin',29),('wck',32),('wck',29),('wck',31),('wck',33),('wck',35),('wck',34),('wck',51);
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,10 +145,10 @@ DROP TABLE IF EXISTS `test`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `test` (
-  `id` int NOT NULL,
-  `p_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `p_id` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL DEFAULT '',
-  `depth` int NOT NULL,
+  `depth` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -204,4 +204,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-03 18:32:11
+-- Dump completed on 2020-09-03 22:34:28

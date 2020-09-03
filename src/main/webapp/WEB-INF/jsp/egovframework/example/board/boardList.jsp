@@ -45,159 +45,6 @@
 	   cursor : pointer;
 	}
 </style>
-</head>
-<body class="container">
-	<a href="boardMain.do"><h1>eGov Board 메인</h1></a>
-	<!-- 유저정보 영역 -->
-	<div class="panel-heading text-right">
-		${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
-		<button type="button" class="btn btn-danger" onclick="logout();">로그아웃</button>
-		<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-			<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
-		</c:if>
-	</div>
-	<!-- 게시판 리스트 영역 -->
-	<div class="mt-3 mb-2">
-		<c:forEach items="${boardKindsList }" var="boardKinds">
-			<a href='boardList.do?b_bseq=${boardKinds.bkBseq }'><b>${boardKinds.bkBname }</b> &nbsp;&nbsp;&nbsp;</a>
-		</c:forEach>
-	</div>
-	<hr>
-	<div class="panel panel-default">
-		
-		<!-- 팝업 레이어 영역 -->
-		 <div id="popup_notice" class="Pstyle">
-		     <span class="b-close">X</span>
-			<div class="content2" style="height:auto; width:100%;"> 
-				<div>
-					<h3>공지사항</h3>
-					<table class="table table-hover mb-3" width="">
-						<!--Table head-->
-						<thead>
-							<tr>
-								<th class="text-left h6">Title</th>
-								<th width="20%" class="h6 text-center">Writer</th>
-								<th width="20%" class="h6 text-center">RegDate</th>
-							</tr>
-						</thead>
-						<!--Table body-->
-						<tbody>
-			    			<c:forEach var="notice" items="${noticeList }" varStatus="i">
-								<tr>
-									<td width="60%" class="h6 toggleButton" style="cursor: pointer;"><p>${notice.bTitle }</p></td>
-									<td width="20%" class="h6 text-center">${notice.bWriter }</td>
-									<td width="20%" class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
-								</tr>
-								<tr class="toggleContent${i.index }" style="display: none;">
-									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
-										<div class="toggleContent${i.index }" style="display: none;"><p><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
-											<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id == 'admin' }"><br>
-												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
-											</c:if>
-										</div>
-									</td>
-			          			</tr>
-							</c:forEach>
-						</tbody>
-						<!--Table body-->
-					</table>
-				</div>
-				<input type="checkbox" class="today" id= "today" data-code="today1"> <label for="today"> 오늘 하루동안 동안 이창 열지 않기</label>
-								
-			</div>
-		 </div>
-		 
-		 <!-- 알림형 게시판 -->
-		<c:if test="${board.bk_type == 1 }">
-			<div style="width: 100%" class="mt-2 mb-2 text-center">
-				<h4>알림형게시판입니다.</h4>
-		 	</div>
-		 	
-			<div style="width: 100%" class="mb-2 text-center">새로운 게시글 수 : ${paginationInfo.totalRecordCount }</div>
-		</c:if>
-		 
-		<!-- 일반형 게시판  -->
-		<c:if test="${board.bk_type == 0 }">
-		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="get">
-		<input type="hidden" id="loginId" name="loginId" value="${sessionScope.user.user_id }">
-		<input type="hidden" id="b_bseq" name="b_bseq" value="${board.b_bseq }">
-		<div>
-			<nav class="navbar">
-				<!-- Navbar brand -->
-				<div>
-					페이징 갯수
-					<select id="pageUnit" name="pageUnit" class="browser-default custom-select mr-2 mb-2" onchange="document.boardListForm.submit();">
-						<option value="10" <c:if test="${board.pageUnit == '10' || board.pageUnit=='' }">selected</c:if>>10개</option>
-						<option value="30" <c:if test="${board.pageUnit == '30'}">selected</c:if>>30개</option>
-					  	<option value="50" <c:if test="${board.pageUnit == '50'}">selected</c:if>>50개</option>
-					</select>
-				</div>
-				
-					<select name="searchCondition" class="browser-default custom-select mr-2 mb-2">
-					  <option value="0" <c:if test="${board.searchCondition=='0' || board.searchCondition=='' }">selected</c:if>>작성자</option>
-					  <option value="1" <c:if test="${board.searchCondition=='1'}">selected</c:if>>제목</option>
-					  <option value="2" <c:if test="${board.searchCondition=='2'}">selected</c:if>>내용</option>
-					  <option value="3" <c:if test="${board.searchCondition=='3'}">selected</c:if>>전체</option>
-					</select>
-					<div class="form-group">
-					  	<input type="text" class="form-control" name="searchKeyword" value="${board.searchKeyword}">
-					 </div>
-					 <button type="submit" class="btn btn-primary">검색</button>
-			</nav>
-		</div>
-		
-		<!-- 테이블(게시글) 영역  -->
-			<div class="table-responsive table-hover">
-			  <table class="table">
-			  	<thead class="thead-dark">
-			      <tr>
-			        <th width="*"><b>글 제목</b></th>
-			        <th class="text-center" width="10%"><b>작성자</b></th>
-			        <th class="text-center" width="20%"><b>작성일</b></th>
-			        <th class="text-center" width="10%"><b>조회수</b></th>
-			      </tr>
-			    </thead>
-			    <tbody>
-			    <c:forEach var="board" items="${boardList }">
-			      <tr>
-			        <td>
-			        	<c:if test="${board.bSecret == 1 }">
-			        		<div class="badge badge-primary text-wrap">비밀글</div>
-			        	</c:if>			        	
-			        	<a href="javascript:readBoard(${board.bNo }, '${board.bWriter }', '${board.bSecret }', '${sessionScope.user.user_id }' , '${board.bPwd }');">
-				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
-				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
-				        </a>
-			        </td>
-			        <td class="text-center"><c:out value="${board.bWriter }" /></td>
-			        <td class="text-center"><fmt:formatDate pattern='yyyy-MM-dd' timeZone="UTC" value='${board.bRegdate }'/></td>
-			        <td class="text-center"><c:out value="${board.bReadcnt }" /></td>
-			      </tr>
-			    </c:forEach>
-			    </tbody>
-			  </table>
-			</div>
-			<ul class="pagination" style="width: 100%; text-align:center;">
-	       		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_link_page" />
-	       	</ul>
-      		<input type="hidden" id="pageIndex" name="pageIndex" value="1">
-      	</form>
-      	</c:if>
-      	
-      	
-		
-		<div class="panel-footer float-right">
-			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
-			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.write_YN == 'Y' }">
-				<button type="button" class="btn btn-primary" onclick="writeBoard('${board.b_bseq}')">게시글 작성</button>
-			</c:if>
-			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-				<button type="button" class="btn btn-primary" onclick="writeNotice('${board.b_bseq}')">공지글 작성</button>
-			</c:if>
-		</div>
-	</div>
-</body>
-
 
 <script>
 $(document).ready(function(){
@@ -286,6 +133,11 @@ function logout(){
 	location.href = "<c:url value='/logout.do' />"
 }
 
+function alarmList(b_bseq, loginId) {
+	var newwin = window.open("<c:url value='/alarmList.do'/>?b_bseq=" + b_bseq +"&loginId=" + loginId , "popUpBoard", "width=500, height=400, left=500, top=50, scrollbars=1");
+}
+
+
 /* pagination 페이지 링크 function */
 function fn_link_page(pageNo){
 	document.boardListForm.pageIndex.value = pageNo;
@@ -300,4 +152,163 @@ function fn_link_page(pageNo){
 	 $("#popup_notice").bPopup().reposition(30); 
 }
 </script>
+</head>
+<body class="container">
+	<a href="boardMain.do"><h1>eGov Board 메인</h1></a>
+	<!-- 유저정보 영역 -->
+	<div class="panel-heading text-right">
+		${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
+		<button type="button" class="btn btn-danger" onclick="logout();">로그아웃</button>
+		<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
+			<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
+		</c:if>
+	</div>
+	<!-- 게시판 리스트 영역 -->
+	<div class="mt-3 mb-2">
+		<c:forEach items="${boardKindsList }" var="boardKinds">
+			<a href='boardList.do?b_bseq=${boardKinds.bkBseq }'><b>${boardKinds.bkBname }</b> &nbsp;&nbsp;&nbsp;</a>
+		</c:forEach>
+	</div>
+	<hr>
+	<div class="panel panel-default" style="width: 100%">
+		
+		<!-- 팝업 레이어 영역 -->
+		 <div id="popup_notice" class="Pstyle">
+		     <span class="b-close">X</span>
+			<div class="content2" style="height:auto; width:100%;"> 
+				<div>
+					<h3>공지사항</h3>
+					<table class="table table-hover mb-3" width="">
+						<!--Table head-->
+						<thead>
+							<tr>
+								<th class="text-left h6">Title</th>
+								<th width="20%" class="h6 text-center">Writer</th>
+								<th width="20%" class="h6 text-center">RegDate</th>
+							</tr>
+						</thead>
+						<!--Table body-->
+						<tbody>
+			    			<c:forEach var="notice" items="${noticeList }" varStatus="i">
+								<tr>
+									<td width="60%" class="h6 toggleButton" style="cursor: pointer;"><p>${notice.bTitle }</p></td>
+									<td width="20%" class="h6 text-center">${notice.bWriter }</td>
+									<td width="20%" class="text-center"><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${notice.bRegdate }"/></td>
+								</tr>
+								<tr class="toggleContent${i.index }" style="display: none;">
+									<td class="toggleContent${i.index }" colspan="6" style="display: none;">
+										<div class="toggleContent${i.index }" style="display: none;"><p><c:out value="${fn:replace(notice.bContent, crcn, br)}" escapeXml="false"/></p>
+											<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id == 'admin' }"><br>
+												<button type="button" class="btn btn-primary mt-5 float-right" onclick="updateNotice(${notice.bNo})">공지글 수정하기</button>
+											</c:if>
+										</div>
+									</td>
+			          			</tr>
+							</c:forEach>
+						</tbody>
+						<!--Table body-->
+					</table>
+				</div>
+				<input type="checkbox" class="today" id= "today" data-code="today1"> <label for="today"> 오늘 하루동안 동안 이창 열지 않기</label>
+								
+			</div>
+		 </div>
+		 
+		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="get">
+		<!-- 알림형 게시판 -->
+		<c:if test="${board.bk_type == 1 }">
+			<div style="width: 100%" class="mt-2 mb-2 text-center">
+				<h4>알림형게시판입니다.</h4>
+		 	</div>
+		 	
+			<div style="width: 100%" class="mb-2 text-center">
+				새로운 게시글 수 : 
+				<c:if test="${paginationInfo.totalRecordCount == 0}">
+					없음
+				</c:if>
+				<c:if test="${paginationInfo.totalRecordCount != 0}">
+					<a style="color: blue;" onclick="alarmList('${board.b_bseq}','${sessionScope.user.user_id }')">${paginationInfo.totalRecordCount }개</a>
+				</c:if>
+			</div>
+		</c:if>
+		 
+		<!-- 일반형 게시판  -->
+		<c:if test="${board.bk_type == 0 }">
+		
+		<input type="hidden" id="b_bseq" name="b_bseq" value="${board.b_bseq }">
+		<div>
+			<nav class="navbar">
+				<!-- Navbar brand -->
+				<div>
+					페이징 갯수
+					<select id="pageUnit" name="pageUnit" class="browser-default custom-select mr-2 mb-2" onchange="document.boardListForm.submit();">
+						<option value="10" <c:if test="${board.pageUnit == '10' || board.pageUnit=='' }">selected</c:if>>10개</option>
+						<option value="30" <c:if test="${board.pageUnit == '30'}">selected</c:if>>30개</option>
+					  	<option value="50" <c:if test="${board.pageUnit == '50'}">selected</c:if>>50개</option>
+					</select>
+				</div>
+				
+					<select name="searchCondition" class="browser-default custom-select mr-2 mb-2">
+					  <option value="0" <c:if test="${board.searchCondition=='0' || board.searchCondition=='' }">selected</c:if>>작성자</option>
+					  <option value="1" <c:if test="${board.searchCondition=='1'}">selected</c:if>>제목</option>
+					  <option value="2" <c:if test="${board.searchCondition=='2'}">selected</c:if>>내용</option>
+					  <option value="3" <c:if test="${board.searchCondition=='3'}">selected</c:if>>전체</option>
+					</select>
+					<div class="form-group">
+					  	<input type="text" class="form-control" name="searchKeyword" value="${board.searchKeyword}">
+					 </div>
+					 <button type="submit" class="btn btn-primary">검색</button>
+			</nav>
+		</div>
+		
+		<!-- 테이블(게시글) 영역  -->
+			<div class="table-responsive table-hover">
+			  <table class="table">
+			  	<thead class="thead-dark">
+			      <tr>
+			        <th width="*"><b>글 제목</b></th>
+			        <th class="text-center" width="10%"><b>작성자</b></th>
+			        <th class="text-center" width="20%"><b>작성일</b></th>
+			        <th class="text-center" width="10%"><b>조회수</b></th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			    <c:forEach var="board" items="${boardList }">
+			      <tr>
+			        <td>
+			        	<c:if test="${board.bSecret == 1 }">
+			        		<div class="badge badge-primary text-wrap">비밀글</div>
+			        	</c:if>			        	
+			        	<a href="javascript:readBoard(${board.bNo }, '${board.bWriter }', '${board.bSecret }', '${sessionScope.user.user_id }' , '${board.bPwd }');">
+				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
+				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
+				        </a>
+			        </td>
+			        <td class="text-center"><c:out value="${board.bWriter }" /></td>
+			        <td class="text-center"><fmt:formatDate pattern='yyyy-MM-dd' timeZone="UTC" value='${board.bRegdate }'/></td>
+			        <td class="text-center"><c:out value="${board.bReadcnt }" /></td>
+			      </tr>
+			    </c:forEach>
+			    </tbody>
+			  </table>
+			</div>
+			<ul class="pagination" style="width: 100%; text-align:center;">
+	       		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_link_page" />
+	       	</ul>
+      		<input type="hidden" id="pageIndex" name="pageIndex" value="1">
+      	</c:if>
+      	
+      	</form>
+		
+		<div class="panel-footer float-right">
+			<button type="button" class="btn btn-danger"onclick="view_notice()">공지사항</button>
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.write_YN == 'Y' }">
+				<button type="button" class="btn btn-primary" onclick="writeBoard('${board.b_bseq}')">게시글 작성</button>
+			</c:if>
+			<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
+				<button type="button" class="btn btn-primary" onclick="writeNotice('${board.b_bseq}')">공지글 작성</button>
+			</c:if>
+		</div>
+	</div>
+</body>
 </html>
