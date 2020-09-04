@@ -74,6 +74,16 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
+	public int reOrderBoardKinds(BoardVO vo) throws Exception {
+		return boardDAO.reOrderBoardKinds(vo);
+	}
+	
+	@Override
+	public int deleteBoardKinds(BoardVO vo) throws Exception {
+		return boardDAO.deleteBoardKinds(vo);
+	}
+	
+	@Override
 	public String insertBoard(BoardVO vo) throws Exception {
 		LOGGER.debug(vo.toString());
 
@@ -128,6 +138,16 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	@Override
 	public int selectBoardListTotCnt(BoardVO vo) {
 		return boardDAO.selectBoardListTotCnt(vo);
+	}
+	
+	@Override
+	public List<?> selectAlarmList(BoardVO vo) throws Exception {
+		return boardDAO.selectAlarmList(vo);
+	}
+
+	@Override
+	public int selectAlarmListTotCnt(BoardVO vo) throws Exception {
+		return boardDAO.selectAlarmListTotCnt(vo);
 	}
 	
 	@Override
@@ -199,5 +219,5 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	public int checkHistory(HistoryVO vo) throws Exception {
 		return boardDAO.checkHistory(vo);
 	}
-	
+
 }

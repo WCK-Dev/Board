@@ -12,6 +12,8 @@
 
 <!-- JQuery -->
 <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- drag&drop JS-->
+<script type="text/javascript"src="${pageContext.request.contextPath }/js/jquery.tablednd.js"></script>
 <!-- Bootstrap core CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 <!-- Material Design Bootstrap -->
@@ -21,14 +23,50 @@
 
 <script type="text/javascript">
 
+	$(function(){ 
+		$("#bkTableBody").tableDnD(); 
+	});
+
 	function newBoardKinds(){
-		var newwin = window.open("<c:url value='/newBoardKinds.do' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+		var newwin = window.open("<c:url value='/newBoardKinds.do' />", "popUpBoard", "width=500, height=500, left=500, top=50, scrollbars=1");
 		newwin.focus();
 	}
 	
 	function managementBoardKinds(bk_bseq){
-		var newwin = window.open("<c:url value='/managementBoardKinds.do?bk_bseq=" + bk_bseq + "' />", "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+		var newwin = window.open("<c:url value='/managementBoardKinds.do?bk_bseq=" + bk_bseq + "' />", "popUpBoard", "width=500, height=500, left=500, top=50, scrollbars=1");
 		newwin.focus();
+	}
+	
+	function reOrderBoardKinds() {
+		location.href = "reOrderBoardKinds.do";
+	}
+	
+	function reOrder(){
+		
+		$(".orderChageValue").each(function(index, item) {
+			var bk_order = index + 1;
+			var bk_bseq = item.lastChild.value;
+			
+			
+			
+			$.ajax({
+				type : 'POST',
+				url : "<c:url value='/reOrderBoardKinds.do'/>",
+				dataType : "text",
+				data : {"bk_bseq" : bk_bseq,
+						"bk_order": bk_order
+						},
+				
+				success : function (result) {
+					resultCnt++;
+					console.log("result="+resultCnt);
+				}
+			});
+		});
+		
+		
+		alert("게시판 노출순서가 변경되었습니다.")
+		location.reload();
 	}
 		
 </script>
@@ -42,24 +80,22 @@
 		<table class="table border border-dark text-center">
 			<thead>
 				<tr>
-					<th class="w-auto h6 font-weight-bold">게시판 이름</th>
-					<th class="w-5 h6 font-weight-bold">게시판 타입</th>
-					<th class="w-5 h6 font-weight-bold">노출순서</th>
-					<th class="w-5 h6 font-weight-bold">답글 허용</th>
-					<th class="w-5 h6 font-weight-bold">댓글 허용</th>
-					<th class="w-5 h6 font-weight-bold">비밀글 허용</th>
-					<th class="w-20 h6 font-weight-bold">수정/삭제</th>
+					<th style="width: *" class="w-auto h6 font-weight-bold">게시판 이름</th>
+					<th style="width: 15%" class="w-5 h6 font-weight-bold">게시판 타입</th>
+					<th style="width: 12%" class="w-5 h6 font-weight-bold">답글</th>
+					<th style="width: 12%" class="w-5 h6 font-weight-bold">댓글</th>
+					<th style="width: 12%" class="w-5 h6 font-weight-bold">비밀글</th>
+					<th style="width: 15%" class="w-20 h6 font-weight-bold">수정/삭제</th>
 				</tr>
 			</thead>
-			<tbody>
-				<c:forEach items="${boardKindsList }" var="boardKinds">
+			<tbody id="bkTableBody">
+				<c:forEach items="${boardKindsList }" var="boardKinds" varStatus="i">
 					<tr>
-						<td class="h6">${boardKinds.bkBname}</td>
+						<td class="h6 orderChageValue">${boardKinds.bkBname}<input type="hidden" value="${boardKinds.bkBseq }"></td>
 						<td class="h6">
 							<c:if test="${boardKinds.bkType == 0}">일반형</c:if>
 							<c:if test="${boardKinds.bkType == 1}">알림형</c:if>
 						</td>
-						<td class="h6">${boardKinds.bkOrder }</td>
 						<td class="h6">
 							<c:if test="${boardKinds.bkBreplyYn == 'Y'}">허용</c:if>
 							<c:if test="${boardKinds.bkBreplyYn == 'N'}">비허용</c:if>
@@ -79,6 +115,7 @@
 		</table>
 		
 		<div class="panel-footer float-right">
+			<button type="button" class="btn btn-primary" onclick="reOrder()">노출순서 변경</button>
 			<button type="button" class="btn btn-primary" onclick="newBoardKinds()">게시판 추가</button>
 		</div>
 	</div>

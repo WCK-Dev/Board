@@ -37,6 +37,10 @@ public interface BoardMapper {
 	int insertBoardKinds(BoardVO vo) throws Exception;
 	
 	int updateBoardKinds(BoardVO vo) throws Exception;
+	
+	int reOrderBoardKinds(BoardVO vo) throws Exception;
+	
+	int deleteBoardKinds(BoardVO vo) throws Exception;
 
 	void insertBoard(BoardVO vo) throws Exception;
 
@@ -51,6 +55,10 @@ public interface BoardMapper {
 	List<?> selectBoardList(BoardVO vo) throws Exception;
 
 	int selectBoardListTotCnt(BoardVO vo);
+	
+	List<?> selectAlarmList(BoardVO vo) throws Exception;
+	
+	int selectAlarmListTotCnt(BoardVO vo) throws Exception;
 	
 	List<?> selectNoticeList(BoardVO vo) throws Exception;
 	

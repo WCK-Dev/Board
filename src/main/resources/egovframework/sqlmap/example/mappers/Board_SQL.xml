@@ -14,6 +14,8 @@
 	<select id="selectBoardKindsList" parameterType="boardVO" resultType="egovMap">
 
 			SELECT * FROM boardkinds
+			
+			ORDER BY bk_order
 
 	</select>
 	
@@ -51,6 +53,14 @@
 	
 	</insert>
 	
+	<update id="reOrderBoardKinds">
+	
+			UPDATE boardkinds
+			SET bk_order = #{bk_order}
+			WHERE bk_bseq = #{bk_bseq}
+			
+	</update>
+	
 	<update id="updateBoardKinds" parameterType="boardVO">
 
 		UPDATE boardkinds
@@ -62,6 +72,13 @@
 		WHERE bk_bseq = #{bk_bseq} 
 	
 	</update>
+	
+	<delete id="deleteBoardKinds" parameterType="boardVO">
+	
+		DELETE FROM boardkinds
+		WHERE bk_bseq = #{bk_bseq}
+	
+	</delete>
 	
 	<insert id="insertBoard" parameterType="boardVO">
 
@@ -175,6 +192,105 @@
 			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq
 			FROM CTE
 			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 1">
+						AND b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 2">
+						AND b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 3">
+		            	AND
+		            	(
+		            	b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+		            	b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+						b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+						)
+					</when>
+				</choose>
+			</if>
+			ORDER BY b_origin DESC, path ASC
+			LIMIT #{firstIndex}, #{recordCountPerPage}
+
+	</select>
+
+	<select id="selectBoardListTotCnt" parameterType="boardVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM BOARD
+			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+		            <when test="searchCondition == 0">
+						AND b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 1">
+						AND b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 2">
+						AND b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+					</when>
+		            <when test="searchCondition == 3">
+		            	AND
+		            	(
+		            	b_writer LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+		            	b_title LIKE CONCAT('%', #{searchKeyword}, '%')
+		            	OR
+						b_content LIKE CONCAT('%', #{searchKeyword}, '%')
+						)
+					</when>
+				</choose>
+			</if>
+	</select>
+	
+	<select id="selectAlarmList" parameterType="boardVO" resultType="egovMap">
+
+			WITH RECURSIVE CTE AS (
+				SELECT b_no 
+						,b_title
+						,b_writer
+						,b_regdate
+						,b_content
+						,b_readcnt
+						,b_refno
+						,b_depth
+						,b_notice
+						,CAST(LPAD(b_no, 10, 0) AS CHAR(3000)) path
+						,b_origin
+						,b_secret
+						,b_pwd
+						,b_bseq
+				FROM board
+				WHERE b_refno = 0
+				UNION ALL
+				SELECT b.b_no
+						,b.b_title
+						,b.b_writer
+						,b.b_regdate
+						,b.b_content
+						,b.b_readcnt
+						,b.b_refno
+						,b.b_depth
+						,b.b_notice
+						,CONCAT(a.path, ',', b.b_no) AS path
+						,b.b_origin
+						,b.b_secret
+						,b.b_pwd
+						,b.b_bseq
+				FROM CTE a
+				INNER JOIN board b ON a.b_no = b.b_refno
+			)
+			
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq
+			FROM CTE
+			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
 			<if test="bk_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})
 			</if>
@@ -209,7 +325,7 @@
 
 	</select>
 
-	<select id="selectBoardListTotCnt" parameterType="boardVO" resultType="int">
+	<select id="selectAlarmListTotCnt" parameterType="boardVO" resultType="int">
 
 			SELECT COUNT(*) totcnt
 			FROM BOARD

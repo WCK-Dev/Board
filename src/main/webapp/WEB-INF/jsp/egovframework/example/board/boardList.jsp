@@ -215,26 +215,8 @@ function fn_link_page(pageNo){
 		 </div>
 		 
 		<form class="form-inline ml-auto" commandName="board" id="boardListForm" name="boardListForm" action="boardList.do" method="get">
-		<!-- 알림형 게시판 -->
-		<c:if test="${board.bk_type == 1 }">
-			<div style="width: 100%" class="mt-2 mb-2 text-center">
-				<h4>알림형게시판입니다.</h4>
-		 	</div>
-		 	
-			<div style="width: 100%" class="mb-2 text-center">
-				새로운 게시글 수 : 
-				<c:if test="${paginationInfo.totalRecordCount == 0}">
-					없음
-				</c:if>
-				<c:if test="${paginationInfo.totalRecordCount != 0}">
-					<a style="color: blue;" onclick="alarmList('${board.b_bseq}','${sessionScope.user.user_id }')">${paginationInfo.totalRecordCount }개</a>
-				</c:if>
-			</div>
-		</c:if>
-		 
-		<!-- 일반형 게시판  -->
-		<c:if test="${board.bk_type == 0 }">
 		
+		 
 		<input type="hidden" id="b_bseq" name="b_bseq" value="${board.b_bseq }">
 		<div>
 			<nav class="navbar">
@@ -260,6 +242,19 @@ function fn_link_page(pageNo){
 					 <button type="submit" class="btn btn-primary">검색</button>
 			</nav>
 		</div>
+		
+		<!-- 알림형 게시판 -->
+		<c:if test="${board.bk_type == 1 }">
+			<div style="width: 100%" class="mt-2 mb-2 text-center">
+				읽지않은 게시글 수 : 
+				<c:if test="${alarmtotCnt == 0}">
+					없음
+				</c:if>
+				<c:if test="${alarmtotCnt != 0}">
+					<a style="color: blue;" onclick="alarmList('${board.b_bseq}','${sessionScope.user.user_id }')">${alarmtotCnt }개</a>
+				</c:if>
+			</div>
+		</c:if>
 		
 		<!-- 테이블(게시글) 영역  -->
 			<div class="table-responsive table-hover">
@@ -296,8 +291,6 @@ function fn_link_page(pageNo){
 	       		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_link_page" />
 	       	</ul>
       		<input type="hidden" id="pageIndex" name="pageIndex" value="1">
-      	</c:if>
-      	
       	</form>
 		
 		<div class="panel-footer float-right">

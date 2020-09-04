@@ -83,6 +83,9 @@ public class BoardController {
 		int totCnt = boardService.selectBoardListTotCnt(boardVO);
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
+		
+		int alarmtotCnt = boardService.selectAlarmListTotCnt(boardVO);
+		model.addAttribute("alarmtotCnt" , alarmtotCnt);
 
 		return "board/boardList";
 	}
@@ -100,11 +103,11 @@ public class BoardController {
 		boardVO.setBk_bcomment_YN(bk.getBk_bcomment_YN());
 		boardVO.setBk_bsecret_YN(bk.getBk_bsecret_YN());
 		
-		List<?> boardList = boardService.selectBoardList(boardVO);
+		List<?> boardList = boardService.selectAlarmList(boardVO);
 		model.addAttribute("boardList", boardList);
 		
-		int totCnt = boardService.selectBoardListTotCnt(boardVO);
-		model.addAttribute("totCnt", totCnt);
+		int alarmtotCnt = boardService.selectAlarmListTotCnt(boardVO);
+		model.addAttribute("alarmtotCnt" , alarmtotCnt);
 		
 		
 		return "board/alarmList";
@@ -113,6 +116,15 @@ public class BoardController {
 	@RequestMapping(value="writeBoard.do" , method = RequestMethod.GET)
 	public String writeBoard(BoardVO boardVO, Model model) throws Exception {
 		
+		BoardVO bk = new BoardVO();
+		bk.setBk_bseq(boardVO.getB_bseq());
+		bk = boardService.selectBoardKinds(bk);
+		boardVO.setBk_type(bk.getBk_type());
+		boardVO.setBk_order(bk.getBk_order());
+		boardVO.setBk_bname(bk.getBk_bname());
+		boardVO.setBk_breply_YN(bk.getBk_breply_YN());
+		boardVO.setBk_bcomment_YN(bk.getBk_bcomment_YN());
+		boardVO.setBk_bsecret_YN(bk.getBk_bsecret_YN());
 		model.addAttribute("board", boardVO);
 		
 		return "board/writeBoard";
@@ -120,6 +132,7 @@ public class BoardController {
 	
 	@RequestMapping(value="writeNotice.do" , method = RequestMethod.GET)
 	public String writeNotice(BoardVO boardVO, Model model) throws Exception {
+		
 		
 		model.addAttribute("board", boardVO);
 		
@@ -143,6 +156,19 @@ public class BoardController {
 	@RequestMapping(value="readBoard.do")
 	public String readBoard(@ModelAttribute("board")BoardVO boardVO, ModelMap model, HttpServletRequest request) throws Exception {
 		
+		boardVO =  boardService.selectBoard(boardVO);
+		
+		/** 게시판 유형정보 저장  */ 
+		BoardVO bk = new BoardVO();
+		bk.setBk_bseq(boardVO.getB_bseq());
+		bk = boardService.selectBoardKinds(bk);
+		boardVO.setBk_type(bk.getBk_type());
+		boardVO.setBk_order(bk.getBk_order());
+		boardVO.setBk_bname(bk.getBk_bname());
+		boardVO.setBk_breply_YN(bk.getBk_breply_YN());
+		boardVO.setBk_bcomment_YN(bk.getBk_bcomment_YN());
+		boardVO.setBk_bsecret_YN(bk.getBk_bsecret_YN());
+		
 		/** 유저의 게시글 읽은 내역 저장 */
 		HistoryVO historyVO = new HistoryVO();
 		String loginId = ((UserVO)request.getSession().getAttribute("user")).getUser_id();
@@ -154,7 +180,7 @@ public class BoardController {
 		}
 		
 		boardService.updateReadCnt(boardVO);
-		model.addAttribute("boardVO", boardService.selectBoard(boardVO));
+		model.addAttribute("boardVO", boardVO);
 		model.addAttribute("commentList", boardService.selectCommentList(boardVO));
 		
 		return "board/readBoard";
@@ -333,6 +359,20 @@ public class BoardController {
 		return boardService.updateBoardKinds(boardVO) + "";
 	}
 	
+	@RequestMapping(value="reOrderBoardKinds.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String reOrderBoardKinds(BoardVO boardVO) throws Exception{
+		
+		return boardService.reOrderBoardKinds(boardVO) + "";
+	}
+	
+	@RequestMapping(value="deleteBoardKinds", method=RequestMethod.POST)
+	@ResponseBody
+	public String deleteBoardKinds(BoardVO boardVO) throws Exception{
+		
+		return boardService.deleteBoardKinds(boardVO) + "";
+	}
+	
 	
 	@RequestMapping(value="managementBoardKinds.do")
 	public String managementBoardKinds(BoardVO boardVO, ModelMap model) throws Exception {
@@ -341,6 +381,7 @@ public class BoardController {
 		
 		return "board/managementBoardKinds";
 	}
+	
 	
 	@RequestMapping(value="insertComment.do", method=RequestMethod.POST)
 	@ResponseBody

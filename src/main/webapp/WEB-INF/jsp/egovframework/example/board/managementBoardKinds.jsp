@@ -38,6 +38,7 @@
 		var bk_breply_YN = $(":radio[name='bk_breply_YN']:checked").val();
 		var bk_bcomment_YN = $(":radio[name='bk_bcomment_YN']:checked").val();
 		var bk_bsecret_YN = $(":radio[name='bk_bsecret_YN']:checked").val();
+		var bk_order = $("#bk_order").val();
 		
 		$.ajax({
 			type : 'POST',
@@ -49,6 +50,7 @@
 				   ,"bk_breply_YN": bk_breply_YN
 				   ,"bk_bcomment_YN": bk_bcomment_YN
 				   ,"bk_bsecret_YN": bk_bsecret_YN
+				   ,"bk_order": bk_order
 				   },
 			
 			success : function(result) {
@@ -62,6 +64,29 @@
 				window.close();
 			}
 		});
+	}
+	
+	function deleteBoardKinds(bk_bseq){
+		
+		if(confirm("게시판을 삭제합니다. \r\n삭제된 게시판은 복구할 수 없습니다.")){
+			$.ajax({
+				type : 'POST',
+				url : "<c:url value='/deleteBoardKinds.do'/>",
+				dataType : "text",
+				data : {"bk_bseq": bk_bseq },
+				
+				success : function(result) {
+					console.log(result);
+					if(result == '1') {
+						alert("게시판이 삭제되었습니다.");
+					} else {
+						alert("게시판삭제에 오류가 발생했습니다.");
+					}
+					opener.location.reload();
+					window.close();
+				}
+			});
+		}
 	}
 	
 </script>
@@ -99,6 +124,15 @@
 			      <input type="radio" id="bk_bsecret_YN1" name="bk_bsecret_YN" value="Y" <c:if test="${boardKinds.bk_bsecret_YN == 'Y' }">checked</c:if>><label for="bk_bsecret_YN1">&nbsp;허용 &nbsp;&nbsp;&nbsp;</label>
 			      <input type="radio" id="bk_bsecret_YN2" name="bk_bsecret_YN" value="N" <c:if test="${boardKinds.bk_bsecret_YN == 'N' }">checked</c:if>><label for="bk_bsecret_YN2">&nbsp;비허용</label>
 			  </div>
+			  
+			  <div class="mb-4">
+			  	<b>게시판 노출 순서 : &nbsp;&nbsp;&nbsp;</b>${boardKinds.bk_order}<br>
+			  	<small style="color: red">게시판 순서변경은 관리창의 드래그&드랍으로 변경할 수 있습니다.</small>
+			  </div>
+			  
+			<div class="panel-footer float-left">
+				<button type="button" class="btn btn-danger" onclick="deleteBoardKinds(${boardKinds.bk_bseq});">게시판 삭제</button>
+			</div>
 			<div class="panel-footer float-right">
 				<button type="button" class="btn btn-primary" onclick="updateBoardKinds(${boardKinds.bk_bseq});">수정</button>
 				<button type="button" class="btn btn-primary" onclick="window.close();">취소</button>

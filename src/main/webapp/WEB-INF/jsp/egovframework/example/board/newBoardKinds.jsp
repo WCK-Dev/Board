@@ -76,23 +76,23 @@
 			  </div>
 			  <div style="width: 100%">
 			      <b>게시판 타입 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="bk_type" value="0" checked>&nbsp;일반형 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="bk_type" value="1">&nbsp;알림형
+			      <input type="radio" id="bk_type1" name="bk_type" value="0" checked>				<label for="bk_type1">&nbsp;일반형 &nbsp;&nbsp;&nbsp;</label>
+			      <input type="radio" id="bk_type2" name="bk_type" value="1">						<label for="bk_type2">&nbsp;알림형</label>
 			  </div>
 			  <div style="width: 100%">
 			      <b>답글 허용 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="bk_breply_YN" value="Y" checked>&nbsp;허용 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="bk_breply_YN" value="N">&nbsp;비허용
+			      <input type="radio" id="bk_breply_YN1" name="bk_breply_YN" value="Y" checked>		<label for="bk_breply_YN1">&nbsp;허용 &nbsp;&nbsp;&nbsp;</label>
+			      <input type="radio" id="bk_breply_YN2" name="bk_breply_YN" value="N">        		<label for="bk_breply_YN2">&nbsp;비허용</label>
 			  </div>
 			  <div style="width: 100%">
 			      <b>댓글 허용 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="bk_bcomment_YN" value="Y" checked>&nbsp;허용 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="bk_bcomment_YN" value="N">&nbsp;비허용
+	      		  <input type="radio" id="bk_bcomment_YN1" name="bk_bcomment_YN" value="Y" checked><label for="bk_bcomment_YN1">&nbsp;허용 &nbsp;&nbsp;&nbsp;</label>
+			      <input type="radio" id="bk_bcomment_YN2" name="bk_bcomment_YN" value="N">        <label for="bk_bcomment_YN2">&nbsp;비허용</label>                 
 			  </div>
 			  <div style="width: 100%">
 			      <b>비밀글 허용 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="bk_bsecret_YN" value="Y" checked>&nbsp;허용 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="bk_bsecret_YN" value="N">&nbsp;비허용
+			      <input type="radio" id="bk_bsecret_YN1" name="bk_bsecret_YN" value="Y" checked>	<label for="bk_bsecret_YN1">&nbsp;허용 &nbsp;&nbsp;&nbsp;</label>
+			      <input type="radio" id="bk_bsecret_YN2" name="bk_bsecret_YN" value="N">			<label for="bk_bsecret_YN2">&nbsp;비허용</label>                 
 			  </div>
 			<div class="panel-footer float-right">
 				<button type="button" class="btn btn-primary" onclick="testValidation();">추가</button>

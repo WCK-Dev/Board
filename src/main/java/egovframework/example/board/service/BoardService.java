@@ -30,6 +30,10 @@ public interface BoardService {
 	int insertBoardKinds(BoardVO vo) throws Exception;
 	
 	int updateBoardKinds(BoardVO vo) throws Exception;
+	
+	int reOrderBoardKinds(BoardVO vo) throws Exception;
+
+	int deleteBoardKinds(BoardVO vo) throws Exception;
 
 	String insertBoard(BoardVO vo) throws Exception;
 
@@ -43,13 +47,17 @@ public interface BoardService {
 
 	List<?> selectBoardList(BoardVO vo) throws Exception;
 	
+	int selectBoardListTotCnt(BoardVO vo);
+	
+	List<?> selectAlarmList(BoardVO vo) throws Exception;
+	
+	int selectAlarmListTotCnt(BoardVO vo) throws Exception;
+	
 	int selectMaxBno()throws Exception;
 	
 	int updateGrpord(BoardVO vo) throws Exception;
 	
 	int insertReply(BoardVO vo) throws Exception;
-
-	int selectBoardListTotCnt(BoardVO vo);
 	
 	List<?> selectNoticeList(BoardVO vo) throws Exception;
 	

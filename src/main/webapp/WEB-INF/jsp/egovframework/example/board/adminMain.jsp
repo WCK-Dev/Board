@@ -57,7 +57,7 @@ function writeBoard(){
 		</div>
 		
 		<div style="width: 100%;" class="center-block">
-			<button type="button" class="btn btn-danger" onclick="location='boardList.do'">게시판 메인으로</button>		
+			<button type="button" class="btn btn-danger" onclick="location='boardMain.do'">게시판 메인으로</button>		
 		</div>
 		
 	</div>

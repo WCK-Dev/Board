@@ -160,45 +160,46 @@ function deleteComment(c_no, c_writer, user_id) {
 		</div>
 		
 		<!-- 댓글란 -->
-		
-		<div class="text-center" >
-			<table class="table border border-light">
-				<c:forEach var="comment" items="${commentList }" varStatus="i">
+		<c:if test="${boardVO.bk_bcomment_YN == 'Y'  }">
+			<div class="text-center" >
+				<table class="table border border-light">
+					<c:forEach var="comment" items="${commentList }" varStatus="i">
+						<tr>
+							<th width='*' scope='row'><b>${comment.cWriter }</b></th>
+							<td width='23%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
+						</tr>
+						<tr>
+							<td class='text-left'>${comment.cContent }</td>
+							<td>
+								<c:if test="${comment.cWriter == sessionScope.user.user_id }">
+									<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">댓글 삭제</div>
+								</c:if>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+				
+				<!-- 댓글 작성란  -->
+				<c:if test="${sessionScope.user.comment_YN == 'Y' || sessionScope.user.admin_YN == 'Y'}">
+				<table>
 					<tr>
-						<th width='*' scope='row'><b>${comment.cWriter }</b></th>
-						<td width='23%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
-					</tr>
-					<tr>
-						<td class='text-left'>${comment.cContent }</td>
-						<td>
-							<c:if test="${comment.cWriter == sessionScope.user.user_id }">
-								<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">댓글 삭제</div>
-							</c:if>
+						<td colspan="2" style="text-align: center">
+							<b class="h4">댓글 작성</b>
 						</td>
 					</tr>
-				</c:forEach>
-			</table>
-			
-			<!-- 댓글 작성란  -->
-			<c:if test="${sessionScope.user.comment_YN == 'Y' || sessionScope.user.admin_YN == 'Y'}">
-			<table>
-				<tr>
-					<td colspan="2" style="text-align: center">
-						<b class="h4">댓글 작성</b>
-					</td>
-				</tr>
-			    <tr>
-			   		<td width="20%"><input type="text" id="c_writer" class="form-control" value="${sessionScope.user.user_id }" readonly></td>
-				   	<td width="80%"><input type="text" id="c_content" class="form-control" placeholder="댓글 내용을 작성하세요" maxlength="100"></td>
-			    </tr>
-			    <tr>
-			    	<td colspan="2" style="text-align: right">
-						<button class="btn btn-info" onclick="writeComment(${boardVO.b_no})">댓글 작성</button>
-					</td>
-			    </tr>
-			</table>
-			</c:if>
-		</div>
+				    <tr>
+				   		<td width="20%"><input type="text" id="c_writer" class="form-control" value="${sessionScope.user.user_id }" readonly></td>
+					   	<td width="80%"><input type="text" id="c_content" class="form-control" placeholder="댓글 내용을 작성하세요" maxlength="100"></td>
+				    </tr>
+				    <tr>
+				    	<td colspan="2" style="text-align: right">
+							<button class="btn btn-info" onclick="writeComment(${boardVO.b_no})">댓글 작성</button>
+						</td>
+				    </tr>
+				</table>
+				</c:if>
+			</div>
+		</c:if>
 		
 		<div class="panel-footer float-right mt-5">
 			<c:if test="${(sessionScope.user.user_id == boardVO.b_writer && sessionScope.user.update_YN == 'Y' )|| sessionScope.user.admin_YN == 'Y'}">
@@ -207,12 +208,11 @@ function deleteComment(c_no, c_writer, user_id) {
 			<c:if test="${(sessionScope.user.user_id == boardVO.b_writer && sessionScope.user.delete_YN == 'Y' )|| sessionScope.user.admin_YN == 'Y'}">
 				<button type="button" class="btn btn-primary" onclick="del(${boardVO.b_no}, ${boardVO.b_refno})">삭제</button>
 			</c:if>
-			<c:if test="${sessionScope.user.reply_YN == 'Y' || sessionScope.user.admin_YN == 'Y'}">
+			<c:if test="${(boardVO.bk_breply_YN == 'Y' && sessionScope.user.reply_YN == 'Y') || sessionScope.user.admin_YN == 'Y'}">
 				<button type="button" class="btn btn-primary" onclick="reply(${boardVO.b_no})">답글 작성</button>
 			</c:if>
 			<button type="button" class="btn btn-primary" onclick="window.close()">닫기</button>
 		</div>
 	</div>
-		
 </body>
 </html>

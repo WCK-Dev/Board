@@ -70,8 +70,6 @@
 		var b_secret = $(":radio[name='b_secret']:checked").val();
 		var b_pwd = $("#b_pwd").val();
 		
-		if( b_pwd == '' || b_pwd.trim() == '') { b_pwd = null};
-		
 		$.ajax({
 			type : 'POST',
 			url : "<c:url value='/writeBoard.do'/>",
@@ -118,15 +116,17 @@
 			      <input type="text" class="form-control" id="b_writer" name="b_writer" value="${sessionScope.user.user_id }" placeholder="작성자명을 입력해주세요." maxlength="20" readonly>
 			    </div>
 			  </div>
-			  <div style="width: 100%">
-			      <b>게시글 유형 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="radio" name="b_secret" value="0" checked onchange="isSecret()">&nbsp;일반글 &nbsp;&nbsp;&nbsp;
-			      <input type="radio" name="b_secret" value="1" onchange="isSecret()">&nbsp;비밀글
-			  </div>
-			  <div>
-			  	  <b>게시글 비밀번호 : &nbsp;&nbsp;&nbsp;</b>
-			      <input type="password" id="b_pwd" name="b_pwd" class="form-control" style="width:63%; display:inline-block;" disabled="disabled" maxlength="20">
-			  </div>
+			  <c:if test="${boardVO.bk_bsecret_YN == 'Y'}">
+				  <div style="width: 100%">
+				      <b>게시글 유형 : &nbsp;&nbsp;&nbsp;</b>
+				      <input type="radio" name="b_secret" value="0" checked onchange="isSecret()">&nbsp;일반글 &nbsp;&nbsp;&nbsp;
+				      <input type="radio" name="b_secret" value="1" onchange="isSecret()">&nbsp;비밀글
+				  </div>
+				  <div>
+				  	  <b>게시글 비밀번호 : &nbsp;&nbsp;&nbsp;</b>
+				      <input type="password" id="b_pwd" name="b_pwd" class="form-control" style="width:63%; display:inline-block;" disabled="disabled" maxlength="20">
+				  </div>
+			  </c:if>
 			  <div class="form-group">
 			    <div class="form-group">
 				  <label for="b_content">게시글 내용</label>
