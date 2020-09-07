@@ -392,6 +392,15 @@ public class BoardController {
 		return boardService.insertComment(commentVO) + "";
 	}
 	
+	@RequestMapping(value="insertRecomment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String insertRecomment(CommentVO commentVO) throws Exception {
+		
+		commentVO.setC_no(boardService.selectMaxCno() + 1);
+		
+		return boardService.insertRecomment(commentVO) + "";
+	}
+	
 	@RequestMapping(value="deleteComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String deleteComment(CommentVO commentVO) throws Exception {

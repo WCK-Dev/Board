@@ -505,12 +505,39 @@
 				 ,c_writer
 				 ,c_content
 				 ,b_no
+				 ,c_origin
+				 ,c_depth
 				 )
 			VALUES 
 				( #{c_no}
 				 ,#{c_writer}
 				 ,#{c_content}
 				 ,#{b_no}
+				 ,#{c_no}
+				 ,1
+				)
+				
+	</insert>
+	
+	<insert id="insertRecomment" parameterType="commentVO">
+		
+			INSERT INTO comment
+				( c_no
+				 ,c_writer
+				 ,c_content
+				 ,b_no
+				 ,c_parent
+				 ,c_origin
+				 ,c_depth
+				 )
+			VALUES 
+				( #{c_no}
+				 ,#{c_writer}
+				 ,#{c_content}
+				 ,#{b_no}
+				 ,#{c_parent}
+				 ,#{c_origin}
+				 ,#{c_depth} + 1
 				)
 				
 	</insert>
@@ -523,10 +550,37 @@
 	</delete>
 	
 	<select id="selectCommentList" parameterType="boardVO" resultType="egovMap">
-	
-			SELECT *
-			FROM comment
+			
+			WITH RECURSIVE CTE AS (
+				SELECT c_no 
+						,c_writer
+						,c_content
+						,c_regdate
+						,c_parent
+						,c_origin
+						,CAST(LPAD(c_no, 10, 0) AS CHAR(3000)) path
+						,b_no
+						,c_depth
+				FROM comment
+				WHERE c_parent = 0
+				UNION ALL
+				SELECT c.c_no
+						,c.c_writer
+						,c.c_content
+						,c.c_regdate
+						,c.c_parent
+						,c.c_origin
+						,CONCAT(a.path, ',', c.c_no) AS path
+						,c.b_no
+						,c.c_depth
+				FROM CTE a
+				INNER JOIN comment c ON a.c_no = c.c_parent
+			)
+			
+			SELECT * 
+			FROM CTE
 			WHERE b_no = #{b_no}
+			ORDER BY c_origin, path
 	
 	</select>
 	

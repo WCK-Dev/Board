@@ -101,6 +101,40 @@ function writeComment(b_no) {
 	
 }
 
+function insertRecomment(b_no, c_parent, c_origin, c_depth, index) {
+	var c_writer ='${sessionScope.user.user_id}';
+	var c_content = $("#c_reComment" + index).val();
+	
+	if(!c_content){
+		alert("댓글내용을 입력해야합니다.");
+	} else {
+		$.ajax({
+			type : 'POST',
+			url : "<c:url value='/insertRecomment.do'/>",
+			dataType : "text",
+			data : {"b_no" : b_no
+				   ,"c_writer": c_writer
+				   ,"c_content": c_content
+				   ,"c_parent": c_parent
+				   ,"c_origin": c_origin
+				   ,"c_depth": c_depth
+					
+					},
+			
+			success : function (result) {
+				
+				if(result == 1){
+					alert("댓글을 등록했습니다.");
+					location.reload(true);
+				} else {
+					alert("댓글등록에 오류가 발생했습니다.")
+				}
+			}
+		});
+	}
+	
+}
+
 function deleteComment(c_no, c_writer, user_id) {
 	
 	if(c_writer != user_id) {
@@ -165,16 +199,24 @@ function deleteComment(c_no, c_writer, user_id) {
 				<table class="table border border-light">
 					<c:forEach var="comment" items="${commentList }" varStatus="i">
 						<tr>
-							<th width='*' scope='row'><b>${comment.cWriter }</b></th>
-							<td width='23%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
+							<th width='*' class="text-left">
+								<c:forEach begin="2" end="${comment.cDepth }"><div class="badge badge-danger text-wrap">Re:</div>&nbsp;</c:forEach>
+								<b>${comment.cWriter }</b>
+							</th>
+							<td width='21%'><fmt:formatDate pattern="yyyy-MM-dd" timeZone="UTC" value="${comment.cRegdate }"/></td>
 						</tr>
 						<tr>
 							<td class='text-left'>${comment.cContent }</td>
 							<td>
+								<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="$('.reCommentForm${i.index}').toggle()">댓글</div>
 								<c:if test="${comment.cWriter == sessionScope.user.user_id }">
-									<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">댓글 삭제</div>
+									<div class="badge badge-danger text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">삭제</div>
 								</c:if>
 							</td>
+						</tr>
+						<tr class="reCommentForm${i.index }" style="display: none;">
+							<td><input type="text" id="c_reComment${i.index }" class="form-control" placeholder="댓글 내용을 작성하세요" maxlength="100"></td>
+							<td><h4><span class="badge badge-primary" style="cursor: pointer" onclick="insertRecomment(${comment.bNo } ,${comment.cNo}, ${comment.cOrigin }, ${comment.cDepth }, ${i.index })">입력</span></h4></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -193,7 +235,7 @@ function deleteComment(c_no, c_writer, user_id) {
 				    </tr>
 				    <tr>
 				    	<td colspan="2" style="text-align: right">
-							<button class="btn btn-info" onclick="writeComment(${boardVO.b_no})">댓글 작성</button>
+							<button class="btn btn-primary" onclick="writeComment(${boardVO.b_no})">댓글 작성</button>
 						</td>
 				    </tr>
 				</table>

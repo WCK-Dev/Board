@@ -49,7 +49,7 @@
 <script>
 $(document).ready(function(){
 	/* 게시판 진입 권한이 없을 경우 boardMain으로 이동  */
-	if('${sessionScope.user.read_YN}' == 'N'){
+	if('${sessionScope.user.read_YN}' != 'Y' && '${sessionScope.user.admin_YN}' != 'Y'){
 		alert("게시판 진입권한이 없습니다..\r\n관리자가 권한을 부여한 후 이용해주세요.");
 		location.href="boardMain.do"
 	}

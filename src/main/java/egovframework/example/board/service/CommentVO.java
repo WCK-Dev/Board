@@ -8,6 +8,9 @@ public class CommentVO {
 	private String c_content;
 	private Timestamp c_regdate;
 	private int b_no;
+	private int c_parent;
+	private int c_origin;
+	private int c_depth;
 	
 	public int getC_no() {
 		return c_no;
@@ -39,7 +42,23 @@ public class CommentVO {
 	public void setB_no(int b_no) {
 		this.b_no = b_no;
 	}
-	
-	
+	public int getC_parent() {
+		return c_parent;
+	}
+	public void setC_parent(int c_parent) {
+		this.c_parent = c_parent;
+	}
+	public int getC_origin() {
+		return c_origin;
+	}
+	public void setC_origin(int c_origin) {
+		this.c_origin = c_origin;
+	}
+	public int getC_depth() {
+		return c_depth;
+	}
+	public void setC_depth(int c_depth) {
+		this.c_depth = c_depth;
+	}
 	
 }

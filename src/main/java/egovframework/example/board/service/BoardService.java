@@ -79,6 +79,8 @@ public interface BoardService {
 	
 	int insertComment(CommentVO vo) throws Exception;
 	
+	int insertRecomment(CommentVO vo) throws Exception;
+	
 	int deleteComment(CommentVO vo) throws Exception;
 	
 	List<?> selectCommentList(BoardVO vo) throws Exception;

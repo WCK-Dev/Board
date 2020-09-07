@@ -201,6 +201,11 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 	@Override
+	public int insertRecomment(CommentVO vo) throws Exception {
+		return boardDAO.insertRecomment(vo);
+	}
+	
+	@Override
 	public int deleteComment(CommentVO vo) throws Exception {
 		return boardDAO.deleteComment(vo);
 	}
