@@ -64,6 +64,7 @@ function readBoard(b_no, b_writer, b_secret, login_id, b_pwd){
 	        	<a href="javascript:readBoard(${board.bNo }, '${board.bWriter }', '${board.bSecret }', '${sessionScope.user.user_id }' , '${board.bPwd }');">
 		        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
 		        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
+		        	<c:if test="${board.bCommentcnt != 0}"> <small class="text-danger">[${board.bCommentcnt }]</small></c:if>
 		        </a>	
 	      	</td>
 	        <td class="text-center"><c:out value="${board.bWriter }" /></td>

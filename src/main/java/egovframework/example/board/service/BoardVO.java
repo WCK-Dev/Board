@@ -76,6 +76,8 @@ public class BoardVO extends BoardKindsVO {
 	/** 게시판 번호 */
 	private int b_bseq;
 
+	/** 댓글 개수 */
+	private int b_commentCnt;
 
 	public int getB_no() {
 		return b_no;
@@ -179,6 +181,14 @@ public class BoardVO extends BoardKindsVO {
 
 	public void setB_bseq(int b_bseq) {
 		this.b_bseq = b_bseq;
+	}
+
+	public int getB_commentCnt() {
+		return b_commentCnt;
+	}
+
+	public void setB_commentCnt(int b_commentCnt) {
+		this.b_commentCnt = b_commentCnt;
 	}
 
 	public static long getSerialversionuid() {

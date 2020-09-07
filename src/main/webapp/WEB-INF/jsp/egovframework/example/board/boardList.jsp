@@ -15,7 +15,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Board Main</title>
+<title>Board List</title>
 <!-- JQuery -->
 <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- bpopup -->
@@ -276,7 +276,8 @@ function fn_link_page(pageNo){
 			        	</c:if>			        	
 			        	<a href="javascript:readBoard(${board.bNo }, '${board.bWriter }', '${board.bSecret }', '${sessionScope.user.user_id }' , '${board.bPwd }');">
 				        	<c:forEach begin="2" end="${board.bDepth }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
-				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" />
+				        	<c:if test="${board.bDepth > 1 }">RE: </c:if><c:out value="${board.bTitle }" /> 
+				        	<c:if test="${board.bCommentcnt != 0}"> <small class="text-danger">[${board.bCommentcnt }]</small></c:if>
 				        </a>
 			        </td>
 			        <td class="text-center"><c:out value="${board.bWriter }" /></td>

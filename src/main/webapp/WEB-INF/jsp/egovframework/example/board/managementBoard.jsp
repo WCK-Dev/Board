@@ -115,6 +115,7 @@
 		</table>
 		
 		<div class="panel-footer float-right">
+			<small style="color: red">드래그&드랍으로 순서를 결정하고 변경버튼을 눌러주세요.</small>
 			<button type="button" class="btn btn-primary" onclick="reOrder()">노출순서 변경</button>
 			<button type="button" class="btn btn-primary" onclick="newBoardKinds()">게시판 추가</button>
 		</div>

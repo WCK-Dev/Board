@@ -189,8 +189,8 @@
 				INNER JOIN board b ON a.b_no = b.b_refno
 			)
 			
-			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq
-			FROM CTE
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq, (SELECT COUNT(*) FROM comment c WHERE c.b_no = cte.b_no ) AS b_commentCnt 
+			FROM CTE cte
 			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
 			<if test="searchKeyword != null and searchKeyword != ''">
 				<choose>
@@ -288,8 +288,8 @@
 				INNER JOIN board b ON a.b_no = b.b_refno
 			)
 			
-			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq
-			FROM CTE
+			SELECT b_no, b_title, b_writer, b_regdate, b_content, b_readcnt, b_refno, b_depth, path, b_origin, b_secret, b_pwd, b_bseq, (SELECT COUNT(*) FROM comment c WHERE c.b_no = cte.b_no ) AS b_commentCnt 
+			FROM CTE cte
 			WHERE b_notice != 1 AND b_bseq = #{b_bseq}
 			<if test="bk_type == 1">
 				AND b_no NOT IN (SELECT b_no FROM history WHERE user_id = #{loginId})

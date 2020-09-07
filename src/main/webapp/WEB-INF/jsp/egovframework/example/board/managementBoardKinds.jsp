@@ -16,7 +16,7 @@
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
-<title>Insert title here</title>
+<title>게시판 설정 관리</title>
 
 <script>
 	
