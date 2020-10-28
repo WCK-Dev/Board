@@ -54,12 +54,7 @@
 				   },
 			
 			success : function(result) {
-				console.log(result);
-				if(result == '1') {
-					alert("게시판설정이 변경되었습니다.");
-				} else {
-					alert("게시판설정 변경에 오류가 발생했습니다.");
-				}
+				alert("게시판설정이 변경되었습니다.");
 				opener.location.reload();
 				window.close();
 			}
@@ -77,11 +72,7 @@
 				
 				success : function(result) {
 					console.log(result);
-					if(result == '1') {
-						alert("게시판이 삭제되었습니다.");
-					} else {
-						alert("게시판삭제에 오류가 발생했습니다.");
-					}
+					alert("게시판이 삭제되었습니다.");
 					opener.location.reload();
 					window.close();
 				}

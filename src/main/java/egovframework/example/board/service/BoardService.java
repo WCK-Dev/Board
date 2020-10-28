@@ -39,7 +39,7 @@ public interface BoardService {
 
 	void updateBoard(BoardVO vo) throws Exception;
 
-	void deleteBoard(BoardVO vo) throws Exception;
+	int deleteBoard(BoardVO vo) throws Exception;
 
 	BoardVO selectBoard(BoardVO vo) throws Exception;
 	

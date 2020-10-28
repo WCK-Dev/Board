@@ -20,7 +20,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
 		Object obj = session.getAttribute("user");
 		
 		if(obj == null || ((UserVO)obj).getUser_id().equals("")) { 
-			response.sendRedirect("/Board/login.do");
+			response.sendRedirect("/TotalProject/login.do");
 			return false;
 		}
 		return true; // 조건문에 걸리지않으면 (로그인 상태이면) 컨트롤러에 요청정보를 전송하게 됨

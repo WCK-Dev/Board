@@ -49,12 +49,7 @@
 				   },
 			
 			success : function(result) {
-				console.log(result);
-				if(result == '1') {
-					alert("게시판이 추가되었습니다.");
-				} else {
-					alert("게시판 추가에 오류가 발생했습니다.");
-				}
+				alert("게시판이 추가되었습니다.");
 				opener.location.reload();
 				window.close();
 			}

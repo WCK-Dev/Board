@@ -18,34 +18,9 @@
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
 
-<script>
-function logout(){
-	location.href = "<c:url value='/logout.do' />"
-}
-
-function adminMain(){
-	location.href = "<c:url value='/adminMain.do' />"
-}
-</script>
-
 </head>
 <body class="container">
-	<a href="boardMain.do"><h1>eGov Board 메인</h1></a>
-	<div class="panel-heading text-right">
-		${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
-		<button type="button" class="btn btn-danger" onclick="logout();">로그아웃</button>
-		<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-			<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
-		</c:if>
-	</div>
-	
-	<div class="mt-3 mb-2">
-		<c:forEach items="${boardKindsList }" var="boardKinds">
-			<a href='boardList.do?b_bseq=${boardKinds.bkBseq }'><b>${boardKinds.bkBname }</b> &nbsp;&nbsp;&nbsp;</a>
-		</c:forEach>
-	</div>
-	<hr>
-	
+	<jsp:include page="../cmmn/pageHeader.jsp"></jsp:include>
 	
 	<div class="panel panel-default mt-5 pt-5">
 		<h4>어서오세요 ! eGov 게시판 메인화면입니다.</h4>

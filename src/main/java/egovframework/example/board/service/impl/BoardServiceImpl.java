@@ -98,8 +98,8 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 
 	@Override
-	public void deleteBoard(BoardVO vo) throws Exception {
-		boardDAO.deleteBoard(vo);
+	public int deleteBoard(BoardVO vo) throws Exception {
+		return boardDAO.deleteBoard(vo);
 	}
 
 	@Override

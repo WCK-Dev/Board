@@ -33,8 +33,6 @@ public class BoardController {
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
-
-	
 	
 	@RequestMapping(value="boardMain.do")
 	public String boardMain(BoardVO boardVO, ModelMap model) {
@@ -206,11 +204,11 @@ public class BoardController {
 		return "redirect:/readBoard.do?b_no=" + boardVO.getB_no();
 	}
 
+	@RequestMapping(value="deleteBoard.do")
 	@ResponseBody
-	@RequestMapping(value="deleteBoard.do", method = RequestMethod.POST)
-	public void deleteBoard(BoardVO boardVO) throws Exception{
+	public String deleteBoard(BoardVO boardVO) throws Exception{
 		
-		boardService.deleteBoard(boardVO);
+		return boardService.deleteBoard(boardVO) + "";
 	}
 	
 	@RequestMapping(value="writeReply.do", method =RequestMethod.GET)

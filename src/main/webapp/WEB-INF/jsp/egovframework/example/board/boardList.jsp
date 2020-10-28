@@ -93,13 +93,13 @@ function adminMain(){
 	location.href = "<c:url value='/adminMain.do' />"
 }
 
-function writeBoard(b_seq){
-	var newwin = window.open("<c:url value='/writeBoard.do' />?b_bseq="+ b_seq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+function writeBoard(b_bseq){
+	var newwin = window.open("<c:url value='/writeBoard.do' />?b_bseq="+ b_bseq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
 	newwin.focus();
 }
 
-function writeNotice(b_seq){
-	var newwin = window.open("<c:url value='/writeNotice.do' />?b_bseq="+ b_seq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
+function writeNotice(b_bseq){
+	var newwin = window.open("<c:url value='/writeNotice.do' />?b_bseq="+ b_bseq, "popUpBoard", "width=500, height=900, left=500, top=50, scrollbars=1");
 	newwin.focus();
 }
 
@@ -154,22 +154,8 @@ function fn_link_page(pageNo){
 </script>
 </head>
 <body class="container">
-	<a href="boardMain.do"><h1>eGov Board 메인</h1></a>
-	<!-- 유저정보 영역 -->
-	<div class="panel-heading text-right">
-		${sessionScope.user.user_name }(${sessionScope.user.user_id })님 환영합니다.
-		<button type="button" class="btn btn-danger" onclick="logout();">로그아웃</button>
-		<c:if test= "${sessionScope.user.user_id != null && sessionScope.user.user_id != '' && sessionScope.user.admin_YN == 'Y' }">
-			<button type="button" class="btn btn-primary" onclick="adminMain()">관리자 페이지</button>
-		</c:if>
-	</div>
-	<!-- 게시판 리스트 영역 -->
-	<div class="mt-3 mb-2">
-		<c:forEach items="${boardKindsList }" var="boardKinds">
-			<a href='boardList.do?b_bseq=${boardKinds.bkBseq }'><b>${boardKinds.bkBname }</b> &nbsp;&nbsp;&nbsp;</a>
-		</c:forEach>
-	</div>
-	<hr>
+	<jsp:include page="../cmmn/pageHeader.jsp"></jsp:include>
+	
 	<div class="panel panel-default" style="width: 100%">
 		
 		<!-- 팝업 레이어 영역 -->

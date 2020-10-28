@@ -51,12 +51,8 @@
 					},
 			
 			success : function (result) {
-				
-				if(result == 1){
-					alert("유저권한을 변경하였습니다.");
-				} else {
-					alert("유저권한 변경에 오류가 발생했습니다.")
-				}
+				alert("유저권한을 변경하였습니다.");
+				window.close();
 			}
 		});
 	}

@@ -53,21 +53,18 @@ function del(b_no, b_refno) {
 		
 		$.ajax({
 			type : 'POST',
-			url : "<c:url value='/deleteBoard.do' />",
+			url : "deleteBoard.do",
+			dataType : "text",
 			data : { "b_no" : b_no,
 					 "b_refno": b_refno},
 			
 			success : function(result) {
+				
 				alert("글 삭제가 정상적으로 수행되었습니다.");
 				opener.location.reload();
 				window.close();
-			},
-			error : function(error) {
-		        alert("글 삭제에 오류가 발생했습니다.");
-				opener.location.reload();
-				window.close();
-		    }
-		});
+			}
+		}); 
 	}
 }
 
@@ -89,12 +86,8 @@ function writeComment(b_no) {
 			
 			success : function (result) {
 				
-				if(result == 1){
-					alert("댓글을 등록했습니다.");
-					location.reload(true);
-				} else {
-					alert("댓글등록에 오류가 발생했습니다.")
-				}
+				alert("댓글을 등록했습니다.");
+				location.reload(true);
 			}
 		});
 	}
@@ -123,12 +116,8 @@ function insertRecomment(b_no, c_parent, c_origin, c_depth, index) {
 			
 			success : function (result) {
 				
-				if(result == 1){
-					alert("댓글을 등록했습니다.");
-					location.reload(true);
-				} else {
-					alert("댓글등록에 오류가 발생했습니다.")
-				}
+				alert("댓글을 등록했습니다.");
+				location.reload(true);
 			}
 		});
 	}
@@ -153,12 +142,8 @@ function deleteComment(c_no, c_writer, user_id) {
 			
 			success : function (result) {
 				
-				if(result == 1){
-					alert("댓글을 삭제했습니다.");
-					location.reload(true);
-				} else {
-					alert("댓글삭제에 오류가 발생했습니다.")
-				}
+				alert("댓글을 삭제했습니다.");
+				location.reload(true);
 			}
 		});
 	}
@@ -208,7 +193,10 @@ function deleteComment(c_no, c_writer, user_id) {
 						<tr>
 							<td class='text-left'>${comment.cContent }</td>
 							<td>
-								<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="$('.reCommentForm${i.index}').toggle()">댓글</div>
+								<c:if test="${sessionScope.user.user_id != null && sessionScope.user.comment_YN == 'Y'}">
+									<div class="badge badge-primary text-wrap" style="cursor: pointer;" onclick="$('.reCommentForm${i.index}').toggle()">댓글</div>
+								</c:if>
+								
 								<c:if test="${comment.cWriter == sessionScope.user.user_id }">
 									<div class="badge badge-danger text-wrap" style="cursor: pointer;" onclick="deleteComment(${comment.cNo}, '${comment.cWriter}', '${sessionScope.user.user_id }')">삭제</div>
 								</c:if>
